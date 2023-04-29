@@ -7,5 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Victor Wong",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "client-sessions": "^0.8.0",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.7",
+    "nodemon": "^2.0.22"
+  }
 }
