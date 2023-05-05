@@ -15,12 +15,12 @@ let User;
 
 function initialize () {
     return new Promise(function (resolve, reject) {
-        let db = mongoose.createConnection("mongodb+srv://Victor:7OkL03vI5PTE9FlJ@lentil.1fev0.mongodb.net/access-project");
+        let db = mongoose.createConnection("mongodb+srv://Victor:7OkL03vI5PTE9FlJ@lentil.1fev0.mongodb.net/access_project");
         db.on('error', (err)=>{
-            reject(err);W
+            reject(err);
         });
         db.once('open', ()=>{
-           User = db.model("users", userSchema);
+           User = db.model("UserAccount", userSchema);
            resolve();
         });
     });

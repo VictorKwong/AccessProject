@@ -51,6 +51,13 @@ app.engine('.hbs', exphbs.engine({
 
  app.use("/public", express.static(path.join(__dirname, "/public")));
 
+ app.use(function(req,res,next){
+    let route = req.path.substring(1);
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));
+    app.locals.viewingCategory = req.query.category;
+    next();
+});
+
  app.use(clientSessions({
     cookieName: "session",
     secret: "nightCodeActionRequired",
@@ -62,6 +69,8 @@ app.use(function(req, res, next) {
     res.locals.session = req.session;
     next();
 });
+
+app.use(express.urlencoded({extended: true}));
 
 function ensureLogin(req, res, next) {
     if (!req.session.user) {
@@ -86,14 +95,50 @@ app.get("/login", function(req,res){
     res.render('login');
 });
 
+app.post("/login", function(req, res) {
+    return new Promise((resolve, reject) => {
+        req.body.userAgent = req.get('User-Agent');
+        authData.loginAccount(req.body).then((user) => {
+            req.session.user = {
+                userName: user.userName,
+                email: user.email
+            }
+            res.redirect('/information');
+        }).catch((err) => {
+            res.render('login', {errorMessage: err, userName: req.body.userName});
+        })
+    })    
+})
+
+
+app.get("/register", function(req,res){
+    res.render('register');
+});
+
+app.post("/register", function(req, res) {
+    console.log(req)
+    console.log('===============')
+    authData.registerAccount(req.body).then(function(data){
+        res.render('register', {successMessage: "User created"});
+    })
+    .catch(function(err){
+        res.render('register', {errorMessage: err, userName: req.body.userName});
+    });
+});
+
 app.get("/information", ensureLogin, function(req,res){
     res.render("information");
 })
 
+app.get('/logout', function(req, res){
+    req.session.reset();
+    res.redirect('/');
+})
 
 
-
-blogService.initialize().then(function() {
+blogService.initialize()
+.then(authData.initialize)
+.then(function() {
     app.listen(HTTP_PORT, onHttpStart);
 }).catch(function(err){
     console.log(err);
