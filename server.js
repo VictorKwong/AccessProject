@@ -116,8 +116,6 @@ app.get("/register", function(req,res){
 });
 
 app.post("/register", function(req, res) {
-    console.log(req)
-    console.log('===============')
     authData.registerAccount(req.body).then(function(data){
         res.render('register', {successMessage: "User created"});
     })
