@@ -124,6 +124,12 @@ app.post("/register", function(req, res) {
     });
 });
 
+app.get("/account", ensureLogin, function(req,res){
+    res.render('account', {
+        data: req.session.user
+    });
+})
+
 app.get("/information", ensureLogin, function(req,res){
     res.render("information");
 })
