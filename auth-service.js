@@ -8,7 +8,11 @@ var userSchema = new Schema({
       type: String,
       "unique": true
     },
-    "password": String
+    "password": String,
+    "Actor": [{
+      "Health": Number,
+      "Attack": Number,
+    }]
 });
 
 let User;
@@ -34,6 +38,13 @@ function registerAccount(accountData){
         // Encrypt password, Salt = 10 rounds
         bcrypt.hash(accountData.password, 10).then( hashPassword =>{ 
           accountData.password = hashPassword;
+
+          const actorInfo = {
+            Health: 100,
+            Attack: 10
+          };
+          accountData[0].Actor.push(actorInfo);
+
           let newUser = new User(accountData);
           newUser.save().then((result)=>{
             resolve(result);
