@@ -97,11 +97,13 @@ app.get("/login", function(req,res){
 
 app.post("/login", function(req, res) {
     return new Promise((resolve, reject) => {
-        req.body.userAgent = req.get('User-Agent');
         authData.loginAccount(req.body).then((user) => {
             req.session.user = {
                 userName: user.userName,
-                email: user.email
+                Actor: [{
+                    Health: user.Actor[0].Health,
+                    Attack: user.Actor[0].Attack
+                }]
             }
             res.redirect('/information');
         }).catch((err) => {
@@ -126,7 +128,8 @@ app.post("/register", function(req, res) {
 
 app.get("/account", ensureLogin, function(req,res){
     res.render('account', {
-        data: req.session.user
+        data: req.session.user,
+        Actor: req.session.user.Actor[0]
     });
 })
 

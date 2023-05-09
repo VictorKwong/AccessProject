@@ -10,8 +10,14 @@ var userSchema = new Schema({
     },
     "password": String,
     "Actor": [{
-      "Health": Number,
-      "Attack": Number,
+      "Health": {
+        type: Number,
+        "default": 100
+      },
+      "Attack": {
+        type: Number,
+        "default": 10
+      },
     }]
 });
 
@@ -39,13 +45,8 @@ function registerAccount(accountData){
         bcrypt.hash(accountData.password, 10).then( hashPassword =>{ 
           accountData.password = hashPassword;
 
-          const actorInfo = {
-            Health: 100,
-            Attack: 10
-          };
-          accountData[0].Actor.push(actorInfo);
-
           let newUser = new User(accountData);
+
           newUser.save().then((result)=>{
             resolve(result);
           }).catch((err)=>{
@@ -73,9 +74,13 @@ function loginAccount(accountData){
       }else{
         bcrypt.compare(accountData.password, account[0].password).then((result) => {
           if (result) {
-
             User.updateOne(
-              { userName: account[0].userName }
+              { userName: account[0].userName,
+                Actor: [{
+                  Health: account[0].Actor[0].Health,
+                  Attack: account[0].Actor[0].Attack
+                }]
+              }
             ).exec().then(() => {
                 resolve(account[0]);
             }).catch((err) => {
