@@ -10,26 +10,6 @@ var userSchema = new Schema({
     },
     "password": String,
     "Actor": {
-      "Health": {
-        type: Number,
-        default: 100
-      },
-      "Attack": {
-        type: Number,
-        default: 10
-      },
-      "Defense": {
-        type: Number,
-        default: 5
-      },
-      "Level": {
-        type: Number,
-        default: 1
-      },
-      "Experience": {
-        type: Number,
-        default: 0
-      },
       "Iron": {
         type: Number,
         default: 500,
@@ -39,6 +19,33 @@ var userSchema = new Schema({
         type: Number,
         default: 100,
         min: 0
+      },
+      "Petroleum": {
+        type: Number,
+        default: 50,
+        min: 0
+      }
+    },
+    "IronMine_1": {
+      "Name": {
+        type: String,
+        default: "Iron Mine"
+      },
+      "Level": {
+        type: Number,
+        default: 1,
+      },
+      "ProduceRate":{
+        type: Number,
+        default: 100,
+      },
+      "Capacity":{
+        type: Number,
+        default: 1000,
+      },
+      "UpgradeCost":{
+        type: Number,
+        default: 10,
       }
     }
 });
@@ -96,15 +103,18 @@ function loginAccount(accountData){
           if (result) {
             User.updateOne(
               { userName: account[0].userName,
-                Actor: [{
-                  Health: account[0].Actor.Health,
-                  Attack: account[0].Actor.Attack,
-                  Defense: account[0].Actor.Defense,
-                  Level: account[0].Actor.Level,
-                  Experience: account[0].Actor.Experience,
+                Actor: {
                   Iron: account[0].Actor.Iron,
-                  Crystal: account[0].Actor.Crystal
-                }]
+                  Crystal: account[0].Actor.Crystal,
+                  Petroleum: account[0].Actor.Petroleum
+                },
+                IronMine_1: {
+                  Name: account[0].IronMine_1.Name,
+                  Level: account[0].IronMine_1.Level,
+                  ProduceRate: account[0].IronMine_1.ProduceRate,
+                  Capacity: account[0].IronMine_1.Capacity,
+                  UpgradeCost: account[0].IronMine_1.UpgradeCost
+                }
               }
             ).exec().then(() => {
                 resolve(account[0]);

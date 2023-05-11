@@ -100,15 +100,18 @@ app.post("/login", function(req, res) {
         authData.loginAccount(req.body).then((user) => {
             req.session.user = {
                 userName: user.userName,
-                Actor: [{
-                    Health: user.Actor.Health,
-                    Attack: user.Actor.Attack,
-                    Defense: user.Actor.Defense,
-                    Level: user.Actor.Level,
-                    Experience: user.Actor.Experience,
+                Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
-                }]
+                    Petroleum: user.Actor.Petroleum,
+                },
+                IronMine_1: {
+                    "Name": user.IronMine_1.Name,
+                    "Level": user.IronMine_1.Level,
+                    "ProduceRate": user.IronMine_1.ProduceRate,
+                    "Capacity": user.IronMine_1.Capacity,
+                    "UpgradeCost": user.IronMine_1.UpgradeCost
+                }
             }
             res.redirect('/information');
         }).catch((err) => {
@@ -134,7 +137,8 @@ app.post("/register", function(req, res) {
 app.get("/account", ensureLogin, function(req,res){
     res.render('account', {
         data: req.session.user,
-        Actor: req.session.user.Actor[0]
+        Actor: req.session.user.Actor,
+        IronMine_1: req.session.user.IronMine_1
     });
 })
 
