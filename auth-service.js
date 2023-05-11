@@ -6,19 +6,41 @@ const bcrypt = require('bcryptjs');
 var userSchema = new Schema({
     "userName":  {
       type: String,
-      "unique": true
+      unique: true
     },
     "password": String,
-    "Actor": [{
+    "Actor": {
       "Health": {
         type: Number,
-        "default": 100
+        default: 100
       },
       "Attack": {
         type: Number,
-        "default": 10
+        default: 10
       },
-    }]
+      "Defense": {
+        type: Number,
+        default: 5
+      },
+      "Level": {
+        type: Number,
+        default: 1
+      },
+      "Experience": {
+        type: Number,
+        default: 0
+      },
+      "Iron": {
+        type: Number,
+        default: 500,
+        min: 0
+      },
+      "Crystal": {
+        type: Number,
+        default: 100,
+        min: 0
+      }
+    }
 });
 
 let User;
@@ -44,9 +66,7 @@ function registerAccount(accountData){
         // Encrypt password, Salt = 10 rounds
         bcrypt.hash(accountData.password, 10).then( hashPassword =>{ 
           accountData.password = hashPassword;
-
           let newUser = new User(accountData);
-
           newUser.save().then((result)=>{
             resolve(result);
           }).catch((err)=>{
@@ -77,8 +97,13 @@ function loginAccount(accountData){
             User.updateOne(
               { userName: account[0].userName,
                 Actor: [{
-                  Health: account[0].Actor[0].Health,
-                  Attack: account[0].Actor[0].Attack
+                  Health: account[0].Actor.Health,
+                  Attack: account[0].Actor.Attack,
+                  Defense: account[0].Actor.Defense,
+                  Level: account[0].Actor.Level,
+                  Experience: account[0].Actor.Experience,
+                  Iron: account[0].Actor.Iron,
+                  Crystal: account[0].Actor.Crystal
                 }]
               }
             ).exec().then(() => {

@@ -1,14 +1,17 @@
 # AccessProject
 
-Purpose: See if it is updated on the README file
+How to run the website server?
+- nodemon server.js
 
-This project is to focus on login system, hashing password, and storing information in the back-end system MongoDB.
+Purpose: This project is to focus on login system, hashing password, and storing information in the back-end system MongoDB.
 
+Tools:
+- bcryptjs
+- client-sessions
 - express
 - express-handlebars
-- client-sessions
 - mongoose
-- bcryptjs
 
-
+Support Tools:
+- nodemon
 

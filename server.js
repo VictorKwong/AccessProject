@@ -101,8 +101,13 @@ app.post("/login", function(req, res) {
             req.session.user = {
                 userName: user.userName,
                 Actor: [{
-                    Health: user.Actor[0].Health,
-                    Attack: user.Actor[0].Attack
+                    Health: user.Actor.Health,
+                    Attack: user.Actor.Attack,
+                    Defense: user.Actor.Defense,
+                    Level: user.Actor.Level,
+                    Experience: user.Actor.Experience,
+                    Iron: user.Actor.Iron,
+                    Crystal: user.Actor.Crystal,
                 }]
             }
             res.redirect('/information');
