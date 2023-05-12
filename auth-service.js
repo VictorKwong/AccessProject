@@ -26,7 +26,7 @@ var userSchema = new Schema({
         min: 0
       }
     },
-    "IronMine_1": {
+    "IronMine": {
       "Name": {
         type: String,
         default: "Iron Mine"
@@ -39,15 +39,37 @@ var userSchema = new Schema({
         type: Number,
         default: 100,
       },
+      "UpgradeCost_Iron":{
+        type: Number,
+        default: 100,
+      },
+      "UpgradeCost_Crystal":{
+        type: Number,
+        default: 10,
+      }
+    },
+    "IronStorage": {
+      "Name": {
+        type: String,
+        default: "Iron Storage"
+      },
+      "Level": {
+        type: Number,
+        default: 1,
+      },
       "Capacity":{
         type: Number,
         default: 1000,
       },
-      "UpgradeCost":{
+      "UpgradeCost_Iron":{
         type: Number,
-        default: 10,
+        default: 5,
+      },
+      "UpgradeCost_Crystal":{
+        type: Number,
+        default: 0,
       }
-    }
+    },
 });
 
 let User;
@@ -108,12 +130,19 @@ function loginAccount(accountData){
                   Crystal: account[0].Actor.Crystal,
                   Petroleum: account[0].Actor.Petroleum
                 },
-                IronMine_1: {
-                  Name: account[0].IronMine_1.Name,
-                  Level: account[0].IronMine_1.Level,
-                  ProduceRate: account[0].IronMine_1.ProduceRate,
-                  Capacity: account[0].IronMine_1.Capacity,
-                  UpgradeCost: account[0].IronMine_1.UpgradeCost
+                IronMine: {
+                  Name: account[0].IronMine.Name,
+                  Level: account[0].IronMine.Level,
+                  ProduceRate: account[0].IronMine.ProduceRate,
+                  UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal
+                },
+                IronStorage: {
+                  Name: account[0].IronStorage.Name,
+                  Level: account[0].IronStorage.Level,
+                  Capacity: account[0].IronStorage.Capacity,
+                  UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
                 }
               }
             ).exec().then(() => {

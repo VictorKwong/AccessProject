@@ -105,13 +105,21 @@ app.post("/login", function(req, res) {
                     Crystal: user.Actor.Crystal,
                     Petroleum: user.Actor.Petroleum,
                 },
-                IronMine_1: {
-                    "Name": user.IronMine_1.Name,
-                    "Level": user.IronMine_1.Level,
-                    "ProduceRate": user.IronMine_1.ProduceRate,
-                    "Capacity": user.IronMine_1.Capacity,
-                    "UpgradeCost": user.IronMine_1.UpgradeCost
-                }
+                IronMine: {
+                    "Name": user.IronMine.Name,
+                    "Level": user.IronMine.Level,
+                    "ProduceRate": user.IronMine.ProduceRate,
+                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
+                },
+                IronStorage: {
+                    "Name": user.IronStorage.Name,
+                    "Level": user.IronStorage.Level,
+                    "Capacity": user.IronStorage.Capacity,
+                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
+                },
+
             }
             res.redirect('/information');
         }).catch((err) => {
@@ -138,7 +146,8 @@ app.get("/account", ensureLogin, function(req,res){
     res.render('account', {
         data: req.session.user,
         Actor: req.session.user.Actor,
-        IronMine_1: req.session.user.IronMine_1
+        IronMine: req.session.user.IronMine,
+        IronStorage: req.session.user.IronStorage
     });
 })
 
