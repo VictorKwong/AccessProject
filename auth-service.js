@@ -70,6 +70,50 @@ var userSchema = new Schema({
         default: 0,
       }
     },
+        "CrystalMine": {
+      "Name": {
+        type: String,
+        default: "Crystal Mine"
+      },
+      "Level": {
+        type: Number,
+        default: 1,
+      },
+      "ProduceRate":{
+        type: Number,
+        default: 100,
+      },
+      "UpgradeCost_Iron":{
+        type: Number,
+        default: 50,
+      },
+      "UpgradeCost_Crystal":{
+        type: Number,
+        default: 50,
+      }
+    },
+    "CrystalStorage": {
+      "Name": {
+        type: String,
+        default: "Crystal Storage"
+      },
+      "Level": {
+        type: Number,
+        default: 1,
+      },
+      "Capacity":{
+        type: Number,
+        default: 1000,
+      },
+      "UpgradeCost_Iron":{
+        type: Number,
+        default: 10,
+      },
+      "UpgradeCost_Crystal":{
+        type: Number,
+        default: 10,
+      }
+    },
 });
 
 let User;
@@ -143,6 +187,20 @@ function loginAccount(accountData){
                   Capacity: account[0].IronStorage.Capacity,
                   UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
                   UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
+                },
+                CrystalMine: {
+                  Name: account[0].CrystalMine.Name,
+                  Level: account[0].CrystalMine.Level,
+                  ProduceRate: account[0].CrystalMine.ProduceRate,
+                  UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
+                },
+                CrystalStorage: {
+                  Name: account[0].CrystalStorage.Name,
+                  Level: account[0].CrystalStorage.Level,
+                  Capacity: account[0].CrystalStorage.Capacity,
+                  UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal
                 }
               }
             ).exec().then(() => {
