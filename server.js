@@ -99,6 +99,7 @@ app.post("/login", function(req, res) {
     return new Promise((resolve, reject) => {
         authData.loginAccount(req.body).then((user) => {
             req.session.user = {
+                _id: user._id,
                 userName: user.userName,
                 Actor: {
                     Iron: user.Actor.Iron,
@@ -166,6 +167,56 @@ app.get("/account", ensureLogin, function(req,res){
         CrystalStorage: req.session.user.CrystalStorage,
     });
 })
+
+/*Upgrade*/
+
+app.get("/UpgradeIronMine", function(req, res) {
+    return new Promise((resolve, reject) => {
+        authData.upgradeIronMine(req.session.user).then((user) => {
+            req.session.user = {
+                _id: user._id,
+                userName: user.userName,
+                Actor: {
+                    Iron: user.Actor.Iron,
+                    Crystal: user.Actor.Crystal,
+                    Petroleum: user.Actor.Petroleum,
+                },
+                IronMine: {
+                    "Name": user.IronMine.Name,
+                    "Level": user.IronMine.Level,
+                    "ProduceRate": user.IronMine.ProduceRate,
+                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
+                },
+                IronStorage: {
+                    "Name": user.IronStorage.Name,
+                    "Level": user.IronStorage.Level,
+                    "Capacity": user.IronStorage.Capacity,
+                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
+                },
+                CrystalMine: {
+                    "Name": user.CrystalMine.Name,
+                    "Level": user.CrystalMine.Level,
+                    "ProduceRate": user.CrystalMine.ProduceRate,
+                    "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal
+                },
+                CrystalStorage: {
+                    "Name": user.CrystalStorage.Name,
+                    "Level": user.CrystalStorage.Level,
+                    "Capacity": user.CrystalStorage.Capacity,
+                    "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
+                }
+            }
+            res.redirect('account');
+        }).catch((err) => {
+            res.render('account', {errorMessage: err, userName: req.body.userName});
+        })
+    })    
+})
+
 
 app.get("/information", ensureLogin, function(req,res){
     res.render("information");

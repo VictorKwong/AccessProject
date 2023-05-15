@@ -12,12 +12,12 @@ var userSchema = new Schema({
     "Actor": {
       "Iron": {
         type: Number,
-        default: 500,
+        default: 2000,
         min: 0
       },
       "Crystal": {
         type: Number,
-        default: 100,
+        default: 1000,
         min: 0
       },
       "Petroleum": {
@@ -224,5 +224,41 @@ function loginAccount(accountData){
   });
 }
 
+function upgradeIronMine(accountData){
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+          if ((account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
+              (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
+            User.updateOne(
+              { userName: account[0].userName,
+                Actor: {
+                  Iron: (account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron),
+                  Crystal: (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal)
+                },
+                IronMine: {
+                  Level: (account[0].IronMine.Level + 1),
+                  ProduceRate: (account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate),
+                  UpgradeCost_Iron: (account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron),
+                  UpgradeCost_Crystal: (account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal),
+                }
+              }
+            ).exec().then(() => {
+              console.log(account[0])
+              console.log("-------------------")
+                resolve(account[0]);
+            }).catch((err) => {
+                reject("Upgrade cause error:" + err);
+            })
+          } else {
+            reject(`Not enough resource: ${accountData.userName}`);
+          }
+    }).catch((err) => {
+        reject(`Unable to find user - ${userData.userName}: ${err}`);
+    });
 
-module.exports = { initialize, registerAccount, loginAccount};
+  });
+}
+
+
+module.exports = { initialize, registerAccount, loginAccount, upgradeIronMine};
