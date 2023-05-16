@@ -16,7 +16,10 @@
     <p>Upgrade Cost: Iron - {{IronMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{IronMine.UpgradeCost_Crystal}}</p>
 
-    <a class="btn btn-primary" href="/UpgradeIronMine" role="button">Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}</a>
+    
+    <form action="/account" method="POST">
+    <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}"></input>
+    </form>
 </div>
 
 <div class="border border-dark">
@@ -45,3 +48,4 @@
     <p>Upgrade Cost: Iron - {{CrystalStorage.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{CrystalStorage.UpgradeCost_Crystal}}</p>
 </div>
+

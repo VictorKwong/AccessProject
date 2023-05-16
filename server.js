@@ -169,11 +169,11 @@ app.get("/account", ensureLogin, function(req,res){
         CrystalMine: req.session.user.CrystalMine,
         CrystalStorage: req.session.user.CrystalStorage,
     });
+    
 })
 
 /*Upgrade*/
-
-app.get("/UpgradeIronMine", function(req, res) {
+app.post("/account", ensureLogin, function(req, res) {
     return new Promise((resolve, reject) => {
         authData.upgradeIronMine(req.session.user).then((user) => {
             req.session.user = {
@@ -214,10 +214,19 @@ app.get("/UpgradeIronMine", function(req, res) {
                 }
             }
             res.redirect('account')
+            
         }).catch((err) => {
-            res.render('account', {errorMessage: err, userName: req.body.userName});
+            res.render('account', {
+                data: req.session.user,
+                Actor: req.session.user.Actor,
+                IronMine: req.session.user.IronMine,
+                IronStorage: req.session.user.IronStorage,
+                CrystalMine: req.session.user.CrystalMine,
+                CrystalStorage: req.session.user.CrystalStorage,
+                errorMessage: err
+            })
         })
-    })    
+    })
 })
 
 

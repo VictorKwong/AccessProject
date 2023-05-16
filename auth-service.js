@@ -230,7 +230,9 @@ function upgradeIronMine(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { userName: account[0].userName,
+            const updateAccount = { 
+              _id: account[0]._id,
+              userName: account[0].userName,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal,
@@ -268,8 +270,6 @@ function upgradeIronMine(accountData){
             User.updateOne(
               { _id: accountData._id }, updateAccount
             ).exec().then(() => {
-              console.log(updateAccount)
-              console.log("-------------------")
                 resolve(updateAccount);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
