@@ -40,6 +40,9 @@ app.engine('.hbs', exphbs.engine({
             let month = (dateObj.getMonth() + 1).toString();
             let day = dateObj.getDate().toString();
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`;
+        },
+        sum: function(a, b) {
+              return a + b;
         }
         
     },
@@ -134,8 +137,8 @@ app.post("/login", function(req, res) {
                     "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
                 },
-
             }
+
             res.redirect('/information');
         }).catch((err) => {
             res.render('login', {errorMessage: err, userName: req.body.userName});
@@ -210,7 +213,7 @@ app.get("/UpgradeIronMine", function(req, res) {
                     "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
                 }
             }
-            res.redirect('account');
+            res.redirect('account')
         }).catch((err) => {
             res.render('account', {errorMessage: err, userName: req.body.userName});
         })

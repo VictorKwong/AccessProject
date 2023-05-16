@@ -12,12 +12,12 @@ var userSchema = new Schema({
     "Actor": {
       "Iron": {
         type: Number,
-        default: 2000,
+        default: 2000000,
         min: 0
       },
       "Crystal": {
         type: Number,
-        default: 1000,
+        default: 1000000,
         min: 0
       },
       "Petroleum": {
@@ -230,23 +230,47 @@ function upgradeIronMine(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
-            User.updateOne(
-              { userName: account[0].userName,
-                Actor: {
-                  Iron: (account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron),
-                  Crystal: (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal)
-                },
-                IronMine: {
-                  Level: (account[0].IronMine.Level + 1),
-                  ProduceRate: (account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate),
-                  UpgradeCost_Iron: (account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron),
-                  UpgradeCost_Crystal: (account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal),
-                }
+            const updateAccount = { userName: account[0].userName,
+              Actor: {
+                Iron: account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron,
+                Crystal: account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal,
+                Petroleum: account[0].Actor.Petroleum
+              },
+              IronMine: {
+                Name: account[0].IronMine.Name,
+                Level: account[0].IronMine.Level + 1,
+                ProduceRate: account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate,
+                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal,
+              },
+              IronStorage: {
+                Name: account[0].IronStorage.Name,
+                Level: account[0].IronStorage.Level,
+                Capacity: account[0].IronStorage.Capacity,
+                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
+              },
+              CrystalMine: {
+                Name: account[0].CrystalMine.Name,
+                Level: account[0].CrystalMine.Level,
+                ProduceRate: account[0].CrystalMine.ProduceRate,
+                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
+              },
+              CrystalStorage: {
+                Name: account[0].CrystalStorage.Name,
+                Level: account[0].CrystalStorage.Level,
+                Capacity: account[0].CrystalStorage.Capacity,
+                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal
               }
+            }
+            User.updateOne(
+              { _id: accountData._id }, updateAccount
             ).exec().then(() => {
-              console.log(account[0])
+              console.log(updateAccount)
               console.log("-------------------")
-                resolve(account[0]);
+                resolve(updateAccount);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })
@@ -254,11 +278,13 @@ function upgradeIronMine(accountData){
             reject(`Not enough resource: ${accountData.userName}`);
           }
     }).catch((err) => {
-        reject(`Unable to find user - ${userData.userName}: ${err}`);
+        reject(`Unable to find user - ${accountData.userName}: ${err}`);
     });
 
   });
 }
+
+
 
 
 module.exports = { initialize, registerAccount, loginAccount, upgradeIronMine};
