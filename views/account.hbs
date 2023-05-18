@@ -1,3 +1,7 @@
+{{#if errorMessage}}
+    <div class="alert alert-danger"> <strong>Error:</strong> {{errorMessage}}</div>
+{{/if}}
+
 <h1>{{data.userName}}</h1>
 
 <p>Testing account information</p>
@@ -17,8 +21,8 @@
     <p>Upgrade Cost: Crystal - {{IronMine.UpgradeCost_Crystal}}</p>
 
     
-    <form action="/account" method="POST">
-    <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}"></input>
+    <form action="/account/upgradeIronMine" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}"></input>
     </form>
 </div>
 
@@ -29,6 +33,9 @@
 
     <p>Upgrade Cost: Iron - {{IronStorage.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{IronStorage.UpgradeCost_Crystal}}</p>
+    <form action="/account/upgradeIronStorage" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronStorage.Name}} - Lv.{{sum IronStorage.Level 1}}"></input>
+    </form>
 </div>
 
 <div class="border border-primary">
@@ -38,6 +45,9 @@
 
     <p>Upgrade Cost: Iron - {{CrystalMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{CrystalMine.UpgradeCost_Crystal}}</p>
+    <form action="/account/upgradeCrystalMine" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{CrystalMine.Name}} - Lv.{{sum CrystalMine.Level 1}}"></input>
+    </form>
 </div>
 
 <div class="border border-primary">
@@ -47,5 +57,31 @@
 
     <p>Upgrade Cost: Iron - {{CrystalStorage.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{CrystalStorage.UpgradeCost_Crystal}}</p>
+    <form action="/account/upgradeCrystalStorage" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{CrystalStorage.Name}} - Lv.{{sum CrystalStorage.Level 1}}"></input>
+    </form>
+</div>
+
+<div class="border border-primary">
+    <p>{{PetroleumMine.Name}} - Lv {{PetroleumMine.Level}}</p>
+
+    <p>Produce Rate: {{PetroleumMine.ProduceRate}}</p>
+
+    <p>Upgrade Cost: Iron - {{PetroleumMine.UpgradeCost_Iron}}</p>
+    <p>Upgrade Cost: Crystal - {{PetroleumMine.UpgradeCost_Crystal}}</p>
+    <form action="/account/upgradeCrystalMine" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{PetroleumMine.Name}} - Lv.{{sum PetroleumMine.Level 1}}"></input>
+    </form>
+</div>
+<div class="border border-primary">
+    <p>{{PetroleumStorage.Name}} - Lv {{PetroleumStorage.Level}}</p>
+
+    <p>Storage Capacity: {{PetroleumStorage.Capacity}}</p>
+
+    <p>Upgrade Cost: Iron - {{PetroleumStorage.UpgradeCost_Iron}}</p>
+    <p>Upgrade Cost: Crystal - {{PetroleumStorage.UpgradeCost_Crystal}}</p>
+    <form action="/account/upgradeCrystalStorage" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{PetroleumStorage.Name}} - Lv.{{sum PetroleumStorage.Level 1}}"></input>
+    </form>
 </div>
 

@@ -137,6 +137,20 @@ app.post("/login", function(req, res) {
                     "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
                 },
+                PetroleumMine: {
+                    "Name": user.PetroleumMine.Name,
+                    "Level": user.PetroleumMine.Level,
+                    "ProduceRate": user.PetroleumMine.ProduceRate,
+                    "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal
+                },
+                PetroleumStorage: {
+                    "Name": user.PetroleumStorage.Name,
+                    "Level": user.PetroleumStorage.Level,
+                    "Capacity": user.PetroleumStorage.Capacity,
+                    "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                }
             }
 
             res.redirect('/information');
@@ -168,65 +182,112 @@ app.get("/account", ensureLogin, function(req,res){
         IronStorage: req.session.user.IronStorage,
         CrystalMine: req.session.user.CrystalMine,
         CrystalStorage: req.session.user.CrystalStorage,
+        PetroleumMine: req.session.user.PetroleumMine,
+        PetroleumStorage: req.session.user.PetroleumStorage,
     });
     
 })
 
 /*Upgrade*/
-app.post("/account", ensureLogin, function(req, res) {
-    return new Promise((resolve, reject) => {
-        authData.upgradeIronMine(req.session.user).then((user) => {
-            req.session.user = {
-                _id: user._id,
-                userName: user.userName,
-                Actor: {
-                    Iron: user.Actor.Iron,
-                    Crystal: user.Actor.Crystal,
-                    Petroleum: user.Actor.Petroleum,
-                },
-                IronMine: {
-                    "Name": user.IronMine.Name,
-                    "Level": user.IronMine.Level,
-                    "ProduceRate": user.IronMine.ProduceRate,
-                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
-                },
-                IronStorage: {
-                    "Name": user.IronStorage.Name,
-                    "Level": user.IronStorage.Level,
-                    "Capacity": user.IronStorage.Capacity,
-                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
-                },
-                CrystalMine: {
-                    "Name": user.CrystalMine.Name,
-                    "Level": user.CrystalMine.Level,
-                    "ProduceRate": user.CrystalMine.ProduceRate,
-                    "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal
-                },
-                CrystalStorage: {
-                    "Name": user.CrystalStorage.Name,
-                    "Level": user.CrystalStorage.Level,
-                    "Capacity": user.CrystalStorage.Capacity,
-                    "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
-                }
-            }
-            res.redirect('account')
-            
-        }).catch((err) => {
-            res.render('account', {
-                data: req.session.user,
-                Actor: req.session.user.Actor,
-                IronMine: req.session.user.IronMine,
-                IronStorage: req.session.user.IronStorage,
-                CrystalMine: req.session.user.CrystalMine,
-                CrystalStorage: req.session.user.CrystalStorage,
-                errorMessage: err
+app.post("/account/:upgrade", ensureLogin, function(req, res) {
+    if(req.params.upgrade === "upgradeIronMine"){
+        return new Promise((resolve, reject) => {
+            authData.upgradeIronMine(req.session.user).then((user) => {
+                req.session.user.Actor.Iron = user.Actor.Iron
+                req.session.user.Actor.Crystal = user.Actor.Crystal
+                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+
+                req.session.user.IronMine.Level = user.IronMine.Level
+                req.session.user.IronMine.ProduceRate = user.IronMine.ProduceRate
+                req.session.user.IronMine.UpgradeCost_Iron = user.IronMine.UpgradeCost_Iron
+                req.session.user.IronMine.UpgradeCost_Crystal = user.IronMine.UpgradeCost_Crystal
+                
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    errorMessage: err
+                })
             })
         })
-    })
+    }else if(req.params.upgrade === "upgradeCrystalMine"){
+        return new Promise((resolve, reject) => {
+            authData.upgradeCrystalMine(req.session.user).then((user) => {
+                req.session.user.Actor.Iron = user.Actor.Iron
+                req.session.user.Actor.Crystal = user.Actor.Crystal
+                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+
+                req.session.user.CrystalMine.Level = user.CrystalMine.Level
+                req.session.user.CrystalMine.ProduceRate = user.CrystalMine.ProduceRate
+                req.session.user.CrystalMine.UpgradeCost_Iron = user.CrystalMine.UpgradeCost_Iron
+                req.session.user.CrystalMine.UpgradeCost_Crystal = user.CrystalMine.UpgradeCost_Crystal
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    errorMessage: err
+                })
+            })
+        })
+    }else if(req.params.upgrade === "upgradeIronStorage"){
+        return new Promise((resolve, reject) => {
+            authData.upgradeIronStorage(req.session.user).then((user) => {
+                req.session.user.Actor.Iron = user.Actor.Iron
+                req.session.user.Actor.Crystal = user.Actor.Crystal
+                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+
+                req.session.user.IronStorage.Level = user.IronStorage.Level
+                req.session.user.IronStorage.Capacity = user.IronStorage.Capacity
+                req.session.user.IronStorage.UpgradeCost_Iron = user.IronStorage.UpgradeCost_Iron
+                req.session.user.IronStorage.UpgradeCost_Crystal = user.IronStorage.UpgradeCost_Crystal
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    errorMessage: err
+                })
+            })
+        })
+    }else if(req.params.upgrade === "upgradeCrystalStorage"){
+        return new Promise((resolve, reject) => {
+            authData.upgradeCrystalStorage(req.session.user).then((user) => {
+                req.session.user.Actor.Iron = user.Actor.Iron
+                req.session.user.Actor.Crystal = user.Actor.Crystal
+                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+
+                req.session.user.CrystalStorage.Level = user.CrystalStorage.Level
+                req.session.user.CrystalStorage.Capacity = user.CrystalStorage.Capacity
+                req.session.user.CrystalStorage.UpgradeCost_Iron = user.CrystalStorage.UpgradeCost_Iron
+                req.session.user.CrystalStorage.UpgradeCost_Crystal = user.CrystalStorage.UpgradeCost_Crystal
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    errorMessage: err
+                })
+            })
+        })
+    }
 })
 
 
