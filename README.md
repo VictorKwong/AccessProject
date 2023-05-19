@@ -17,3 +17,5 @@ Tools:
 Support Tools:
 - nodemon
 
+Direction:
+Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds.
