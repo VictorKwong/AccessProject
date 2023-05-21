@@ -282,6 +282,91 @@ function loginAccount(accountData){
   });
 }
 
+function changePasswordAccount(accountData){
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+      if(account.length == 0){
+        reject("Unable to find user: " + accountData.userName);
+      }else if(accountData.newPassword !== accountData.confirmNewPassword){
+        reject("New Passwords do not match");
+      }else if(account[0].password !== accountData.password){
+        reject("Passwords do not match");
+      }else{
+        //Note need to test later
+        bcrypt.compare(accountData.password, account[0].password).then((result) => {
+          if (result) {
+            User.updateOne(
+              { userName: account[0].userName,
+                Actor: {
+                  Iron: account[0].Actor.Iron,
+                  Crystal: account[0].Actor.Crystal,
+                  Petroleum: account[0].Actor.Petroleum
+                },
+                IronMine: {
+                  Name: account[0].IronMine.Name,
+                  Level: account[0].IronMine.Level,
+                  ProduceRate: account[0].IronMine.ProduceRate,
+                  UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal
+                },
+                IronStorage: {
+                  Name: account[0].IronStorage.Name,
+                  Level: account[0].IronStorage.Level,
+                  Capacity: account[0].IronStorage.Capacity,
+                  UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
+                },
+                CrystalMine: {
+                  Name: account[0].CrystalMine.Name,
+                  Level: account[0].CrystalMine.Level,
+                  ProduceRate: account[0].CrystalMine.ProduceRate,
+                  UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
+                },
+                CrystalStorage: {
+                  Name: account[0].CrystalStorage.Name,
+                  Level: account[0].CrystalStorage.Level,
+                  Capacity: account[0].CrystalStorage.Capacity,
+                  UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal
+                },
+                PetroleumMine: {
+                  Name: account[0].PetroleumMine.Name,
+                  Level: account[0].PetroleumMine.Level,
+                  ProduceRate: account[0].PetroleumMine.ProduceRate,
+                  UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
+                },
+                PetroleumStorage: {
+                  Name: account[0].PetroleumStorage.Name,
+                  Level: account[0].PetroleumStorage.Level,
+                  Capacity: account[0].PetroleumStorage.Capacity,
+                  UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
+                  UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+                }
+              }
+            ).exec().then(() => {
+                resolve(account[0]);
+            }).catch((err) => {
+                reject("There was an error verifying the user:" + err);
+            })
+          } else {
+            // Passwords do not match, reject the promise with an error message
+            reject(`Incorrect Password for user: ${accountData.userName}`);
+          }
+        }).catch((err) => {
+          // Handle any errors that occur during the comparison
+          reject(`Error checking password for user ${accountData.userName}: ${err}`);
+        });
+      }
+    }).catch((err) => {
+        reject(`Unable to find user - ${accountData.userName}: ${err}`);
+    });
+
+  });
+}
+
 function refreshAccount(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ userName: accountData.userName }).exec()
@@ -798,4 +883,4 @@ function upgradePetroleumStorage(accountData){
   });
 }
 
-module.exports = { initialize, registerAccount, loginAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage};
