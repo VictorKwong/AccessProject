@@ -412,6 +412,16 @@ app.get("/information", ensureLogin, function(req,res){
     res.render("information");
 })
 
+app.post("/information", function(req, res) {
+    authData.changePasswordAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
+        res.render('information', {successMessage: "Successful change Password!"});
+    })
+    .catch(function(err){
+        res.render('information', {errorMessage: err, userName: req.session.user.userName});
+    });
+});
+
+
 app.get('/logout', function(req, res){
     req.session.reset();
     res.redirect('/');

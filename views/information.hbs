@@ -5,13 +5,14 @@
 {{#if errorMessage}}
     <div class="alert alert-danger"> <strong>Error:</strong> {{errorMessage}}</div>
 {{else if successMessage}}
-    <div class="alert alert-success"> <strong>Success:</strong> {{successMessage}}</div><a class="btn btn-success pull-right" href="/login">&nbsp;&nbsp;&nbsp;Proceed to Log in&nbsp;&nbsp;&nbsp;</a><br /><br /><br />
+    <div class="alert alert-success"> <strong>Success:</strong> {{successMessage}}</div>
 {{/if}}
 
 <form method="post" action="/information">
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
+                <p>Old password</p>
                 <input class="form-control" id="password" name="password" type="password" placeholder="Password" required>
             </div>
         </div>
@@ -19,14 +20,16 @@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <input class="form-control" id="newPassword" name="newPassword" type="password" placeholder="Password" required>
+                <p>New password</p>
+                <input class="form-control" id="newPassword" name="newPassword" type="password" placeholder="New password" required>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
-                <input class="form-control" id="confirmNewPassword" name="confirmNewPassword" type="password" placeholder="Confirm Password" required>
+                <p>Confirm New password</p>
+                <input class="form-control" id="confirmNewPassword" name="confirmNewPassword" type="password" placeholder="Confirm new password" required>
             </div>
         </div>
     </div>
