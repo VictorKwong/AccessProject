@@ -238,9 +238,10 @@ app.get("/account", ensureLogin, function(req,res){
                 CrystalStorage: req.session.user.CrystalStorage,
                 PetroleumMine: req.session.user.PetroleumMine,
                 PetroleumStorage: req.session.user.PetroleumStorage,
+                successMessage: undefined
             });
         }).catch((err) => {
-            res.render('login', {errorMessage: err, userName: req.body.userName});
+            res.render('login', {errorMessage: err, userName: req.session.user.userName});
         })
     })
 })
