@@ -50,6 +50,9 @@ app.engine('.hbs', exphbs.engine({
     layoutsDir: path.join(__dirname, "/views/layouts/")
  }));
 
+ //Image plug
+ app.use(express.static("images"));
+
  app.set('view engine', '.hbs');
 
  app.use("/public", express.static(path.join(__dirname, "/public")));

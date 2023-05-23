@@ -20,5 +20,6 @@ Support Tools:
 Direction:
 Daily Reward = Reset everyday at LOCAL time | First register account can claim their daily reward immediately. (Done)
 Express Handlebars = Helpers numbers separate by comma (1000 -> 1,000).
+app.use(express.static("images")) - Inserting Images through hbs (Done)
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)
