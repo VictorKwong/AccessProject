@@ -3,12 +3,23 @@ var Schema = mongoose.Schema;
 
 const bcrypt = require('bcryptjs');
 
+//Set daily reward-----------
+var todayDate = new Date();
+todayDate.setDate(todayDate.getDate() - 1);
+var previousDate = todayDate.toLocaleDateString();
+//---------------------------
+
+
 var userSchema = new Schema({
     "userName":  {
       type: String,
       unique: true
     },
     "password": String,
+    "rewardDate" : {
+      type: Date,
+      default: previousDate
+    },
     "Actor": {
       "Iron": {
         type: Number,
@@ -212,7 +223,9 @@ function loginAccount(accountData){
         bcrypt.compare(accountData.password, account[0].password).then((result) => {
           if (result) {
             User.updateOne(
-              { userName: account[0].userName,
+              { _id: account[0]._id,
+                userName: account[0].userName,
+                rewardDate: account[0].rewardDate,
                 Actor: {
                   Iron: account[0].Actor.Iron,
                   Crystal: account[0].Actor.Crystal,
@@ -337,7 +350,9 @@ function refreshAccount(accountData){
         reject("Unable to find user: " + accountData.userName);
       }else{
         User.updateOne(
-          { userName: account[0].userName,
+          { _id: account[0]._id,
+            userName: account[0].userName,
+            rewardDate: account[0].rewardDate,
             Actor: {
               Iron: account[0].Actor.Iron,
               Crystal: account[0].Actor.Crystal,
@@ -409,6 +424,7 @@ function upgradeIronMine(accountData){
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal,
@@ -483,6 +499,7 @@ function upgradeCrystalMine(accountData){
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].CrystalMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].CrystalMine.UpgradeCost_Crystal,
@@ -557,6 +574,7 @@ function upgradePetroleumMine(accountData){
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].PetroleumMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].PetroleumMine.UpgradeCost_Crystal,
@@ -632,6 +650,7 @@ function upgradeIronStorage(accountData){
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].IronStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].IronStorage.UpgradeCost_Crystal,
@@ -706,6 +725,7 @@ function upgradeCrystalStorage(accountData){
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].CrystalStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].CrystalStorage.UpgradeCost_Crystal,
@@ -780,6 +800,7 @@ function upgradePetroleumStorage(accountData){
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal,
@@ -845,4 +866,159 @@ function upgradePetroleumStorage(accountData){
   });
 }
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage};
+// Claim the daily reward
+function claimDailyReward(accountData) {
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+          const today = new Date().toLocaleDateString();
+          console.log("first: " + account[0].rewardDate !== previousDate);
+          console.log("Second: " + today === account[0].rewardDate.toLocaleDateString());
+          console.log(today)
+          console.log(account[0].rewardDate.toLocaleDateString())
+          if ((account[0].rewardDate !== previousDate) && (today === account[0].rewardDate.toLocaleDateString())){
+            reject("You have already claimed the reward today.");
+          }else{
+            const updateAccount = { 
+              _id: account[0]._id,
+              userName: account[0].userName,
+              rewardDate: today,
+              Actor: {
+                Iron: account[0].Actor.Iron + 125,
+                Crystal: account[0].Actor.Crystal + 125,
+                Petroleum: account[0].Actor.Petroleum + 125
+              },
+              IronMine: {
+                Name: account[0].IronMine.Name,
+                Level: account[0].IronMine.Level,
+                ProduceRate: account[0].IronMine.ProduceRate,
+                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
+              },
+              IronStorage: {
+                Name: account[0].IronStorage.Name,
+                Level: account[0].IronStorage.Level,
+                Capacity: account[0].IronStorage.Capacity,
+                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
+              },
+              CrystalMine: {
+                Name: account[0].CrystalMine.Name,
+                Level: account[0].CrystalMine.Level,
+                ProduceRate: account[0].CrystalMine.ProduceRate,
+                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
+              },
+              CrystalStorage: {
+                Name: account[0].CrystalStorage.Name,
+                Level: account[0].CrystalStorage.Level,
+                Capacity: account[0].CrystalStorage.Capacity,
+                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
+              },
+              PetroleumMine: {
+                Name: account[0].PetroleumMine.Name,
+                Level: account[0].PetroleumMine.Level,
+                ProduceRate: account[0].PetroleumMine.ProduceRate,
+                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
+              },
+              PetroleumStorage: {
+                Name: account[0].PetroleumStorage.Name,
+                Level: account[0].PetroleumStorage.Level,
+                Capacity: account[0].PetroleumStorage.Capacity,
+                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+              }
+            }
+            User.updateOne(
+              { _id: accountData._id }, updateAccount
+            ).exec().then(() => {
+                resolve(updateAccount);
+            }).catch((err) => {
+                reject("Claim reward cause error:" + err);
+            })
+          }
+    }).catch((err) => {
+        reject(`Unable to find user - ${accountData.userName}: ${err}`);
+    });
+  })
+}
+
+//Need QC
+function collectAllResource(accountData){
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+          if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
+              (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
+            const updateAccount = { 
+              _id: account[0]._id,
+              userName: account[0].userName,
+              rewardDate: account[0].rewardDate,
+              Actor: {
+                Iron: account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron,
+                Crystal: account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal,
+                Petroleum: account[0].Actor.Petroleum
+              },
+              IronMine: {
+                Name: account[0].IronMine.Name,
+                Level: account[0].IronMine.Level,
+                ProduceRate: account[0].IronMine.ProduceRate,
+                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
+              },
+              IronStorage: {
+                Name: account[0].IronStorage.Name,
+                Level: account[0].IronStorage.Level,
+                Capacity: account[0].IronStorage.Capacity,
+                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
+              },
+              CrystalMine: {
+                Name: account[0].CrystalMine.Name,
+                Level: account[0].CrystalMine.Level,
+                ProduceRate: account[0].CrystalMine.ProduceRate,
+                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
+              },
+              CrystalStorage: {
+                Name: account[0].CrystalStorage.Name,
+                Level: account[0].CrystalStorage.Level,
+                Capacity: account[0].CrystalStorage.Capacity,
+                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
+              },
+              PetroleumMine: {
+                Name: account[0].PetroleumMine.Name,
+                Level: account[0].PetroleumMine.Level,
+                ProduceRate: account[0].PetroleumMine.ProduceRate,
+                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
+              },
+              PetroleumStorage: {
+                Name: account[0].PetroleumStorage.Name,
+                Level: account[0].PetroleumStorage.Level + 1,
+                Capacity: account[0].PetroleumStorage.Capacity + account[0].PetroleumStorage.Capacity,
+                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron,
+                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal
+              }
+            }
+            User.updateOne(
+              { _id: accountData._id }, updateAccount
+            ).exec().then(() => {
+                resolve(updateAccount);
+            }).catch((err) => {
+                reject("Upgrade cause error:" + err);
+            })
+          } else {
+            reject(`Not enough resource: ${accountData.userName}`);
+          }
+    }).catch((err) => {
+        reject(`Unable to find user - ${accountData.userName}: ${err}`);
+    });
+
+  });
+}
+
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, collectAllResource};

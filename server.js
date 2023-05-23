@@ -247,7 +247,28 @@ app.get("/account", ensureLogin, function(req,res){
 
 /*Upgrade*/
 app.post("/account/:upgrade", ensureLogin, function(req, res) {
-    if(req.params.upgrade === "upgradeIronMine"){
+    if(req.params.upgrade === "claimDailyReward"){
+        return new Promise((resolve, reject) => {
+            authData.claimDailyReward(req.session.user).then((user) => {
+                req.session.user.Actor.Iron = user.Actor.Iron
+                req.session.user.Actor.Crystal = user.Actor.Crystal
+                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    PetroleumMine: req.session.user.PetroleumMine,
+                    PetroleumStorage: req.session.user.PetroleumStorage,
+                    errorMessage: err
+                })
+            })
+        })
+    }else if(req.params.upgrade === "upgradeIronMine"){
         return new Promise((resolve, reject) => {
             authData.upgradeIronMine(req.session.user).then((user) => {
                 req.session.user.Actor.Iron = user.Actor.Iron

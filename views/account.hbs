@@ -13,6 +13,14 @@
 <p>Petroleum: {{Actor.Petroleum}}</p>
 
 <div class="border border-dark">
+    <p>Daily Reward</p>
+    
+    <form action="/account/claimDailyReward" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Daily Reward!"></input>
+    </form>
+</div>
+
+<div class="border border-dark">
     <p>{{IronMine.Name}} - Lv {{IronMine.Level}}</p>
 
     <p>Produce Rate: {{IronMine.ProduceRate}}</p>
