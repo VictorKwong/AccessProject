@@ -107,6 +107,7 @@ app.post("/login", function(req, res) {
             req.session.user = {
                 _id: user._id,
                 userName: user.userName,
+                loginBonus: user.loginBonus,
                 Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
@@ -183,6 +184,7 @@ app.get("/account", ensureLogin, function(req,res){
             req.session.user = {
                 _id: user._id,
                 userName: user.userName,
+                loginBonus: user.loginBonus,
                 Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
@@ -256,6 +258,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Actor.Iron = user.Actor.Iron
                 req.session.user.Actor.Crystal = user.Actor.Crystal
                 req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.loginBonus = user.loginBonus
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,

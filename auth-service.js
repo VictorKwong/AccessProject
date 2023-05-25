@@ -20,6 +20,10 @@ var userSchema = new Schema({
       type: Date,
       default: previousDate
     },
+    "loginBonus" : {
+      type: Number,
+      default: 0
+    },
     "Actor": {
       "Iron": {
         type: Number,
@@ -313,6 +317,7 @@ function upgradeIronMine(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal,
@@ -388,6 +393,7 @@ function upgradeCrystalMine(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].CrystalMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].CrystalMine.UpgradeCost_Crystal,
@@ -463,6 +469,7 @@ function upgradePetroleumMine(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].PetroleumMine.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].PetroleumMine.UpgradeCost_Crystal,
@@ -539,6 +546,7 @@ function upgradeIronStorage(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].IronStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].IronStorage.UpgradeCost_Crystal,
@@ -614,6 +622,7 @@ function upgradeCrystalStorage(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].CrystalStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].CrystalStorage.UpgradeCost_Crystal,
@@ -689,6 +698,7 @@ function upgradePetroleumStorage(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal,
@@ -763,14 +773,23 @@ function claimDailyReward(accountData) {
           if ((account[0].rewardDate !== previousDate) && (today === account[0].rewardDate.toLocaleDateString())){
             reject("You have already claimed the reward today.");
           }else{
+            //----Count Bonus----
+            let bonusCount = account[0].loginBonus
+            if(account[0].rewardDate === previousDate){
+              ++bonusCount;
+            }else{
+              bonusCount = 1;
+            }
+            //---------------------
             const updateAccount = { 
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: today,
+              loginBonus: bonusCount,
               Actor: {
-                Iron: account[0].Actor.Iron + 125,
-                Crystal: account[0].Actor.Crystal + 125,
-                Petroleum: account[0].Actor.Petroleum + 125
+                Iron: account[0].Actor.Iron + (125 * bonusCount),
+                Crystal: account[0].Actor.Crystal + (125 * bonusCount),
+                Petroleum: account[0].Actor.Petroleum + (125 * bonusCount)
               },
               IronMine: {
                 Name: account[0].IronMine.Name,
@@ -840,6 +859,7 @@ function collectAllResource(accountData){
               _id: account[0]._id,
               userName: account[0].userName,
               rewardDate: account[0].rewardDate,
+              loginBonus: account[0].loginBonus,
               Actor: {
                 Iron: account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron,
                 Crystal: account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal,
