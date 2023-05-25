@@ -48,10 +48,7 @@ app.engine('.hbs', exphbs.engine({
             return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
         },
         toAbbr: function(number, precision) {
-
-            if(precision === undefined){
-                precision = 3;
-            }
+            precision = 3;
             number = Number(number);
    
             // 2 decimal places => 100, 3 => 1000, etc.
