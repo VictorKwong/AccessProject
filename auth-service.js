@@ -770,13 +770,15 @@ function claimDailyReward(accountData) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
           const today = new Date().toLocaleDateString();
-          if ((account[0].rewardDate !== previousDate) && (today === account[0].rewardDate.toLocaleDateString())){
+          if ((account[0].rewardDate.toLocaleDateString() !== previousDate) && (today === account[0].rewardDate.toLocaleDateString())){
             reject("You have already claimed the reward today.");
           }else{
-            //----Count Bonus----
+            //----Count Bonus, keep it as 20----
             let bonusCount = account[0].loginBonus
-            if(account[0].rewardDate === previousDate){
+            if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount < 20){
               ++bonusCount;
+            }else if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount >= 20){
+              bonusCount = 20;
             }else{
               bonusCount = 1;
             }
@@ -787,9 +789,9 @@ function claimDailyReward(accountData) {
               rewardDate: today,
               loginBonus: bonusCount,
               Actor: {
-                Iron: account[0].Actor.Iron + (125 * bonusCount),
-                Crystal: account[0].Actor.Crystal + (125 * bonusCount),
-                Petroleum: account[0].Actor.Petroleum + (125 * bonusCount)
+                Iron: account[0].Actor.Iron + (7000 * bonusCount),
+                Crystal: account[0].Actor.Crystal + (7000 * bonusCount),
+                Petroleum: account[0].Actor.Petroleum + (3500 * bonusCount)
               },
               IronMine: {
                 Name: account[0].IronMine.Name,
@@ -837,6 +839,7 @@ function claimDailyReward(accountData) {
             User.updateOne(
               { _id: accountData._id }, updateAccount
             ).exec().then(() => {
+                //account, Iron Bonus, Crystal Bonus, Petroleum Bonus
                 resolve(updateAccount);
             }).catch((err) => {
                 reject("Claim reward cause error:" + err);

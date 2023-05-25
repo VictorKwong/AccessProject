@@ -19,8 +19,9 @@ Support Tools:
 
 Direction:
 Daily Reward = Reset everyday at LOCAL time | First register account can claim their daily reward immediately. (Done)
-Daily Reward Bonus 20 Days stack max (Continuously Login x20)
-Express Handlebars = Helpers numbers separate by comma (1000 -> 1,000).
+Daily Reward Bonus 20 Days stack max (Continuously Login x20) (Done)
+Shows daily reward claim bonus (Partly Done, variables to confirm changes)
+Express Handlebars = Helpers numbers separate by comma (1000 -> 1,000) and Abbreviate numbers (k,m,b).
 app.use(express.static("images")) - Inserting Images through hbs (Done)
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)

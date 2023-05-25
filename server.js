@@ -42,7 +42,33 @@ app.engine('.hbs', exphbs.engine({
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2,'0')}`;
         },
         sum: function(a, b) {
-              return a + b;
+            return a + b;
+        },
+        addCommas: function(num) {
+            return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+        },
+        toAbbr: function(number, precision) {
+
+            if(precision === undefined){
+                precision = 3;
+            }
+            number = Number(number);
+   
+            // 2 decimal places => 100, 3 => 1000, etc.
+            precision = Math.pow(10, precision);
+            var abbr = ['k', 'm', 'b', 't', 'q'];
+            var len = abbr.length - 1;
+          
+            while (len >= 0) {
+              var size = Math.pow(10, (len + 1) * 3);
+              if (size <= (number + 1)) {
+                number = Math.round(number * precision / size) / precision;
+                number += abbr[len];
+                break;
+              }
+              len--;
+            }
+            return number;
         }
         
     },
@@ -259,6 +285,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Actor.Crystal = user.Actor.Crystal
                 req.session.user.Actor.Petroleum = user.Actor.Petroleum
                 req.session.user.loginBonus = user.loginBonus
+
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
@@ -268,7 +295,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
-                    successMessage: "Daily Reward Claimed!"
+                    successMessage: "Daily Reward Claimed! Iron +" + 7000 * user.loginBonus +", Crystal +" + 7000 * user.loginBonus + ", Petroleum +" + 3500 * user.loginBonus
                 })
             }).catch((err) => {
                 res.render('account', {
