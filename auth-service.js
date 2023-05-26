@@ -173,6 +173,9 @@ var userSchema = new Schema({
         default: 10,
       }
     },
+    "ItemBag":{
+      
+    }
 });
 
 let User;
