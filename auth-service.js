@@ -174,7 +174,30 @@ var userSchema = new Schema({
       }
     },
     "ItemBag":{
-      
+      "Resource" : {
+        "1,000 Iron": {
+          "Name": { type: String, default: "1,000 Iron" },
+          "Amount": { type: Number, default: 10 }
+        },
+        "1,000 Crystal": {
+          "Name": { type: String, default: "1,000 Crystal" },
+          "Amount": { type: Number, default: 10 }
+        },
+        "200 Petroleum": {
+          "Name": { type: String, default: "200 Petroleum" },
+          "Amount": { type: Number, default: 10 }
+        },
+      },
+      "Materials" : {
+        "Textile Fibers": {
+          "Name": { type: String, default: "Textile Fibers" },
+          "Amount": { type: Number, default: 2 }
+        },
+        "Carbon Steel": {
+          "Name": { type: String, default: "Carbon Steel" },
+          "Amount": { type: Number, default: 1 }
+        },
+      }
     }
 });
 

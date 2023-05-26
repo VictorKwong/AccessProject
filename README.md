@@ -23,6 +23,6 @@ Daily Reward Bonus 20 Days stack max (Continuously Login x20) (Done)
 Shows daily reward claim bonus (Partly Done, variables to confirm changes)
 Express Handlebars = Helpers numbers separate by comma (1000 -> 1,000) and Abbreviate numbers (k,m,b).
 app.use(express.static("images")) - Inserting Images through hbs (Partly Done - Finding images)
-Add item slot - Item Boost or Instant use Item - Separate Categories = | Item | Buff | Others etc..
+Add item slot - Item Boost or Instant use Item - Separate Categories = | Resource | Materials | Others etc..
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)
