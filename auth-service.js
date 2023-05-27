@@ -175,25 +175,25 @@ var userSchema = new Schema({
     },
     "ItemBag":{
       "Resource" : {
-        "1,000 Iron": {
+        "Iron1000": {
           "Name": { type: String, default: "1,000 Iron" },
           "Amount": { type: Number, default: 10 }
         },
-        "1,000 Crystal": {
+        "Crystal1000": {
           "Name": { type: String, default: "1,000 Crystal" },
           "Amount": { type: Number, default: 10 }
         },
-        "200 Petroleum": {
+        "Petroleum200": {
           "Name": { type: String, default: "200 Petroleum" },
           "Amount": { type: Number, default: 10 }
         },
       },
       "Materials" : {
-        "Textile Fibers": {
+        "TextileFibers": {
           "Name": { type: String, default: "Textile Fibers" },
           "Amount": { type: Number, default: 2 }
         },
-        "Carbon Steel": {
+        "CarbonSteel": {
           "Name": { type: String, default: "Carbon Steel" },
           "Amount": { type: Number, default: 1 }
         },
@@ -466,6 +466,17 @@ function upgradeCrystalMine(accountData){
                 Capacity: account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(
@@ -542,6 +553,17 @@ function upgradePetroleumMine(accountData){
                 Capacity: account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(
@@ -619,6 +641,17 @@ function upgradeIronStorage(accountData){
                 Capacity: account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(
@@ -695,6 +728,17 @@ function upgradeCrystalStorage(accountData){
                 Capacity: account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(
@@ -771,6 +815,17 @@ function upgradePetroleumStorage(accountData){
                 Capacity: account[0].PetroleumStorage.Capacity + account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(
@@ -860,6 +915,17 @@ function claimDailyReward(accountData) {
                 Capacity: account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(
@@ -935,6 +1001,17 @@ function collectAllResource(accountData){
                 Capacity: account[0].PetroleumStorage.Capacity + account[0].PetroleumStorage.Capacity,
                 UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron,
                 UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal
+              },
+              ItemBag: {
+                Resource : {
+                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+                },
+                Materials : {
+                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+                }
               }
             }
             User.updateOne(

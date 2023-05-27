@@ -116,7 +116,15 @@ function onHttpStart() {
 
 app.get("/", function(req,res){
     res.render('index', {
-        // data: someData,
+        data: req.session.user,
+        Actor: req.session.user.Actor,
+        IronMine: req.session.user.IronMine,
+        IronStorage: req.session.user.IronStorage,
+        CrystalMine: req.session.user.CrystalMine,
+        CrystalStorage: req.session.user.CrystalStorage,
+        PetroleumMine: req.session.user.PetroleumMine,
+        PetroleumStorage: req.session.user.PetroleumStorage,
+        ItemBag: req.session.user.ItemBag
     });
 });
 
@@ -177,6 +185,17 @@ app.post("/login", function(req, res) {
                     "Capacity": user.PetroleumStorage.Capacity,
                     "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                },
+                ItemBag: {
+                    Resource : {
+                        "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
+                        "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
+                        "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
+                    },
+                    Materials : {
+                        "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
+                        "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
+                    }
                 }
             }
 
@@ -254,6 +273,17 @@ app.get("/account", ensureLogin, function(req,res){
                     "Capacity": user.PetroleumStorage.Capacity,
                     "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                },
+                ItemBag: {
+                    Resource : {
+                        "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
+                        "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
+                        "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
+                    },
+                    Materials : {
+                        "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
+                        "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
+                    }
                 }
             }
 
@@ -265,7 +295,8 @@ app.get("/account", ensureLogin, function(req,res){
                 CrystalMine: req.session.user.CrystalMine,
                 CrystalStorage: req.session.user.CrystalStorage,
                 PetroleumMine: req.session.user.PetroleumMine,
-                PetroleumStorage: req.session.user.PetroleumStorage
+                PetroleumStorage: req.session.user.PetroleumStorage,
+                ItemBag : req.session.user.ItemBag
             });
         }).catch((err) => {
             res.render('login', {errorMessage: err, userName: req.session.user.userName});
@@ -292,6 +323,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     successMessage: "Daily Reward Claimed! Iron +" + 7000 * user.loginBonus +", Crystal +" + 7000 * user.loginBonus + ", Petroleum +" + 3500 * user.loginBonus
                 })
             }).catch((err) => {
@@ -304,6 +336,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
@@ -331,6 +364,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
@@ -357,6 +391,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
@@ -383,6 +418,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
@@ -409,6 +445,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
@@ -435,6 +472,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
@@ -461,6 +499,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     CrystalStorage: req.session.user.CrystalStorage,
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
                     errorMessage: err
                 })
             })
