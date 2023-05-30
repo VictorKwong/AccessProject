@@ -9,9 +9,9 @@
 <p>Login Reward Bonus: {{data.loginBonus}}</p>
 
 <div class="d-flex justify-content-end">
-    <div class="p-2" title="Iron: {{Actor.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/> {{addCommas Actor.Iron}}</div>
-    <div class="p-2" title="Crystal: {{Actor.Crystal}}">Crystal: {{addCommas Actor.Crystal}}</div>
-    <div class="p-2" title="Petroleum: {{Actor.Petroleum}}">Petroleum: {{addCommas Actor.Petroleum}}</div>
+    <div class="p-2" title="Iron: {{addCommas Actor.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/> {{addCommas Actor.Iron}}</div>
+    <div class="p-2" title="Crystal: {{addCommas Actor.Crystal}}">Crystal: {{addCommas Actor.Crystal}}</div>
+    <div class="p-2" title="Petroleum: {{addCommas Actor.Petroleum}}">Petroleum: {{addCommas Actor.Petroleum}}</div>
 </div>
 
 <div class="border border-dark">
@@ -104,3 +104,29 @@
     </form>
 </div>
 
+<div>
+    <h2>Item Bags</h2>
+</div>
+
+<div>
+    <h2>Resource</h2>
+        {{#each ItemBag.Resource}}
+            {{#if Amount}}
+                <p>{{Name}}</p>
+                <p>{{Amount}}</p>
+            {{else}}
+                <p>Should not display</p>
+            {{/if}}
+        {{/each}}
+
+    <h2>Materials</h2>
+        {{#each ItemBag.Materials}}
+            {{#if Amount}}
+                <p>{{Name}}</p>
+                <p>{{Amount}}</p>
+            {{else}}
+                <p>Should not display</p>
+            {{/if}}
+        {{/each}}
+
+</div>

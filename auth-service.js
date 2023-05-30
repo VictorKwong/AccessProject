@@ -177,25 +177,25 @@ var userSchema = new Schema({
       "Resource" : {
         "Iron1000": {
           "Name": { type: String, default: "1,000 Iron" },
-          "Amount": { type: Number, default: 10 }
+          "Amount": { type: Number, default: 0 }
         },
         "Crystal1000": {
           "Name": { type: String, default: "1,000 Crystal" },
-          "Amount": { type: Number, default: 10 }
+          "Amount": { type: Number, default: 0 }
         },
         "Petroleum200": {
           "Name": { type: String, default: "200 Petroleum" },
-          "Amount": { type: Number, default: 10 }
+          "Amount": { type: Number, default: 0 }
         },
       },
       "Materials" : {
         "TextileFibers": {
           "Name": { type: String, default: "Textile Fibers" },
-          "Amount": { type: Number, default: 2 }
+          "Amount": { type: Number, default: 0 }
         },
         "CarbonSteel": {
           "Name": { type: String, default: "Carbon Steel" },
-          "Amount": { type: Number, default: 1 }
+          "Amount": { type: Number, default: 0 }
         },
       }
     }
@@ -252,6 +252,15 @@ function loginAccount(accountData){
       }else{
         bcrypt.compare(accountData.password, account[0].password).then((result) => {
           if (result) {
+              //----Count Bonus, keep it as 20----
+              let bonusCount = account[0].loginBonus
+              if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount < 20){
+                //do nothing
+              }else if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount >= 20){
+                account[0].loginBonus = 20;
+              }else{
+                account[0].loginBonus = 0;
+              }
             resolve(account[0]);
           } else {
             // Passwords do not match, reject the promise with an error message

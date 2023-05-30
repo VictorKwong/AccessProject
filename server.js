@@ -116,15 +116,15 @@ function onHttpStart() {
 
 app.get("/", function(req,res){
     res.render('index', {
-        data: req.session.user,
-        Actor: req.session.user.Actor,
-        IronMine: req.session.user.IronMine,
-        IronStorage: req.session.user.IronStorage,
-        CrystalMine: req.session.user.CrystalMine,
-        CrystalStorage: req.session.user.CrystalStorage,
-        PetroleumMine: req.session.user.PetroleumMine,
-        PetroleumStorage: req.session.user.PetroleumStorage,
-        ItemBag: req.session.user.ItemBag
+        // data: req.session.user,
+        // Actor: req.session.user.Actor,
+        // IronMine: req.session.user.IronMine,
+        // IronStorage: req.session.user.IronStorage,
+        // CrystalMine: req.session.user.CrystalMine,
+        // CrystalStorage: req.session.user.CrystalStorage,
+        // PetroleumMine: req.session.user.PetroleumMine,
+        // PetroleumStorage: req.session.user.PetroleumStorage,
+        // ItemBag: req.session.user.ItemBag
     });
 });
 
