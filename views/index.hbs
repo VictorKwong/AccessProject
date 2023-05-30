@@ -4,3 +4,20 @@
 <div>
     <h2>Item Bags</h2>
 </div>
+
+<div>
+    {{#if ItemBag}}
+    <h2>Resource</h2>
+        {{#each ItemBag.Resource}}
+            <p>{{Name}}</p>
+            <p>{{Amount}}</p>
+        {{/each}}
+    <h2>Materials</h2>
+        {{#each ItemBag.Materials}}
+            <p>{{Name}}</p>
+            <p>{{Amount}}</p>
+        {{/each}}
+    {{else}}
+        <div>No Items</div>
+    {{/if}}
+</div>
