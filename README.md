@@ -26,3 +26,5 @@ Direction:
 - Add item slot - Item Boost or Instant use Item - Separate Categories = | Resource | Materials | Others etc..
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)
+
+[ ] Add Digital Clock system to the main.hbs - digital clock service js

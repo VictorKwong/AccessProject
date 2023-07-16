@@ -1,3 +1,33 @@
 <br>
 <h1>Hello World</h1>
 
+<div>
+    <h3>Making a digital clock</h3>
+    <div id="clock-js"></div>
+
+</div>
+<script>
+    function updateClock() {
+        let today = new Date();
+        let hours = today.getHours();
+        let minutes = today.getMinutes().toString().padStart(2, '0');
+        let seconds = today.getSeconds().toString().padStart(2, '0');
+
+        let ampm;
+        if(hours > 12){
+            hours = hours - 12;
+            ampm = "PM";
+        }else{
+            ampm = "AM";
+        }
+        hours = hours.toString().padStart(2, '0');
+        const timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+        document.getElementById('clock-js').innerText = timeString;
+    }
+
+    // Update the clock every second
+    setInterval(updateClock, 1000);
+
+    // Initial call to display the clock immediately
+    updateClock();
+</script>

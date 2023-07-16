@@ -177,15 +177,15 @@ var userSchema = new Schema({
       "Resource" : {
         "Iron1000": {
           "Name": { type: String, default: "1,000 Iron" },
-          "Amount": { type: Number, default: 0 }
+          "Amount": { type: Number, default: 10 }
         },
         "Crystal1000": {
           "Name": { type: String, default: "1,000 Crystal" },
-          "Amount": { type: Number, default: 0 }
+          "Amount": { type: Number, default: 10 }
         },
         "Petroleum200": {
           "Name": { type: String, default: "200 Petroleum" },
-          "Amount": { type: Number, default: 0 }
+          "Amount": { type: Number, default: 10 }
         },
       },
       "Materials" : {
