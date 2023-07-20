@@ -348,63 +348,18 @@ function upgradeIronMine(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: account[0].rewardDate,
-              loginBonus: account[0].loginBonus,
-              Actor: {
-                Iron: account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron,
-                Crystal: account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal,
-                Petroleum: account[0].Actor.Petroleum
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level + 1,
-                ProduceRate: account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level,
-                Capacity: account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level,
-                Capacity: account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level,
-                ProduceRate: account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level,
-                Capacity: account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
-              }
-            }
+
+            accountData.Actor.Iron -= account[0].IronMine.UpgradeCost_Iron;
+            accountData.Actor.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
+            accountData.IronMine.Level += 1;
+            accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
+            accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
+            accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
+
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })

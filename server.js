@@ -139,6 +139,7 @@ app.post("/login", function(req, res) {
                 _id: user._id,
                 userName: user.userName,
                 loginBonus: user.loginBonus,
+                rewardDate: user.rewardDate,
                 Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
@@ -226,6 +227,7 @@ app.get("/account", ensureLogin, function(req,res){
             req.session.user = {
                 _id: user._id,
                 userName: user.userName,
+                rewardDate: user.rewardDate,
                 loginBonus: user.loginBonus,
                 Actor: {
                     Iron: user.Actor.Iron,
