@@ -409,74 +409,18 @@ function upgradePetroleumMine(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].PetroleumMine.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].PetroleumMine.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: account[0].rewardDate,
-              loginBonus: account[0].loginBonus,
-              Actor: {
-                Iron: account[0].Actor.Iron - account[0].PetroleumMine.UpgradeCost_Iron,
-                Crystal: account[0].Actor.Crystal - account[0].PetroleumMine.UpgradeCost_Crystal,
-                Petroleum: account[0].Actor.Petroleum
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level,
-                ProduceRate: account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level,
-                Capacity: account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level,
-                Capacity: account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level + 1,
-                ProduceRate: account[0].PetroleumMine.ProduceRate + account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron + account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal + account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level,
-                Capacity: account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
-              },
-              ItemBag: {
-                Resource : {
-                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-                },
-                Materials : {
-                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-                }
-              }
-            }
+
+                accountData.Actor.Iron -= account[0].PetroleumMine.UpgradeCost_Iron;
+                accountData.Actor.Crystal -= account[0].PetroleumMine.UpgradeCost_Crystal;
+                accountData.PetroleumMine.Level += 1;
+                accountData.PetroleumMine.ProduceRate = account[0].PetroleumMine.ProduceRate + account[0].PetroleumMine.ProduceRate;
+                accountData.PetroleumMine.UpgradeCost_Iron = account[0].PetroleumMine.UpgradeCost_Iron + account[0].PetroleumMine.UpgradeCost_Iron;
+                accountData.PetroleumMine.UpgradeCost_Crystal = account[0].PetroleumMine.UpgradeCost_Crystal + account[0].PetroleumMine.UpgradeCost_Crystal;
+
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })
@@ -497,74 +441,18 @@ function upgradeIronStorage(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].IronStorage.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].IronStorage.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: account[0].rewardDate,
-              loginBonus: account[0].loginBonus,
-              Actor: {
-                Iron: account[0].Actor.Iron - account[0].IronStorage.UpgradeCost_Iron,
-                Crystal: account[0].Actor.Crystal - account[0].IronStorage.UpgradeCost_Crystal,
-                Petroleum: account[0].Actor.Petroleum
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level,
-                ProduceRate: account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level + 1,
-                Capacity: account[0].IronStorage.Capacity + account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron + account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal + account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level,
-                Capacity: account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level,
-                ProduceRate: account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level,
-                Capacity: account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
-              },
-              ItemBag: {
-                Resource : {
-                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-                },
-                Materials : {
-                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-                }
-              }
-            }
+
+                accountData.Actor.Iron -= account[0].IronStorage.UpgradeCost_Iron;
+                accountData.Actor.Crystal -= account[0].IronStorage.UpgradeCost_Crystal;
+                accountData.IronStorage.Level += 1;
+                accountData.IronStorage.ProduceRate = account[0].IronStorage.ProduceRate + account[0].IronStorage.ProduceRate;
+                accountData.IronStorage.UpgradeCost_Iron = account[0].IronStorage.UpgradeCost_Iron + account[0].IronStorage.UpgradeCost_Iron;
+                accountData.IronStorage.UpgradeCost_Crystal = account[0].IronStorage.UpgradeCost_Crystal + account[0].IronStorage.UpgradeCost_Crystal;
+
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })
@@ -584,74 +472,18 @@ function upgradeCrystalStorage(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].CrystalStorage.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].CrystalStorage.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: account[0].rewardDate,
-              loginBonus: account[0].loginBonus,
-              Actor: {
-                Iron: account[0].Actor.Iron - account[0].CrystalStorage.UpgradeCost_Iron,
-                Crystal: account[0].Actor.Crystal - account[0].CrystalStorage.UpgradeCost_Crystal,
-                Petroleum: account[0].Actor.Petroleum
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level,
-                ProduceRate: account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level,
-                Capacity: account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level + 1,
-                Capacity: account[0].CrystalStorage.Capacity + account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron + account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal + account[0].CrystalStorage.UpgradeCost_Crystal
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level,
-                ProduceRate: account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level,
-                Capacity: account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
-              },
-              ItemBag: {
-                Resource : {
-                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-                },
-                Materials : {
-                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-                }
-              }
-            }
+
+                accountData.Actor.Iron -= account[0].CrystalStorage.UpgradeCost_Iron;
+                accountData.Actor.Crystal -= account[0].CrystalStorage.UpgradeCost_Crystal;
+                accountData.CrystalStorage.Level += 1;
+                accountData.CrystalStorage.ProduceRate = account[0].CrystalStorage.ProduceRate + account[0].CrystalStorage.ProduceRate;
+                accountData.CrystalStorage.UpgradeCost_Iron = account[0].CrystalStorage.UpgradeCost_Iron + account[0].CrystalStorage.UpgradeCost_Iron;
+                accountData.CrystalStorage.UpgradeCost_Crystal = account[0].CrystalStorage.UpgradeCost_Crystal + account[0].CrystalStorage.UpgradeCost_Crystal;
+
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })
@@ -671,70 +503,14 @@ function upgradePetroleumStorage(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: account[0].rewardDate,
-              loginBonus: account[0].loginBonus,
-              Actor: {
-                Iron: account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron,
-                Crystal: account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal,
-                Petroleum: account[0].Actor.Petroleum
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level,
-                ProduceRate: account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level,
-                Capacity: account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level,
-                Capacity: account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level,
-                ProduceRate: account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level + 1,
-                Capacity: account[0].PetroleumStorage.Capacity + account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal
-              },
-              ItemBag: {
-                Resource : {
-                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-                },
-                Materials : {
-                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-                }
-              }
-            }
+
+                accountData.Actor.Iron -= account[0].PetroleumStorage.UpgradeCost_Iron;
+                accountData.Actor.Crystal -= account[0].PetroleumStorage.UpgradeCost_Crystal;
+                accountData.PetroleumStorage.Level += 1;
+                accountData.PetroleumStorage.ProduceRate = account[0].PetroleumStorage.ProduceRate + account[0].PetroleumStorage.ProduceRate;
+                accountData.PetroleumStorage.UpgradeCost_Iron = account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron;
+                accountData.PetroleumStorage.UpgradeCost_Crystal = account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal;
+
             User.updateOne(
               { _id: accountData._id }, updateAccount
             ).exec().then(() => {
@@ -770,71 +546,75 @@ function claimDailyReward(accountData) {
             }else{
               bonusCount = 1;
             }
+            accountData.loginBonus = bonusCount;
+            accountData.Actor.Iron += 7000 * bonusCount;
+            accountData.Actor.Crystal += 7000 * bonusCount;
+            accountData.Actor.Petroleum += 3500 * bonusCount;
             //---------------------
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: today,
-              loginBonus: bonusCount,
-              Actor: {
-                Iron: account[0].Actor.Iron + (7000 * bonusCount),
-                Crystal: account[0].Actor.Crystal + (7000 * bonusCount),
-                Petroleum: account[0].Actor.Petroleum + (3500 * bonusCount)
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level,
-                ProduceRate: account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level,
-                Capacity: account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level,
-                Capacity: account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level,
-                ProduceRate: account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level,
-                Capacity: account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
-              },
-              ItemBag: {
-                Resource : {
-                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-                },
-                Materials : {
-                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-                }
-              }
-            }
+            // const updateAccount = { 
+            //   _id: account[0]._id,
+            //   userName: account[0].userName,
+            //   rewardDate: today,
+            //   loginBonus: bonusCount,
+            //   Actor: {
+            //     Iron: account[0].Actor.Iron + (7000 * bonusCount),
+            //     Crystal: account[0].Actor.Crystal + (7000 * bonusCount),
+            //     Petroleum: account[0].Actor.Petroleum + (3500 * bonusCount)
+            //   },
+            //   IronMine: {
+            //     Name: account[0].IronMine.Name,
+            //     Level: account[0].IronMine.Level,
+            //     ProduceRate: account[0].IronMine.ProduceRate,
+            //     UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
+            //     UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
+            //   },
+            //   IronStorage: {
+            //     Name: account[0].IronStorage.Name,
+            //     Level: account[0].IronStorage.Level,
+            //     Capacity: account[0].IronStorage.Capacity,
+            //     UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
+            //     UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
+            //   },
+            //   CrystalMine: {
+            //     Name: account[0].CrystalMine.Name,
+            //     Level: account[0].CrystalMine.Level,
+            //     ProduceRate: account[0].CrystalMine.ProduceRate,
+            //     UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
+            //     UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
+            //   },
+            //   CrystalStorage: {
+            //     Name: account[0].CrystalStorage.Name,
+            //     Level: account[0].CrystalStorage.Level,
+            //     Capacity: account[0].CrystalStorage.Capacity,
+            //     UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
+            //     UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
+            //   },
+            //   PetroleumMine: {
+            //     Name: account[0].PetroleumMine.Name,
+            //     Level: account[0].PetroleumMine.Level,
+            //     ProduceRate: account[0].PetroleumMine.ProduceRate,
+            //     UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
+            //     UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
+            //   },
+            //   PetroleumStorage: {
+            //     Name: account[0].PetroleumStorage.Name,
+            //     Level: account[0].PetroleumStorage.Level,
+            //     Capacity: account[0].PetroleumStorage.Capacity,
+            //     UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
+            //     UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
+            //   },
+            //   ItemBag: {
+            //     Resource : {
+            //         "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
+            //         "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
+            //         "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
+            //     },
+            //     Materials : {
+            //         "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
+            //         "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
+            //     }
+            //   }
+            // }
             User.updateOne(
               { _id: accountData._id }, updateAccount
             ).exec().then(() => {
@@ -857,70 +637,7 @@ function collectAllResource(accountData){
     .then((account) => {
           if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
-            const updateAccount = { 
-              _id: account[0]._id,
-              userName: account[0].userName,
-              rewardDate: account[0].rewardDate,
-              loginBonus: account[0].loginBonus,
-              Actor: {
-                Iron: account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron,
-                Crystal: account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal,
-                Petroleum: account[0].Actor.Petroleum
-              },
-              IronMine: {
-                Name: account[0].IronMine.Name,
-                Level: account[0].IronMine.Level,
-                ProduceRate: account[0].IronMine.ProduceRate,
-                UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-              },
-              IronStorage: {
-                Name: account[0].IronStorage.Name,
-                Level: account[0].IronStorage.Level,
-                Capacity: account[0].IronStorage.Capacity,
-                UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-              },
-              CrystalMine: {
-                Name: account[0].CrystalMine.Name,
-                Level: account[0].CrystalMine.Level,
-                ProduceRate: account[0].CrystalMine.ProduceRate,
-                UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-              },
-              CrystalStorage: {
-                Name: account[0].CrystalStorage.Name,
-                Level: account[0].CrystalStorage.Level,
-                Capacity: account[0].CrystalStorage.Capacity,
-                UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
-              },
-              PetroleumMine: {
-                Name: account[0].PetroleumMine.Name,
-                Level: account[0].PetroleumMine.Level,
-                ProduceRate: account[0].PetroleumMine.ProduceRate,
-                UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-              },
-              PetroleumStorage: {
-                Name: account[0].PetroleumStorage.Name,
-                Level: account[0].PetroleumStorage.Level + 1,
-                Capacity: account[0].PetroleumStorage.Capacity + account[0].PetroleumStorage.Capacity,
-                UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron,
-                UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal
-              },
-              ItemBag: {
-                Resource : {
-                    "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-                    "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-                    "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-                },
-                Materials : {
-                    "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-                    "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-                }
-              }
-            }
+
             User.updateOne(
               { _id: accountData._id }, updateAccount
             ).exec().then(() => {
