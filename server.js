@@ -138,6 +138,7 @@ app.post("/login", function(req, res) {
             req.session.user = {
                 _id: user._id,
                 userName: user.userName,
+                displayName: user.displayName,
                 loginBonus: user.loginBonus,
                 rewardDate: user.rewardDate,
                 Actor: {
@@ -227,6 +228,7 @@ app.get("/account", ensureLogin, function(req,res){
             req.session.user = {
                 _id: user._id,
                 userName: user.userName,
+                displayName: user.displayName,
                 rewardDate: user.rewardDate,
                 loginBonus: user.loginBonus,
                 Actor: {
@@ -511,12 +513,22 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
 
 
 app.get("/information", ensureLogin, function(req,res){
-    res.render("information");
+    res.render("information", {
+        data: req.session.user});
 })
 
 app.post("/information", function(req, res) {
     authData.changePasswordAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
         res.render('information', {successMessage: "Successful change Password!"});
+    })
+    .catch(function(err){
+        res.render('information', {errorMessage: err, userName: req.session.user.userName});
+    });
+});
+
+app.post("/informationName", function(req, res) {
+    authData.changeDisplayNameAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
+        res.render('information', {successMessage: "Successful change name!", data: req.session.user});
     })
     .catch(function(err){
         res.render('information', {errorMessage: err, userName: req.session.user.userName});

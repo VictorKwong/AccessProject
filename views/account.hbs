@@ -4,7 +4,7 @@
     <div class="alert alert-success"> <strong>Success:</strong> {{successMessage}}</div>
 {{/if}}
 
-<h1>{{data.userName}}</h1>
+<h1>{{data.displayName}}</h1>
 
 <p>Login Reward Bonus: {{data.loginBonus}}</p>
 
@@ -44,6 +44,10 @@
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}"></input>
     </form>
 </div>
+
+<br>
+<br>
+<br>
 
 <div class="border border-dark">
     <p>{{IronStorage.Name}} - Lv {{IronStorage.Level}}</p>

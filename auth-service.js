@@ -16,6 +16,11 @@ var userSchema = new Schema({
       unique: true
     },
     "password": String,
+    "displayName":  {
+      type: String,
+      unique: true,
+      default: "player_" + Date.now()
+    },
     "rewardDate" : {
       type: Date,
       default: previousDate
@@ -324,6 +329,24 @@ function changePasswordAccount(accountData, userID, varName) {
       });
   });
 }
+function changeDisplayNameAccount(accountData, userID, varName) {  
+  return new Promise(function(resolve, reject) {
+    // Find the user based on the provided userID
+    User.find({ _id: userID }).exec()
+    .then((account) => {
+            User.updateOne(
+              { _id: userID },
+              { $set: { displayName: accountData.displayName } }
+            ).exec().then(() => {
+              resolve("Successfully changed name!");
+            }).catch((err) => {
+                reject("Upgrade cause error:" + err);
+            })
+    }).catch((err) => {
+        reject(`Unable to find user - ${varName}: ${err}`);
+    });
+  });
+}
 
 function refreshAccount(accountData){
   return new Promise(function (resolve, reject) {
@@ -512,9 +535,9 @@ function upgradePetroleumStorage(accountData){
                 accountData.PetroleumStorage.UpgradeCost_Crystal = account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal;
 
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })
@@ -547,6 +570,7 @@ function claimDailyReward(accountData) {
               bonusCount = 1;
             }
             accountData.loginBonus = bonusCount;
+            accountData.rewardDate = today;
             accountData.Actor.Iron += 7000 * bonusCount;
             accountData.Actor.Crystal += 7000 * bonusCount;
             accountData.Actor.Petroleum += 3500 * bonusCount;
@@ -616,10 +640,10 @@ function claimDailyReward(accountData) {
             //   }
             // }
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
                 //account, Iron Bonus, Crystal Bonus, Petroleum Bonus
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Claim reward cause error:" + err);
             })
@@ -639,9 +663,9 @@ function collectAllResource(accountData){
               (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
 
             User.updateOne(
-              { _id: accountData._id }, updateAccount
+              { _id: accountData._id }, accountData
             ).exec().then(() => {
-                resolve(updateAccount);
+                resolve(accountData);
             }).catch((err) => {
                 reject("Upgrade cause error:" + err);
             })
@@ -655,4 +679,4 @@ function collectAllResource(accountData){
   });
 }
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, collectAllResource};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, collectAllResource};
