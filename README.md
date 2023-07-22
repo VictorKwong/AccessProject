@@ -29,5 +29,5 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 
 [ ] Add Digital Clock system to the main.hbs - digital clock service js
 [x] Reduce all passing variables in auth-service.js
-[ ] Change display Name system (How to update displayName on navbar + updating system checking)
-[ ] How to work on a javascript time upgrade function
+[x] Change display Name system (req.session.update (Front end) + SQL (Back End))
+[ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond

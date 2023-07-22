@@ -66,6 +66,17 @@ var userSchema = new Schema({
       "UpgradeCost_Crystal":{
         type: Number,
         default: 10,
+      },
+      "Upgrade_StartTime":{
+        type: Date,
+      },
+      "Upgrade_DurationSecond":{
+        type: Number,
+        default: 60
+      },
+      "Upgrading":{
+        type: Boolean,
+        default: false
       }
     },
     "IronStorage": {
@@ -338,9 +349,9 @@ function changeDisplayNameAccount(accountData, userID, varName) {
               { _id: userID },
               { $set: { displayName: accountData.displayName } }
             ).exec().then(() => {
-              resolve("Successfully changed name!");
+              resolve(accountData);
             }).catch((err) => {
-                reject("Upgrade cause error:" + err);
+                reject(accountData.displayName + " name has already been taken!");
             })
     }).catch((err) => {
         reject(`Unable to find user - ${varName}: ${err}`);
@@ -372,6 +383,8 @@ function upgradeIronMine(accountData){
           if ((account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
               (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
 
+
+            accountData.IronMine.Updating = true;
             accountData.Actor.Iron -= account[0].IronMine.UpgradeCost_Iron;
             accountData.Actor.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
             accountData.IronMine.Level += 1;

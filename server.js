@@ -241,7 +241,10 @@ app.get("/account", ensureLogin, function(req,res){
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
+                    "Upgrade_StartTime": user.IronMine.Upgrade_StartTime,
+                    "Upgrade_DurationSecond": user.IronMine.Upgrade_DurationSecond,
+                    "Upgrading": user.IronMine.Upgrading
                 },
                 IronStorage: {
                     "Name": user.IronStorage.Name,
@@ -518,23 +521,27 @@ app.get("/information", ensureLogin, function(req,res){
 })
 
 app.post("/information", function(req, res) {
-    authData.changePasswordAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
-        res.render('information', {successMessage: "Successful change Password!"});
-    })
-    .catch(function(err){
-        res.render('information', {errorMessage: err, userName: req.session.user.userName});
-    });
-});
+    if(req.body.displayName === undefined){
+        //change password - can be the same
+        authData.changePasswordAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
+            res.render('information', {successMessage: "Successful change Password!"});
+        })
+        .catch(function(err){
+            res.render('information', {errorMessage: err, userName: req.session.user.userName});
+        });
+    }else{
+        //change displayName
+        
+        authData.changeDisplayNameAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
+            req.session.user.displayName = data.displayName;
+            res.render('information', {successMessage: "Successful change name!"});
+        })
+        .catch(function(err){
+            res.render('information', {errorMessage: err, userName: req.session.user.userName});
+        });
+    }
 
-app.post("/informationName", function(req, res) {
-    authData.changeDisplayNameAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
-        res.render('information', {successMessage: "Successful change name!", data: req.session.user});
-    })
-    .catch(function(err){
-        res.render('information', {errorMessage: err, userName: req.session.user.userName});
-    });
 });
-
 
 app.get('/logout', function(req, res){
     req.session.reset();
