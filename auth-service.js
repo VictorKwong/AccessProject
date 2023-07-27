@@ -29,6 +29,10 @@ var userSchema = new Schema({
       type: Number,
       default: 0
     },
+    "rewardCollect": {
+      type: Boolean,
+      default: false
+    },
     "Actor": {
       "Iron": {
         type: Number,
@@ -66,17 +70,6 @@ var userSchema = new Schema({
       "UpgradeCost_Crystal":{
         type: Number,
         default: 10,
-      },
-      "Upgrade_StartTime":{
-        type: Date,
-      },
-      "Upgrade_DurationSecond":{
-        type: Number,
-        default: 60
-      },
-      "Upgrading":{
-        type: Boolean,
-        default: false
       }
     },
     "IronStorage": {
@@ -384,9 +377,11 @@ function upgradeIronMine(accountData){
               (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
 
 
-            accountData.IronMine.Updating = true;
+            accountData.IronMine.Upgrading = true;
             accountData.Actor.Iron -= account[0].IronMine.UpgradeCost_Iron;
             accountData.Actor.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
+
+            //Upgrade time is done then add these stats together
             accountData.IronMine.Level += 1;
             accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
             accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;

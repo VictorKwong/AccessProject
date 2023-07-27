@@ -141,6 +141,7 @@ app.post("/login", function(req, res) {
                 displayName: user.displayName,
                 loginBonus: user.loginBonus,
                 rewardDate: user.rewardDate,
+                rewardCollect: user.rewardCollect,
                 Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
@@ -230,6 +231,7 @@ app.get("/account", ensureLogin, function(req,res){
                 userName: user.userName,
                 displayName: user.displayName,
                 rewardDate: user.rewardDate,
+                rewardCollect: user.rewardCollect,
                 loginBonus: user.loginBonus,
                 Actor: {
                     Iron: user.Actor.Iron,
@@ -242,9 +244,6 @@ app.get("/account", ensureLogin, function(req,res){
                     "ProduceRate": user.IronMine.ProduceRate,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
-                    "Upgrade_StartTime": user.IronMine.Upgrade_StartTime,
-                    "Upgrade_DurationSecond": user.IronMine.Upgrade_DurationSecond,
-                    "Upgrading": user.IronMine.Upgrading
                 },
                 IronStorage: {
                     "Name": user.IronStorage.Name,
@@ -293,6 +292,8 @@ app.get("/account", ensureLogin, function(req,res){
                     }
                 }
             }
+            console.log(user);
+            console.log("====")
 
             res.render('account', {
                 data: req.session.user,

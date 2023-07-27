@@ -31,3 +31,4 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 [x] Reduce all passing variables in auth-service.js
 [x] Change display Name system (req.session.update (Front end) + SQL (Back End))
 [ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
+[ ] Change collect reward as daily mission (instead of counting time?)
