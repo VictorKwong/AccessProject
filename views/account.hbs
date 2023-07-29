@@ -35,6 +35,7 @@
     <p>{{IronMine.Name}} - Lv {{IronMine.Level}}</p>
 
     <p>Produce Rate: {{toAbbr IronMine.ProduceRate}}</p>
+    <p>Capacity: {{toAbbr IronMine.Capacity}}</p>
 
     <p>Upgrade Cost: Iron - {{toAbbr IronMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr IronMine.UpgradeCost_Crystal}}</p>
@@ -48,6 +49,12 @@
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}"></input>
     </form>
     {{/if}}
+
+    <br>
+    <br>
+    <form action="/account/collectAllResource" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Collect all"></input>
+    </form>
 
 </div>
 

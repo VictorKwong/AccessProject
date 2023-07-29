@@ -32,3 +32,6 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 [x] Change display Name system (req.session.update (Front end) + SQL (Back End))
 [ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
 [ ] Change collect reward as daily mission (instead of counting time?)
+[ ] Collect all resouce time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
+
+-> All testing method should be use by IronMine & IronStorage first **

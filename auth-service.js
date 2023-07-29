@@ -33,6 +33,10 @@ var userSchema = new Schema({
       type: Boolean,
       default: false
     },
+    "previousCollectTime": {
+      type: Number,
+      default: Math.floor(Date.now() / 1000)
+    },
     "Actor": {
       "Iron": {
         type: Number,
@@ -62,6 +66,10 @@ var userSchema = new Schema({
       "ProduceRate":{
         type: Number,
         default: 100,
+      },
+      "Capacity":{
+        type: Number,
+        default: 1000 
       },
       "UpgradeCost_Iron":{
         type: Number,
@@ -667,19 +675,26 @@ function collectAllResource(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
+          // if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
+          //     (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
 
-            User.updateOne(
-              { _id: accountData._id }, accountData
-            ).exec().then(() => {
-                resolve(accountData);
-            }).catch((err) => {
-                reject("Upgrade cause error:" + err);
-            })
-          } else {
-            reject(`Not enough resource: ${accountData.userName}`);
-          }
+            let currentTime = Date.now();
+            let currentTimeInSeconds = Math.floor(currentTime / 1000);
+
+            let duration = currentTimeInSeconds - account[0].previousCollectTime;
+
+            console.log("This is currentTime: " + currentTimeInSeconds);
+            console.log("Any Data from account? " + account[0].previousCollectTime)
+            console.log("This is duration: " + duration);
+
+            resolve(accountData);
+            // User.updateOne(
+            //   { _id: accountData._id }, accountData
+            // ).exec().then(() => {
+            //     resolve(accountData);
+            // }).catch((err) => {
+            //     reject("Upgrade cause error:" + err);
+            // })
     }).catch((err) => {
         reject(`Unable to find user - ${accountData.userName}: ${err}`);
     });

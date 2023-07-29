@@ -142,6 +142,7 @@ app.post("/login", function(req, res) {
                 loginBonus: user.loginBonus,
                 rewardDate: user.rewardDate,
                 rewardCollect: user.rewardCollect,
+                previousCollectTime: user.previousCollectTime,
                 Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
@@ -151,6 +152,7 @@ app.post("/login", function(req, res) {
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
+                    "Capacity": user.IronMine.Capacity,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
                 },
@@ -230,9 +232,10 @@ app.get("/account", ensureLogin, function(req,res){
                 _id: user._id,
                 userName: user.userName,
                 displayName: user.displayName,
+                loginBonus: user.loginBonus,
                 rewardDate: user.rewardDate,
                 rewardCollect: user.rewardCollect,
-                loginBonus: user.loginBonus,
+                previousCollectTime: user.previousCollectTime,
                 Actor: {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
@@ -242,6 +245,7 @@ app.get("/account", ensureLogin, function(req,res){
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
+                    "Capacity": user.IronMine.Capacity,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
                 },
@@ -292,9 +296,6 @@ app.get("/account", ensureLogin, function(req,res){
                     }
                 }
             }
-            console.log(user);
-            console.log("====")
-
             res.render('account', {
                 data: req.session.user,
                 Actor: req.session.user.Actor,
@@ -333,6 +334,40 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     successMessage: "Daily Reward Claimed! Iron +" + 7000 * user.loginBonus +", Crystal +" + 7000 * user.loginBonus + ", Petroleum +" + 3500 * user.loginBonus
+                })
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    PetroleumMine: req.session.user.PetroleumMine,
+                    PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
+                    errorMessage: err
+                })
+            })
+        })
+    }else if(req.params.upgrade === "collectAllResource"){
+        return new Promise((resolve, reject) => {
+            authData.collectAllResource(req.session.user).then((user) => {
+                req.session.user.Actor.Iron = user.Actor.Iron
+                req.session.user.Actor.Crystal = user.Actor.Crystal
+                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                
+                res.render('account', {
+                    data: req.session.user,
+                    Actor: req.session.user.Actor,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    PetroleumMine: req.session.user.PetroleumMine,
+                    PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
+                    successMessage: "Collect all Resource!"
                 })
             }).catch((err) => {
                 res.render('account', {
