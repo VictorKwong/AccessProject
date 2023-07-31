@@ -686,15 +686,25 @@ function collectAllResource(accountData){
             console.log("This is currentTime: " + currentTimeInSeconds);
             console.log("Any Data from account? " + account[0].previousCollectTime)
             console.log("This is duration: " + duration);
+            let memoryResult;
 
-            resolve(accountData);
-            // User.updateOne(
-            //   { _id: accountData._id }, accountData
-            // ).exec().then(() => {
-            //     resolve(accountData);
-            // }).catch((err) => {
-            //     reject("Upgrade cause error:" + err);
-            // })
+            if(accountData.Actor.Iron < account[0].IronStorage.Capacity){
+              parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? memoryResult = parseInt(account[0].IronMine.ProduceRate * duration/3600) : memoryResult = account[0].IronMine.Capacity ;
+
+              memoryResult <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += memoryResult : accountData.Actor.Iron = account[0].IronStorage.Capacity
+              //update
+              accountData.previousCollectTime = currentTimeInSeconds
+            }else{
+              //Storage is full bug
+
+            }
+            User.updateOne(
+              { _id: accountData._id }, accountData
+            ).exec().then(() => {
+                resolve(accountData);
+            }).catch((err) => {
+                reject("Upgrade cause error:" + err);
+            })
     }).catch((err) => {
         reject(`Unable to find user - ${accountData.userName}: ${err}`);
     });
