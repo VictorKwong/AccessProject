@@ -36,7 +36,6 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 
 -> All testing method should be use by IronMine & IronStorage first **
 
-<br>
 ## Upgrading notes pseudo code
 
 upgrading time cost?
@@ -81,4 +80,3 @@ upgrading time cost?
 
     }
 ```
-<br>
