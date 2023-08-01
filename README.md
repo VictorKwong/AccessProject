@@ -27,12 +27,12 @@ Direction:
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)
 
-[ ] Add Digital Clock system to the main.hbs - digital clock service js
-[x] Reduce all passing variables in auth-service.js
-[x] Change display Name system (req.session.update (Front end) + SQL (Back End))
-[ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
-[ ] Change collect reward as daily mission (instead of counting time?)
-[x] Collect all resource time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
+- [ ] Add Digital Clock system to the main.hbs - digital clock service js
+- [x] Reduce all passing variables in auth-service.js
+- [x] Change display Name system (req.session.update (Front end) + SQL (Back End))
+- [ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
+- [ ] Change collect reward as daily mission (instead of counting time?)
+- [x] Collect all resource time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
 
 -> All testing method should be use by IronMine & IronStorage first **
 
