@@ -153,6 +153,7 @@ app.post("/login", function(req, res) {
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
                     "Capacity": user.IronMine.Capacity,
+                    "CollectedResource": user.IronMine.CollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
                 },
@@ -246,6 +247,7 @@ app.get("/account", ensureLogin, function(req,res){
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
                     "Capacity": user.IronMine.Capacity,
+                    "CollectedResource": user.IronMine.CollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
                 },
@@ -357,6 +359,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Actor.Crystal = user.Actor.Crystal
                 req.session.user.Actor.Petroleum = user.Actor.Petroleum
                 
+                
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
@@ -367,9 +370,10 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
-                    successMessage: "Collect all Resource!"
+                    successMessage: "Collect all Resource! Iron +" + user.IronMine.CollectedResource
                 })
             }).catch((err) => {
+
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,

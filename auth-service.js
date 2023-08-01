@@ -40,7 +40,7 @@ var userSchema = new Schema({
     "Actor": {
       "Iron": {
         type: Number,
-        default: 2000000,
+        default: 200,
         min: 0
       },
       "Crystal": {
@@ -65,11 +65,15 @@ var userSchema = new Schema({
       },
       "ProduceRate":{
         type: Number,
-        default: 100,
+        default: 200,
       },
       "Capacity":{
         type: Number,
         default: 1000 
+      },
+      "CollectedResource":{
+        type: Number,
+        default: 0
       },
       "UpgradeCost_Iron":{
         type: Number,
@@ -686,14 +690,16 @@ function collectAllResource(accountData){
             console.log("This is currentTime: " + currentTimeInSeconds);
             console.log("Any Data from account? " + account[0].previousCollectTime)
             console.log("This is duration: " + duration);
-            let memoryResult;
+            accountData.IronMine.CollectedResource = 0;
 
-            if(accountData.Actor.Iron < account[0].IronStorage.Capacity){
+
+            if((accountData.Actor.Iron < account[0].IronStorage.Capacity) && parseInt(account[0].IronMine.ProduceRate * duration/3600) > 0){
+              console.log("A")
               //determine how many thing that we can collect
-              parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? memoryResult = parseInt(account[0].IronMine.ProduceRate * duration/3600) : memoryResult = account[0].IronMine.Capacity;
+              parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
 
               //determine how many things that can store
-              memoryResult <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += memoryResult : accountData.Actor.Iron = account[0].IronStorage.Capacity
+              accountData.IronMine.CollectedResource <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += accountData.IronMine.CollectedResource : accountData.Actor.Iron = account[0].IronStorage.Capacity
               //update
               accountData.previousCollectTime = currentTimeInSeconds
 
@@ -704,6 +710,10 @@ function collectAllResource(accountData){
               }).catch((err) => {
                   reject("Upgrade cause error:" + err);
               })
+            } else if(parseInt(account[0].IronMine.ProduceRate * duration/3600) <= 0){
+              console.log("B")
+              //No resource to collect
+              resolve(accountData);
             }else{
               //Storage is full bug
               reject("Storage is full, please upgrade it!");
