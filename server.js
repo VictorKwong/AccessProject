@@ -326,7 +326,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Actor.Crystal = user.Actor.Crystal
                 req.session.user.Actor.Petroleum = user.Actor.Petroleum
                 req.session.user.loginBonus = user.loginBonus
-
+                
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
