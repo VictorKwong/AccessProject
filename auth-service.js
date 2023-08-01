@@ -689,22 +689,25 @@ function collectAllResource(accountData){
             let memoryResult;
 
             if(accountData.Actor.Iron < account[0].IronStorage.Capacity){
-              parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? memoryResult = parseInt(account[0].IronMine.ProduceRate * duration/3600) : memoryResult = account[0].IronMine.Capacity ;
+              //determine how many thing that we can collect
+              parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? memoryResult = parseInt(account[0].IronMine.ProduceRate * duration/3600) : memoryResult = account[0].IronMine.Capacity;
 
+              //determine how many things that can store
               memoryResult <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += memoryResult : accountData.Actor.Iron = account[0].IronStorage.Capacity
               //update
               accountData.previousCollectTime = currentTimeInSeconds
+
+              User.updateOne(
+                { _id: accountData._id }, accountData
+              ).exec().then(() => {
+                  resolve(accountData);
+              }).catch((err) => {
+                  reject("Upgrade cause error:" + err);
+              })
             }else{
               //Storage is full bug
-              reject("Storage is full, can't collect Resource!");
+              reject("Storage is full, please upgrade it!");
             }
-            User.updateOne(
-              { _id: accountData._id }, accountData
-            ).exec().then(() => {
-                resolve(accountData);
-            }).catch((err) => {
-                reject("Upgrade cause error:" + err);
-            })
     }).catch((err) => {
         reject(`Unable to find user - ${accountData.userName}: ${err}`);
     });
