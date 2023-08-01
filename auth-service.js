@@ -696,7 +696,7 @@ function collectAllResource(accountData){
               accountData.previousCollectTime = currentTimeInSeconds
             }else{
               //Storage is full bug
-
+              reject("Storage is full, can't collect Resource!");
             }
             User.updateOne(
               { _id: accountData._id }, accountData
