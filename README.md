@@ -37,28 +37,30 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 -> All testing method should be use by IronMine & IronStorage first **
 
 <br>
-#Upgrading notes pseudo code
+## Upgrading notes pseudo code
+
 upgrading time cost?
 
 -Resource
-building upgrade = true
+```python
+    building upgrade = true
 
-Individual Upgrade = true of false
+    Individual Upgrade = true of false
 
-If there is it is true (Upgrade)
+    If there is it is true (Upgrade)
 
-#ex IronMine upgrade
+    #ex IronMine upgrade
 
-for loop
-if upgrade is true{
-	calculate remainTime
-	If Final > remainTime{
-	Final = remainTime
-	}
-}
+    for loop
+    if upgrade is true{
+        calculate remainTime
+        If Final > remainTime{
+        Final = remainTime
+        }
+    }
 
 
-//loop refresh page
+    //loop refresh page
     window.setInterval('refresh()', Final);
 
     // Refresh or reload page.
@@ -66,16 +68,17 @@ if upgrade is true{
         window  .location.reload();
     }
 
-//Refresh page
-authData.refreshAccount
+    //Refresh page
+    authData.refreshAccount
 
-//find the true (one or more) building upgrade
-calculate remainTime
+    //find the true (one or more) building upgrade
+    calculate remainTime
 
-if(remainTime <= 0){
-	individualUpgrade = false
-	+BuildingUpgrade
-}else{
+    if(remainTime <= 0){
+        individualUpgrade = false
+        +BuildingUpgrade
+    }else{
 
-}
+    }
+```
 <br>
