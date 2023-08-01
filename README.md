@@ -32,6 +32,50 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 [x] Change display Name system (req.session.update (Front end) + SQL (Back End))
 [ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
 [ ] Change collect reward as daily mission (instead of counting time?)
-[ ] Collect all resouce time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
+[x] Collect all resource time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
 
 -> All testing method should be use by IronMine & IronStorage first **
+
+<br>
+#Upgrading notes pseudo code
+upgrading time cost?
+
+-Resource
+building upgrade = true
+
+Individual Upgrade = true of false
+
+If there is it is true (Upgrade)
+
+#ex IronMine upgrade
+
+for loop
+if upgrade is true{
+	calculate remainTime
+	If Final > remainTime{
+	Final = remainTime
+	}
+}
+
+
+//loop refresh page
+    window.setInterval('refresh()', Final);
+
+    // Refresh or reload page.
+    function refresh() {
+        window  .location.reload();
+    }
+
+//Refresh page
+authData.refreshAccount
+
+//find the true (one or more) building upgrade
+calculate remainTime
+
+if(remainTime <= 0){
+	individualUpgrade = false
+	+BuildingUpgrade
+}else{
+
+}
+<br>

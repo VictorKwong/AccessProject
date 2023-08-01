@@ -75,6 +75,10 @@ var userSchema = new Schema({
         type: Number,
         default: 0
       },
+      "HistoryCollectedResource":{
+        type: Number,
+        default: 0
+      },
       "UpgradeCost_Iron":{
         type: Number,
         default: 100,
@@ -95,7 +99,7 @@ var userSchema = new Schema({
       },
       "Capacity":{
         type: Number,
-        default: 1000,
+        default: 10000,
       },
       "UpgradeCost_Iron":{
         type: Number,
@@ -389,7 +393,6 @@ function upgradeIronMine(accountData){
               (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
 
 
-            accountData.IronMine.Upgrading = true;
             accountData.Actor.Iron -= account[0].IronMine.UpgradeCost_Iron;
             accountData.Actor.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
 
@@ -594,6 +597,7 @@ function claimDailyReward(accountData) {
             accountData.Actor.Iron += 7000 * bonusCount;
             accountData.Actor.Crystal += 7000 * bonusCount;
             accountData.Actor.Petroleum += 3500 * bonusCount;
+            accountData.IronMine.HistoryCollectedResource += 7000 * bonusCount;
             //---------------------
             // const updateAccount = { 
             //   _id: account[0]._id,
@@ -687,14 +691,10 @@ function collectAllResource(accountData){
 
             let duration = currentTimeInSeconds - account[0].previousCollectTime;
 
-            console.log("This is currentTime: " + currentTimeInSeconds);
-            console.log("Any Data from account? " + account[0].previousCollectTime)
-            console.log("This is duration: " + duration);
             accountData.IronMine.CollectedResource = 0;
 
 
             if((accountData.Actor.Iron < account[0].IronStorage.Capacity) && parseInt(account[0].IronMine.ProduceRate * duration/3600) > 0){
-              console.log("A")
               //determine how many thing that we can collect
               parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
 
@@ -702,7 +702,7 @@ function collectAllResource(accountData){
               accountData.IronMine.CollectedResource <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += accountData.IronMine.CollectedResource : accountData.Actor.Iron = account[0].IronStorage.Capacity
               //update
               accountData.previousCollectTime = currentTimeInSeconds
-
+              accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
               User.updateOne(
                 { _id: accountData._id }, accountData
               ).exec().then(() => {
@@ -711,7 +711,6 @@ function collectAllResource(accountData){
                   reject("Upgrade cause error:" + err);
               })
             } else if(parseInt(account[0].IronMine.ProduceRate * duration/3600) <= 0){
-              console.log("B")
               //No resource to collect
               resolve(accountData);
             }else{

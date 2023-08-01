@@ -154,6 +154,7 @@ app.post("/login", function(req, res) {
                     "ProduceRate": user.IronMine.ProduceRate,
                     "Capacity": user.IronMine.Capacity,
                     "CollectedResource": user.IronMine.CollectedResource,
+                    "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
                 },
@@ -248,6 +249,7 @@ app.get("/account", ensureLogin, function(req,res){
                     "ProduceRate": user.IronMine.ProduceRate,
                     "Capacity": user.IronMine.Capacity,
                     "CollectedResource": user.IronMine.CollectedResource,
+                    "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
                 },
@@ -557,7 +559,15 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
 
 app.get("/information", ensureLogin, function(req,res){
     res.render("information", {
-        data: req.session.user});
+        data: req.session.user,
+        Actor: req.session.user.Actor,
+        IronMine: req.session.user.IronMine,
+        IronStorage: req.session.user.IronStorage,
+        CrystalMine: req.session.user.CrystalMine,
+        CrystalStorage: req.session.user.CrystalStorage,
+        PetroleumMine: req.session.user.PetroleumMine,
+        PetroleumStorage: req.session.user.PetroleumStorage,
+        ItemBag: req.session.user.ItemBag});
 })
 
 app.post("/information", function(req, res) {
