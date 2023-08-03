@@ -39,8 +39,9 @@
 
     <p>Upgrade Cost: Iron - {{toAbbr IronMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr IronMine.UpgradeCost_Crystal}}</p>
-
-    {{#if IronMine.Upgrading}}
+    <p>Upgrade Time: {{IronMine.UpgradeCost_Time}}</p>
+    <p>Upgrade RemainDuration: - {{calDuration IronMine.UpgradeCost_TimeStart}}</p>
+    {{#if IronMine.UpgradeCost_Status}}
     <form action="/account/upgradeIronMine" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}" disabled></input>
     </form>
@@ -149,5 +150,18 @@
 </div>
 
 <script>
-    //add script :) upgrade time refresh
+function test() {
+  let dateNow = Date.now() / 1000; // Convert to seconds
+  const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
+  const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
+
+  // Compare the elapsed time with the specified duration (continue the logic)
+  if ((Math.floor(dateNow - upgradeTimeStart) >= upgradeTimeDuration) && IronMine.UpgradeCost_Status) {
+    // Reload the current page if the condition is true
+    window.location.reload();
+  }
+}
+setInterval(test, 1000);
+// Initial call to run the test function immediately
+test();
 </script>

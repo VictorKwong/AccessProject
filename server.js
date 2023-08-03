@@ -66,6 +66,10 @@ app.engine('.hbs', exphbs.engine({
               len--;
             }
             return number;
+        },
+        calDuration: function(startTime) {
+            const dateNow = Math.floor(Date.now() / 1000);
+            return (dateNow - startTime);
         }
         
     },
@@ -156,7 +160,10 @@ app.post("/login", function(req, res) {
                     "CollectedResource": user.IronMine.CollectedResource,
                     "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
                 },
                 IronStorage: {
                     "Name": user.IronStorage.Name,
@@ -252,6 +259,9 @@ app.get("/account", ensureLogin, function(req,res){
                     "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
                 },
                 IronStorage: {
                     "Name": user.IronStorage.Name,

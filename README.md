@@ -64,7 +64,7 @@ upgrading time cost?
 
     // Refresh or reload page.
     function refresh() {
-        window  .location.reload();
+        window.location.reload();
     }
 
     //Refresh page

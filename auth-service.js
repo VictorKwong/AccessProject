@@ -95,7 +95,7 @@ var userSchema = new Schema({
       //When to start
       "UpgradeCost_TimeStart":{
         type: Number,
-        default: 0
+        default: Math.floor(Date.now() / 1000)
       },
       "UpgradeCost_Status":{
         type: Boolean,
@@ -389,26 +389,26 @@ function refreshAccount(accountData){
       if(account.length == 0){
         reject("Unable to find user: " + accountData.userName);
       }else{
-        if(account.IronMine.UpgradeCost_Status){
+        if(accountData.IronMine.UpgradeCost_Status){
           let currentTime = Date.now();
           let currentTimeInSeconds = Math.floor(currentTime / 1000);
-          if((currentTimeInSeconds - account.IronMine.UpgradeCost_TimeStart) >= account.IronMine.UpgradeCost_Time){
-            //finished upgrade
-            accountData.IronMine.UpgradeCost_Status = false;
-            accountData.IronMine.UpgradeCost_Time = account[0].IronMine.UpgradeCost_Time + account[0].IronMine.UpgradeCost_Time;
-  
-            accountData.IronMine.Level += 1;
-            accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
-            accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
-            accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
-            User.updateOne(
-              { _id: accountData._id }, accountData
-            ).exec().then(() => {
-                resolve(accountData);
-            }).catch((err) => {
-                reject("Upgrade cause error:" + err);
-            })
-          }
+            if((currentTimeInSeconds - accountData.IronMine.UpgradeCost_TimeStart) >= accountData.IronMine.UpgradeCost_Time){
+              //finished upgrade
+              accountData.IronMine.UpgradeCost_Status = false;
+              accountData.IronMine.UpgradeCost_Time = account[0].IronMine.UpgradeCost_Time + account[0].IronMine.UpgradeCost_Time;
+    
+              accountData.IronMine.Level += 1;
+              accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
+              accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
+              accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
+              User.updateOne(
+                { _id: accountData._id }, accountData
+              ).exec().then(() => {
+                  resolve(accountData);
+              }).catch((err) => {
+                  reject("Upgrade cause error:" + err);
+              })
+            }
         }else{
           //Nothing happend
           resolve(account[0]);
@@ -432,12 +432,13 @@ function upgradeIronMine(accountData){
 
             accountData.Actor.Iron -= account[0].IronMine.UpgradeCost_Iron;
             accountData.Actor.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
-
+            accountData.IronMine.UpgradeCost_Status = true;
+            accountData.IronMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
             //Upgrade time is done then add these stats together
-            accountData.IronMine.Level += 1;
-            accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
-            accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
-            accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
+            // accountData.IronMine.Level += 1;
+            // accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
+            // accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
+            // accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
                 
             User.updateOne(
               { _id: accountData._id }, accountData
