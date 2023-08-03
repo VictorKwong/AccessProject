@@ -40,7 +40,9 @@
     <p>Upgrade Cost: Iron - {{toAbbr IronMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr IronMine.UpgradeCost_Crystal}}</p>
     <p>Upgrade Time: {{IronMine.UpgradeCost_Time}}</p>
-    <p>Upgrade RemainDuration: - {{calDuration IronMine.UpgradeCost_TimeStart}}</p>
+    {{#if IronMine.UpgradeCost_Status}}
+    <p id="ironMineUpgrade-js">Upgrade RemainDuration: {{calDuration IronMine.UpgradeCost_TimeStart IronMine.UpgradeCost_Time}}</p>
+    {{/if}}
     {{#if IronMine.UpgradeCost_Status}}
     <form action="/account/upgradeIronMine" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronMine.Name}} - Lv.{{sum IronMine.Level 1}}" disabled></input>
@@ -150,16 +152,22 @@
 </div>
 
 <script>
-function test() {
-  let dateNow = Date.now() / 1000; // Convert to seconds
-  const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
-  const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
+    function test() {
+        let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
+        const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
+        const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
 
-  // Compare the elapsed time with the specified duration (continue the logic)
-  if ((Math.floor(dateNow - upgradeTimeStart) >= upgradeTimeDuration) && IronMine.UpgradeCost_Status) {
-    // Reload the current page if the condition is true
-    window.location.reload();
-  }
+        if({{IronMine.UpgradeCost_Status}}){
+            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('ironMineUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.reload();
+            }
+        }else{
+            document.getElementById('ironMineUpgrade-js').innerText = "";
+        }
+
+
 }
 setInterval(test, 1000);
 // Initial call to run the test function immediately

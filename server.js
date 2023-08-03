@@ -67,9 +67,9 @@ app.engine('.hbs', exphbs.engine({
             }
             return number;
         },
-        calDuration: function(startTime) {
+        calDuration: function(startTime, duration) {
             const dateNow = Math.floor(Date.now() / 1000);
-            return (dateNow - startTime);
+            return (duration - (dateNow - startTime));
         }
         
     },
