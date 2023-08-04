@@ -152,7 +152,7 @@
 </div>
 
 <script>
-    function test() {
+    function upgradeIronMine() {
         let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
         const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
         const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
@@ -169,7 +169,7 @@
 
 
 }
-setInterval(test, 1000);
+setInterval(upgradeIronMine, 1000);
 // Initial call to run the test function immediately
-test();
+upgradeIronMine();
 </script>

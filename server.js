@@ -581,7 +581,100 @@ app.get("/information", ensureLogin, function(req,res){
 })
 
 app.post("/information", function(req, res) {
-    if(req.body.displayName === undefined){
+    if(req.body.displayName === undefined && req.body.password === undefined && req.body.newPassword === undefined && req.body.confirmNewPassword === undefined){
+        //reset
+        authData.resetAccount(req.session.user).then(function(user){
+            req.session.user = {
+                _id: user._id,
+                userName: user.userName,
+                displayName: user.displayName,
+                loginBonus: user.loginBonus,
+                rewardDate: user.rewardDate,
+                rewardCollect: user.rewardCollect,
+                previousCollectTime: user.previousCollectTime,
+                Actor: {
+                    Iron: user.Actor.Iron,
+                    Crystal: user.Actor.Crystal,
+                    Petroleum: user.Actor.Petroleum,
+                },
+                IronMine: {
+                    "Name": user.IronMine.Name,
+                    "Level": user.IronMine.Level,
+                    "ProduceRate": user.IronMine.ProduceRate,
+                    "Capacity": user.IronMine.Capacity,
+                    "CollectedResource": user.IronMine.CollectedResource,
+                    "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
+                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
+                },
+                IronStorage: {
+                    "Name": user.IronStorage.Name,
+                    "Level": user.IronStorage.Level,
+                    "Capacity": user.IronStorage.Capacity,
+                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
+                },
+                CrystalMine: {
+                    "Name": user.CrystalMine.Name,
+                    "Level": user.CrystalMine.Level,
+                    "ProduceRate": user.CrystalMine.ProduceRate,
+                    "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal
+                },
+                CrystalStorage: {
+                    "Name": user.CrystalStorage.Name,
+                    "Level": user.CrystalStorage.Level,
+                    "Capacity": user.CrystalStorage.Capacity,
+                    "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
+                },
+                PetroleumMine: {
+                    "Name": user.PetroleumMine.Name,
+                    "Level": user.PetroleumMine.Level,
+                    "ProduceRate": user.PetroleumMine.ProduceRate,
+                    "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal
+                },
+                PetroleumStorage: {
+                    "Name": user.PetroleumStorage.Name,
+                    "Level": user.PetroleumStorage.Level,
+                    "Capacity": user.PetroleumStorage.Capacity,
+                    "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
+                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                },
+                ItemBag: {
+                    Resource : {
+                        "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
+                        "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
+                        "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
+                    },
+                    Materials : {
+                        "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
+                        "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
+                    }
+                }
+            }
+            res.render("information", {
+                data: req.session.user,
+                Actor: req.session.user.Actor,
+                IronMine: req.session.user.IronMine,
+                IronStorage: req.session.user.IronStorage,
+                CrystalMine: req.session.user.CrystalMine,
+                CrystalStorage: req.session.user.CrystalStorage,
+                PetroleumMine: req.session.user.PetroleumMine,
+                PetroleumStorage: req.session.user.PetroleumStorage,
+                ItemBag: req.session.user.ItemBag,
+                successMessage: "Successful reset account!"
+            });
+        })
+        .catch(function(err){
+            res.render('information', {errorMessage: err, userName: req.session.user.userName});
+        });
+    }
+    else if(req.body.displayName === undefined){
         //change password - can be the same
         authData.changePasswordAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
             res.render('information', {successMessage: "Successful change Password!"});

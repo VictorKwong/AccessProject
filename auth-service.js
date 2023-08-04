@@ -381,6 +381,42 @@ function changeDisplayNameAccount(accountData, userID, varName) {
     });
   });
 }
+function resetAccount(accountData) {  
+  return new Promise(function(resolve, reject) {
+    // Find the user based on the provided userID
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+            //reset only ironMine
+            accountData.rewardDate = previousDate
+            accountData.loginBonus = 0
+            accountData.rewardCollect = false
+            accountData.previousCollectTime = Math.floor(Date.now() / 1000)
+            accountData.Actor.Iron = 200
+            accountData.Actor.Crystal = 1000000
+            accountData.Actor.Petroleum = 50
+            accountData.IronMine.Level = 1
+            accountData.IronMine.ProduceRate = 200
+            accountData.IronMine.Capacity = 1000
+            accountData.IronMine.CollectedResource = 0
+            accountData.IronMine.HistoryCollectedResource = 0
+            accountData.IronMine.UpgradeCost_Iron = 100
+            accountData.IronMine.UpgradeCost_Crystal = 10
+            accountData.IronMine.UpgradeCost_Time = 5
+            accountData.IronMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.IronMine.UpgradeCost_Status = false
+            User.updateOne(
+              { _id: accountData._id }, accountData
+            ).exec().then(() => {
+              resolve(accountData);
+            }).catch((err) => {
+                reject("Error! cannot be reset!");
+            })
+    }).catch((err) => {
+        reject(`Unable to find user - ${varName}: ${err}`);
+    });
+  });
+}
+
 
 function refreshAccount(accountData){
   return new Promise(function (resolve, reject) {
@@ -760,4 +796,4 @@ function collectAllResource(accountData){
   });
 }
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, collectAllResource};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, collectAllResource};
