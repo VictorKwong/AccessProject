@@ -27,7 +27,7 @@
     <p>Number Abbr test</p>
     <p title="Iron: {{addCommas 1234.7}}">{{toAbbr 1234.7}}</p>
     <p>{{toAbbr 2345678}}</p>
-    <p>{{toAbbr 3456789876}}</p>    
+    <p>{{toAbbr 3456789876}}</p>
 </div>
 
 
@@ -157,11 +157,16 @@
         const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
         const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
 
+
         if({{IronMine.UpgradeCost_Status}}){
             const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
             document.getElementById('ironMineUpgrade-js').innerText = timeRemain;
             if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.reload();
+                //1. upgrading, 2. during upgrading, collect resource, 3. finished upgrading /collectResource
+                //collectAllResource
+                //window.location.reload();
+                const protocol = window.location.origin + "/account";
+                window.location.replace(protocol)
             }
         }else{
             document.getElementById('ironMineUpgrade-js').innerText = "";

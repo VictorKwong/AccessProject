@@ -434,6 +434,7 @@ function refreshAccount(accountData){
 
           accountData.IronMine.Level += 1;
           accountData.IronMine.ProduceRate = account[0].IronMine.ProduceRate + account[0].IronMine.ProduceRate;
+          accountData.IronMine.Capacity = account[0].IronMine.Capacity + account[0].IronMine.Capacity;
           accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
           accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
           User.updateOne(
@@ -771,7 +772,7 @@ function collectAllResource(accountData){
               parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
 
               //determine how many things that can store
-              accountData.IronMine.CollectedResource <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += accountData.IronMine.CollectedResource : accountData.Actor.Iron = account[0].IronStorage.Capacity
+              (accountData.Actor.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += accountData.IronMine.CollectedResource : accountData.Actor.Iron = account[0].IronStorage.Capacity
               //update
               accountData.previousCollectTime = currentTimeInSeconds
               accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
@@ -780,7 +781,7 @@ function collectAllResource(accountData){
               ).exec().then(() => {
                   resolve(accountData);
               }).catch((err) => {
-                  reject("Upgrade cause error:" + err);
+                  reject("Can't collect resource: " + err);
               })
             } else if(parseInt(account[0].IronMine.ProduceRate * duration/3600) <= 0){
               //No resource to collect

@@ -33,6 +33,7 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - [ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
 - [ ] Change collect reward as daily mission (instead of counting time?)
 - [x] Collect all resource time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
+- [x] During Upgrading, change url to collect resource /collectAllResource. Finished upgrading and reload page while link = /collectAllResource (Problem Solving). **Change the reload url to origin/account.
 
 -> All testing method should be use by IronMine & IronStorage first **
 
