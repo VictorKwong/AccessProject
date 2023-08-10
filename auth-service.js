@@ -54,6 +54,44 @@ var userSchema = new Schema({
         min: 0
       }
     },
+    "Pet": {
+      "name": {
+        type: String,
+        unique: true,
+        default: "pet_" + Date.now()
+      },
+      "level":{
+        type: Number,
+        default: 1,
+      },
+      "experience":{
+        type: Number,
+        default: 0,
+        min:0
+      },
+      "maxHealth": {
+        type: Number,
+        default: 100,
+        min: 0
+      },
+      "currentHealth": {
+        type: Number,
+        default: 100,
+        min: 0
+      },
+      "strength":{
+        type: Number,
+        default: 1,
+      },
+      "dexterity":{
+        type: Number,
+        default: 1,
+      },
+      "intelligence":{
+        type: Number,
+        default: 1,
+      }
+    },
     "IronMine": {
       "Name": {
         type: String,

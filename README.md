@@ -27,15 +27,43 @@ Direction:
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)
 
-- [ ] Add Digital Clock system to the main.hbs - digital clock service js
+- [x] Add Digital Clock system to the main.hbs - digital clock service js
 - [x] Reduce all passing variables in auth-service.js
 - [x] Change display Name system (req.session.update (Front end) + SQL (Back End))
-- [ ] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
+- [x] How to work on a javascript time upgrade function - Upgrade_StartTime, Upgrade_DurationSecond
 - [ ] Change collect reward as daily mission (instead of counting time?)
 - [x] Collect all resource time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
 - [x] During Upgrading, change url to collect resource /collectAllResource. Finished upgrading and reload page while link = /collectAllResource (Problem Solving). **Change the reload url to origin/account.
 
 -> All testing method should be use by IronMine & IronStorage first **
+
+## Check list
+- IronMine
+- Generate resource each second, It cannot collect more resource up to the IronMine Capacity or IronStorage Capacity
+- If calculated collect resource (CCR) is more than IronMine Capacity, then CCR will be cap at IronMine Capacity
+- At this point, I was arguing should I keep IronStorage since CCR might reduce to 0 either it reaches to IronMine Capacity or IronStorage Capacity
+
+- Upgrading Building
+- When user click upgrade, It will check cost materials, reduce it and add an upgrade time clock to the database server.
+- using formula UpgradeTime - (Date.Now() - upgradeTimeStart) can get the remain time upgrade (RTU). When RTU is less than or equal to 0, it will refresh the page + accountData check upgrade status and update all information, and do a final UpdateOne Check. (Expand Version)
+- Once click "Collect all" button, It redirects to post /collectAllResource page and it will stick with windows.location.reload() when building is finished upgrade. To resolve this, change windows.location.reload() to redirect the url page origin + "/account".
+
+- DailyReward System
+- User can claim daily rewards due to how many days that they had login, cap at 20 days
+- DailyReward will depends on the days that had been login continuously, it resets to 1 day if user break the cycle.
+
+- User/Pet Level system?
+- name, level, exp, max/current health, str, dex, int
+
+- User Inventory Bag
+- To be continue
+
+- Event or enemy System?
+- To be continue
+
+
+- Can use "Collect all" button to collect all Resource
+
 
 ## Upgrading notes pseudo code
 

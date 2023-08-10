@@ -77,6 +77,10 @@
     </form>
 </div>
 
+<br>
+<br>
+<br>
+
 <div class="border border-primary">
     <p>{{CrystalMine.Name}} - Lv {{CrystalMine.Level}}</p>
 
@@ -165,8 +169,7 @@
                 //1. upgrading, 2. during upgrading, collect resource, 3. finished upgrading /collectResource
                 //collectAllResource
                 //window.location.reload();
-                const protocol = window.location.origin + "/account";
-                window.location.replace(protocol)
+                window.location.replace(window.location.origin + "/account")
             }
         }else{
             document.getElementById('ironMineUpgrade-js').innerText = "";
