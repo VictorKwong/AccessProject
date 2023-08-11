@@ -52,6 +52,9 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - User can claim daily rewards due to how many days that they had login, cap at 20 days
 - DailyReward will depends on the days that had been login continuously, it resets to 1 day if user break the cycle.
 
+- Achievement System
+- Reach certain level will gain bonus speed of structure or buff?
+
 - User/Pet Level system?
 - name, level, exp, max/current health, str, dex, int
 
