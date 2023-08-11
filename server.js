@@ -152,6 +152,16 @@ app.post("/login", function(req, res) {
                     Crystal: user.Actor.Crystal,
                     Petroleum: user.Actor.Petroleum,
                 },
+                Pet:{
+                    name: user.Pet.name,
+                    level: user.Pet.level,
+                    experience: user.Pet.experience,
+                    maxHealth: user.Pet.maxHealth,
+                    currentHealth: user.Pet.currentHealth,
+                    strength: user.Pet.strength,
+                    dexterity: user.Pet.dexterity,
+                    intelligence: user.Pet.intelligence,
+                },
                 IronMine: {
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
@@ -250,6 +260,16 @@ app.get("/account", ensureLogin, function(req,res){
                     Crystal: user.Actor.Crystal,
                     Petroleum: user.Actor.Petroleum,
                 },
+                Pet:{
+                    name: user.Pet.name,
+                    level: user.Pet.level,
+                    experience: user.Pet.experience,
+                    maxHealth: user.Pet.maxHealth,
+                    currentHealth: user.Pet.currentHealth,
+                    strength: user.Pet.strength,
+                    dexterity: user.Pet.dexterity,
+                    intelligence: user.Pet.intelligence,
+                },
                 IronMine: {
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
@@ -313,6 +333,7 @@ app.get("/account", ensureLogin, function(req,res){
             res.render('account', {
                 data: req.session.user,
                 Actor: req.session.user.Actor,
+                Pet: req.session.user.Pet,
                 IronMine: req.session.user.IronMine,
                 IronStorage: req.session.user.IronStorage,
                 CrystalMine: req.session.user.CrystalMine,
@@ -340,6 +361,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -353,6 +375,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -375,6 +398,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -389,6 +413,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -417,6 +442,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -444,6 +470,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -471,6 +498,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -498,6 +526,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -525,6 +554,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -552,6 +582,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', {
                     data: req.session.user,
                     Actor: req.session.user.Actor,
+                    Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
                     CrystalMine: req.session.user.CrystalMine,
@@ -571,6 +602,21 @@ app.get("/information", ensureLogin, function(req,res){
     res.render("information", {
         data: req.session.user,
         Actor: req.session.user.Actor,
+        Pet: req.session.user.Pet,
+        IronMine: req.session.user.IronMine,
+        IronStorage: req.session.user.IronStorage,
+        CrystalMine: req.session.user.CrystalMine,
+        CrystalStorage: req.session.user.CrystalStorage,
+        PetroleumMine: req.session.user.PetroleumMine,
+        PetroleumStorage: req.session.user.PetroleumStorage,
+        ItemBag: req.session.user.ItemBag});
+})
+
+app.get("/Pet", ensureLogin, function(req,res){
+    res.render("pet", {
+        data: req.session.user,
+        Actor: req.session.user.Actor,
+        Pet: req.session.user.Pet,
         IronMine: req.session.user.IronMine,
         IronStorage: req.session.user.IronStorage,
         CrystalMine: req.session.user.CrystalMine,
@@ -596,6 +642,16 @@ app.post("/information", function(req, res) {
                     Iron: user.Actor.Iron,
                     Crystal: user.Actor.Crystal,
                     Petroleum: user.Actor.Petroleum,
+                },
+                Pet:{
+                    name: user.Pet.name,
+                    level: user.Pet.level,
+                    experience: user.Pet.experience,
+                    maxHealth: user.Pet.maxHealth,
+                    currentHealth: user.Pet.currentHealth,
+                    strength: user.Pet.strength,
+                    dexterity: user.Pet.dexterity,
+                    intelligence: user.Pet.intelligence,
                 },
                 IronMine: {
                     "Name": user.IronMine.Name,
@@ -660,6 +716,7 @@ app.post("/information", function(req, res) {
             res.render("information", {
                 data: req.session.user,
                 Actor: req.session.user.Actor,
+                Pet: req.session.user.Pet,
                 IronMine: req.session.user.IronMine,
                 IronStorage: req.session.user.IronStorage,
                 CrystalMine: req.session.user.CrystalMine,

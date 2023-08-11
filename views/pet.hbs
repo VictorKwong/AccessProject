@@ -1,0 +1,17 @@
+{{#if errorMessage}}
+    <div class="alert alert-danger"> <strong>Error:</strong> {{errorMessage}}</div>
+{{else if successMessage}}
+    <div class="alert alert-success"> <strong>Success:</strong> {{successMessage}}</div>
+{{/if}}
+
+<h1>{{data.displayName}}</h1>
+
+<div>
+    <p>{{Pet.name}}</p>
+    <p>Lvl: {{Pet.level}}</p>
+    <p>EXP: {{Pet.experience}}</p>
+    <p>Health: {{Pet.currentHealth}}/{{Pet.maxHealth}}</p>
+    <p>STR: {{Pet.strength}}</p>
+    <p>DEX: {{Pet.dexterity}}</p>
+    <p>INT: {{Pet.intelligence}}</p>
+</div>
