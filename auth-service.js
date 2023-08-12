@@ -19,7 +19,7 @@ var userSchema = new Schema({
     "displayName":  {
       type: String,
       unique: true,
-      default: "player_" + Date.now()
+      default: "player_" + Date.now() + Math.floor(Math.random() * 999)
     },
     "rewardDate" : {
       type: Date,
@@ -58,7 +58,7 @@ var userSchema = new Schema({
       "name": {
         type: String,
         unique: true,
-        default: "pet_" + Date.now()
+        default: "pet_" + Date.now() + Math.floor(Math.random() * 999)
       },
       "level":{
         type: Number,
@@ -803,7 +803,6 @@ function collectAllResource(accountData){
             let duration = currentTimeInSeconds - account[0].previousCollectTime;
 
             accountData.IronMine.CollectedResource = 0;
-
 
             if((accountData.Actor.Iron < account[0].IronStorage.Capacity) && parseInt(account[0].IronMine.ProduceRate * duration/3600) > 0){
               //determine how many thing that we can collect

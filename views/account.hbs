@@ -33,10 +33,11 @@
 
 <div class="border border-dark">
     <p>{{IronMine.Name}} - Lv {{IronMine.Level}}</p>
+    <p id="ironMineRate-js">Status: </p>
 
     <p>Produce Rate: {{toAbbr IronMine.ProduceRate}}</p>
     <p>Capacity: {{toAbbr IronMine.Capacity}}</p>
-
+    
     <p>Upgrade Cost: Iron - {{toAbbr IronMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr IronMine.UpgradeCost_Crystal}}</p>
     <p>Upgrade Time: {{IronMine.UpgradeCost_Time}}</p>
@@ -158,11 +159,16 @@
 <script>
     function upgradeIronMine() {
         let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
-        const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
-        const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
-
-
+        //produce rate
+        let duration = dateNow - {{data.previousCollectTime}};
+        let rate;
+        parseInt({{IronMine.ProduceRate}} * duration/3600) <= {{IronMine.Capacity}} ? rate = parseInt({{IronMine.ProduceRate}} * duration/3600) : rate = {{IronMine.Capacity}};
+        const produceRate = "Status: " + rate + "/" + {{IronMine.Capacity}};
+        document.getElementById('ironMineRate-js').innerText = produceRate;
+        //upgrade status
         if({{IronMine.UpgradeCost_Status}}){
+            const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
+            const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
             const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
             document.getElementById('ironMineUpgrade-js').innerText = timeRemain;
             if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
@@ -175,8 +181,7 @@
             document.getElementById('ironMineUpgrade-js').innerText = "";
         }
 
-
-}
+    }
 setInterval(upgradeIronMine, 1000);
 // Initial call to run the test function immediately
 upgradeIronMine();
