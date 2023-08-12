@@ -9,9 +9,9 @@
 <p>Login Reward Bonus: {{data.loginBonus}}</p>
 
 <div class="d-flex justify-content-end">
-    <div class="p-2" title="Iron: {{addCommas Actor.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/> {{addCommas Actor.Iron}}</div>
-    <div class="p-2" title="Crystal: {{addCommas Actor.Crystal}}">Crystal: {{addCommas Actor.Crystal}}</div>
-    <div class="p-2" title="Petroleum: {{addCommas Actor.Petroleum}}">Petroleum: {{addCommas Actor.Petroleum}}</div>
+    <div class="p-2" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/> {{addCommas Resource.Iron}}</div>
+    <div class="p-2" title="Crystal: {{addCommas Resource.Crystal}}">Crystal: {{addCommas Resource.Crystal}}</div>
+    <div class="p-2" title="Petroleum: {{addCommas Resource.Petroleum}}">Petroleum: {{addCommas Resource.Petroleum}}</div>
 </div>
 
 <div class="border border-dark">
@@ -137,12 +137,22 @@
     <h2>Resource</h2>
         {{#each ItemBag.Resource}}
             {{#if Amount}}
-                <p>{{Name}}</p>
-                <p>{{Amount}}</p>
+                <div onclick="updateInputAndSelect('{{Name}}', {{Amount}})">
+                    <p>{{Name}}</p>
+                    <p>Amount: {{Amount}}</p>
+                </div>
             {{else}}
                 <p>Should not display</p>
             {{/if}}
         {{/each}}
+    <div>
+        <h3>Select Resource</h3>
+        <input type="number" id="customNumber" min="1" value="1">
+        
+        <button onclick="decrementValue()">-</button>
+        <button onclick="incrementValue()">+</button>
+    </div>
+
 
     <h2>Materials</h2>
         {{#each ItemBag.Materials}}
@@ -162,7 +172,7 @@
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
         let rate;
-        parseInt({{IronMine.ProduceRate}} * duration/3600) <= {{IronMine.Capacity}} ? rate = parseInt({{IronMine.ProduceRate}} * duration/3600) : rate = {{IronMine.Capacity}};
+        parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) <= {{IronMine.Capacity}} ? rate = parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) : rate = {{IronMine.Capacity}};
         const produceRate = "Status: " + rate + "/" + {{IronMine.Capacity}};
         document.getElementById('ironMineRate-js').innerText = produceRate;
         //upgrade status
@@ -185,4 +195,23 @@
 setInterval(upgradeIronMine, 1000);
 // Initial call to run the test function immediately
 upgradeIronMine();
+
+        function updateInputAndSelect(name, amount) {
+            const customNumberInput = document.getElementById('customNumber');
+            customNumberInput.value = amount;
+        }
+
+        function decrementValue() {
+            const customNumberInput = document.getElementById('customNumber');
+            if (customNumberInput.value > 1) {
+                customNumberInput.value = parseInt(customNumberInput.value) - 1;
+            }
+        }
+
+        function incrementValue() {
+            const customNumberInput = document.getElementById('customNumber');
+            customNumberInput.value = parseInt(customNumberInput.value) + 1;
+        }
+
+
 </script>

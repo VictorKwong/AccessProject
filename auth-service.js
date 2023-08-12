@@ -37,7 +37,7 @@ var userSchema = new Schema({
       type: Number,
       default: Math.floor(Date.now() / 1000)
     },
-    "Actor": {
+    "Resource": {
       "Iron": {
         type: Number,
         default: 200,
@@ -258,11 +258,11 @@ var userSchema = new Schema({
         },
         "Crystal1000": {
           "Name": { type: String, default: "1,000 Crystal" },
-          "Amount": { type: Number, default: 10 }
+          "Amount": { type: Number, default: 25 }
         },
         "Petroleum200": {
           "Name": { type: String, default: "200 Petroleum" },
-          "Amount": { type: Number, default: 10 }
+          "Amount": { type: Number, default: 50 }
         },
       },
       "Materials" : {
@@ -274,6 +274,16 @@ var userSchema = new Schema({
           "Name": { type: String, default: "Carbon Steel" },
           "Amount": { type: Number, default: 0 }
         },
+      }
+    },
+    "Achievement": {
+      "Resource":{
+        "FirstCollect":{
+          "Name": { type: String, default: "FirstCollect" },
+          "Bool": { type: Boolean, default: false},
+          "Description": { type: String, default: "Increase production Rate 1000%"}
+        },
+        "Bonus": { type: Number, default: 1},
       }
     }
 });
@@ -429,9 +439,9 @@ function resetAccount(accountData) {
             accountData.loginBonus = 0
             accountData.rewardCollect = false
             accountData.previousCollectTime = Math.floor(Date.now() / 1000)
-            accountData.Actor.Iron = 200
-            accountData.Actor.Crystal = 1000000
-            accountData.Actor.Petroleum = 50
+            accountData.Resource.Iron = 200
+            accountData.Resource.Crystal = 1000000
+            accountData.Resource.Petroleum = 50
             accountData.IronMine.Level = 1
             accountData.IronMine.ProduceRate = 200
             accountData.IronMine.Capacity = 1000
@@ -499,12 +509,11 @@ function upgradeIronMine(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
 
-
-            accountData.Actor.Iron -= account[0].IronMine.UpgradeCost_Iron;
-            accountData.Actor.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
+            accountData.Resource.Iron -= account[0].IronMine.UpgradeCost_Iron;
+            accountData.Resource.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
             accountData.IronMine.UpgradeCost_Status = true;
             accountData.IronMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
             //Upgrade time is done then add these stats together
@@ -534,11 +543,11 @@ function upgradeCrystalMine(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].CrystalMine.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].CrystalMine.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].CrystalMine.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].CrystalMine.UpgradeCost_Crystal) >= 0){
 
-                accountData.Actor.Iron -= account[0].CrystalMine.UpgradeCost_Iron;
-                accountData.Actor.Crystal -= account[0].CrystalMine.UpgradeCost_Crystal;
+                accountData.Resource.Iron -= account[0].CrystalMine.UpgradeCost_Iron;
+                accountData.Resource.Crystal -= account[0].CrystalMine.UpgradeCost_Crystal;
                 accountData.CrystalMine.Level += 1;
                 accountData.CrystalMine.ProduceRate = account[0].CrystalMine.ProduceRate + account[0].CrystalMine.ProduceRate;
                 accountData.CrystalMine.UpgradeCost_Iron = account[0].CrystalMine.UpgradeCost_Iron + account[0].CrystalMine.UpgradeCost_Iron;
@@ -564,11 +573,11 @@ function upgradePetroleumMine(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].PetroleumMine.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].PetroleumMine.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].PetroleumMine.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].PetroleumMine.UpgradeCost_Crystal) >= 0){
 
-                accountData.Actor.Iron -= account[0].PetroleumMine.UpgradeCost_Iron;
-                accountData.Actor.Crystal -= account[0].PetroleumMine.UpgradeCost_Crystal;
+                accountData.Resource.Iron -= account[0].PetroleumMine.UpgradeCost_Iron;
+                accountData.Resource.Crystal -= account[0].PetroleumMine.UpgradeCost_Crystal;
                 accountData.PetroleumMine.Level += 1;
                 accountData.PetroleumMine.ProduceRate = account[0].PetroleumMine.ProduceRate + account[0].PetroleumMine.ProduceRate;
                 accountData.PetroleumMine.UpgradeCost_Iron = account[0].PetroleumMine.UpgradeCost_Iron + account[0].PetroleumMine.UpgradeCost_Iron;
@@ -596,11 +605,11 @@ function upgradeIronStorage(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].IronStorage.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].IronStorage.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].IronStorage.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].IronStorage.UpgradeCost_Crystal) >= 0){
 
-                accountData.Actor.Iron -= account[0].IronStorage.UpgradeCost_Iron;
-                accountData.Actor.Crystal -= account[0].IronStorage.UpgradeCost_Crystal;
+                accountData.Resource.Iron -= account[0].IronStorage.UpgradeCost_Iron;
+                accountData.Resource.Crystal -= account[0].IronStorage.UpgradeCost_Crystal;
                 accountData.IronStorage.Level += 1;
                 accountData.IronStorage.ProduceRate = account[0].IronStorage.ProduceRate + account[0].IronStorage.ProduceRate;
                 accountData.IronStorage.UpgradeCost_Iron = account[0].IronStorage.UpgradeCost_Iron + account[0].IronStorage.UpgradeCost_Iron;
@@ -627,11 +636,11 @@ function upgradeCrystalStorage(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].CrystalStorage.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].CrystalStorage.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].CrystalStorage.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].CrystalStorage.UpgradeCost_Crystal) >= 0){
 
-                accountData.Actor.Iron -= account[0].CrystalStorage.UpgradeCost_Iron;
-                accountData.Actor.Crystal -= account[0].CrystalStorage.UpgradeCost_Crystal;
+                accountData.Resource.Iron -= account[0].CrystalStorage.UpgradeCost_Iron;
+                accountData.Resource.Crystal -= account[0].CrystalStorage.UpgradeCost_Crystal;
                 accountData.CrystalStorage.Level += 1;
                 accountData.CrystalStorage.ProduceRate = account[0].CrystalStorage.ProduceRate + account[0].CrystalStorage.ProduceRate;
                 accountData.CrystalStorage.UpgradeCost_Iron = account[0].CrystalStorage.UpgradeCost_Iron + account[0].CrystalStorage.UpgradeCost_Iron;
@@ -658,11 +667,11 @@ function upgradePetroleumStorage(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
-              (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
 
-                accountData.Actor.Iron -= account[0].PetroleumStorage.UpgradeCost_Iron;
-                accountData.Actor.Crystal -= account[0].PetroleumStorage.UpgradeCost_Crystal;
+                accountData.Resource.Iron -= account[0].PetroleumStorage.UpgradeCost_Iron;
+                accountData.Resource.Crystal -= account[0].PetroleumStorage.UpgradeCost_Crystal;
                 accountData.PetroleumStorage.Level += 1;
                 accountData.PetroleumStorage.ProduceRate = account[0].PetroleumStorage.ProduceRate + account[0].PetroleumStorage.ProduceRate;
                 accountData.PetroleumStorage.UpgradeCost_Iron = account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron;
@@ -705,9 +714,9 @@ function claimDailyReward(accountData) {
             }
             accountData.loginBonus = bonusCount;
             accountData.rewardDate = today;
-            accountData.Actor.Iron += 7000 * bonusCount;
-            accountData.Actor.Crystal += 7000 * bonusCount;
-            accountData.Actor.Petroleum += 3500 * bonusCount;
+            accountData.Resource.Iron += 7000 * bonusCount;
+            accountData.Resource.Crystal += 7000 * bonusCount;
+            accountData.Resource.Petroleum += 3500 * bonusCount;
             accountData.IronMine.HistoryCollectedResource += 7000 * bonusCount;
             //---------------------
             // const updateAccount = { 
@@ -715,10 +724,10 @@ function claimDailyReward(accountData) {
             //   userName: account[0].userName,
             //   rewardDate: today,
             //   loginBonus: bonusCount,
-            //   Actor: {
-            //     Iron: account[0].Actor.Iron + (7000 * bonusCount),
-            //     Crystal: account[0].Actor.Crystal + (7000 * bonusCount),
-            //     Petroleum: account[0].Actor.Petroleum + (3500 * bonusCount)
+            //   Resource: {
+            //     Iron: account[0].Resource.Iron + (7000 * bonusCount),
+            //     Crystal: account[0].Resource.Crystal + (7000 * bonusCount),
+            //     Petroleum: account[0].Resource.Petroleum + (3500 * bonusCount)
             //   },
             //   IronMine: {
             //     Name: account[0].IronMine.Name,
@@ -794,8 +803,6 @@ function collectAllResource(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          // if ((account[0].Actor.Iron - account[0].PetroleumStorage.UpgradeCost_Iron) >= 0 &&
-          //     (account[0].Actor.Crystal - account[0].PetroleumStorage.UpgradeCost_Crystal) >= 0){
 
             let currentTime = Date.now();
             let currentTimeInSeconds = Math.floor(currentTime / 1000);
@@ -804,12 +811,17 @@ function collectAllResource(accountData){
 
             accountData.IronMine.CollectedResource = 0;
 
-            if((accountData.Actor.Iron < account[0].IronStorage.Capacity) && parseInt(account[0].IronMine.ProduceRate * duration/3600) > 0){
+            if((accountData.Resource.Iron < account[0].IronStorage.Capacity) && parseInt(account[0].IronMine.ProduceRate * duration/3600) > 0){
+              //Achievement
+              if(!account[0].Achievement.Resource.FirstCollect.Bool){
+                accountData.Achievement.Resource.FirstCollect.Bool = true;
+                accountData.Achievement.Resource.Bonus *= 10;
+              }
               //determine how many thing that we can collect
-              parseInt(account[0].IronMine.ProduceRate * duration/3600) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
+              parseInt(account[0].IronMine.ProduceRate * duration/3600 * accountData.Achievement.Resource.Bonus) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600 * accountData.Achievement.Resource.Bonus) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
 
               //determine how many things that can store
-              (accountData.Actor.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.Actor.Iron += accountData.IronMine.CollectedResource : accountData.Actor.Iron = account[0].IronStorage.Capacity
+              (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.Resource.Iron += accountData.IronMine.CollectedResource : accountData.Resource.Iron = account[0].IronStorage.Capacity
               //update
               accountData.previousCollectTime = currentTimeInSeconds
               accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource

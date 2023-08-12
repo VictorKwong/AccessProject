@@ -34,6 +34,8 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - [ ] Change collect reward as daily mission (instead of counting time?)
 - [x] Collect all resource time stamp. currentTime - previousCollectTime = Remaining time that hasn't been collect **
 - [x] During Upgrading, change url to collect resource /collectAllResource. Finished upgrading and reload page while link = /collectAllResource (Problem Solving). **Change the reload url to origin/account.
+- [ ] Collect Rate will be automatically update as level increase.(Should it be?) 75/1000 -> 151/2000?
+- [ ] Controlling the item Resource Number, Select and max-cap question
 
 -> All testing method should be use by IronMine & IronStorage first **
 
@@ -61,9 +63,11 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - User Inventory Bag
 - To be continue
 
-- Event or enemy System?
+- enemy System?
 - To be continue
 
+- Regular Event?
+- To be continue
 
 - Can use "Collect all" button to collect all Resource
 

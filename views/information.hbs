@@ -14,6 +14,22 @@
     
 </div>
 
+<div>
+    <h4>Achievement</h4>
+    {{#if Achievement.Resource.FirstCollect.Bool}}
+        <div class="alert alert-success">
+            <p>{{Achievement.Resource.FirstCollect.Name}}</p>
+            <p>{{Achievement.Resource.FirstCollect.Description}}</p>
+        </div>
+    {{else}}
+        <div class="alert alert-secondary">
+            <p>{{Achievement.Resource.FirstCollect.Name}}</p>
+            <p>{{Achievement.Resource.FirstCollect.Description}}</p>
+        </div>
+    {{/if}}
+
+</div>
+
 <br>
 <form method="post" action="/information">
     <div class="row">

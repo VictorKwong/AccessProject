@@ -3,7 +3,6 @@ var path = require("path");
 const exphbs = require('express-handlebars');
 var clientSessions = require('client-sessions');
 
-
 var app = express();
 var blogService = require('./blog-service.js');
 var authData = require('./auth-service.js');
@@ -124,7 +123,7 @@ function onHttpStart() {
 app.get("/", function(req,res){
     res.render('index', {
         // data: req.session.user,
-        // Actor: req.session.user.Actor,
+        // Resource: req.session.user.Resource,
         // IronMine: req.session.user.IronMine,
         // IronStorage: req.session.user.IronStorage,
         // CrystalMine: req.session.user.CrystalMine,
@@ -150,10 +149,10 @@ app.post("/login", function(req, res) {
                 rewardDate: user.rewardDate,
                 rewardCollect: user.rewardCollect,
                 previousCollectTime: user.previousCollectTime,
-                Actor: {
-                    Iron: user.Actor.Iron,
-                    Crystal: user.Actor.Crystal,
-                    Petroleum: user.Actor.Petroleum,
+                Resource: {
+                    Iron: user.Resource.Iron,
+                    Crystal: user.Resource.Crystal,
+                    Petroleum: user.Resource.Petroleum,
                 },
                 Pet:{
                     name: user.Pet.name,
@@ -222,6 +221,16 @@ app.post("/login", function(req, res) {
                     Materials : {
                         "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
                         "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
+                    }
+                },
+                Achievement: {
+                    Resource : {
+                        "FirstCollect" : {
+                            "Name": user.Achievement.Resource.FirstCollect.Name,
+                            "Bool": user.Achievement.Resource.FirstCollect.Bool,
+                            "Description": user.Achievement.Resource.FirstCollect.Description
+                        },
+                        "Bonus": user.Achievement.Resource.Bonus,
                     }
                 }
             }
@@ -258,10 +267,10 @@ app.get("/account", ensureLogin, function(req,res){
                 rewardDate: user.rewardDate,
                 rewardCollect: user.rewardCollect,
                 previousCollectTime: user.previousCollectTime,
-                Actor: {
-                    Iron: user.Actor.Iron,
-                    Crystal: user.Actor.Crystal,
-                    Petroleum: user.Actor.Petroleum,
+                Resource: {
+                    Iron: user.Resource.Iron,
+                    Crystal: user.Resource.Crystal,
+                    Petroleum: user.Resource.Petroleum,
                 },
                 Pet:{
                     name: user.Pet.name,
@@ -331,11 +340,21 @@ app.get("/account", ensureLogin, function(req,res){
                         "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
                         "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
                     }
+                },
+                Achievement: {
+                    Resource : {
+                        "FirstCollect" : {
+                            "Name": user.Achievement.Resource.FirstCollect.Name,
+                            "Bool": user.Achievement.Resource.FirstCollect.Bool,
+                            "Description": user.Achievement.Resource.FirstCollect.Description
+                        },
+                        "Bonus": user.Achievement.Resource.Bonus,
+                    }
                 }
             }
             res.render('account', {
                 data: req.session.user,
-                Actor: req.session.user.Actor,
+                Resource: req.session.user.Resource,
                 Pet: req.session.user.Pet,
                 IronMine: req.session.user.IronMine,
                 IronStorage: req.session.user.IronStorage,
@@ -343,7 +362,8 @@ app.get("/account", ensureLogin, function(req,res){
                 CrystalStorage: req.session.user.CrystalStorage,
                 PetroleumMine: req.session.user.PetroleumMine,
                 PetroleumStorage: req.session.user.PetroleumStorage,
-                ItemBag : req.session.user.ItemBag
+                ItemBag : req.session.user.ItemBag,
+                Achievement: req.session.user.Achievement
             });
         }).catch((err) => {
             res.render('login', {errorMessage: err, userName: req.session.user.userName});
@@ -356,14 +376,14 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     if(req.params.upgrade === "claimDailyReward"){
         return new Promise((resolve, reject) => {
             authData.claimDailyReward(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
                 req.session.user.loginBonus = user.loginBonus
                 
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -372,12 +392,13 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     successMessage: "Daily Reward Claimed! Iron +" + 7000 * user.loginBonus +", Crystal +" + 7000 * user.loginBonus + ", Petroleum +" + 3500 * user.loginBonus
                 })
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -386,6 +407,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -393,14 +415,14 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "collectAllResource"){
         return new Promise((resolve, reject) => {
             authData.collectAllResource(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
                 
                 
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -409,13 +431,14 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     successMessage: "Collect all Resource! Iron +" + user.IronMine.CollectedResource
                 })
             }).catch((err) => {
 
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -424,6 +447,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -431,9 +455,9 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "upgradeIronMine"){
         return new Promise((resolve, reject) => {
             authData.upgradeIronMine(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
                 req.session.user.IronMine.Level = user.IronMine.Level
                 req.session.user.IronMine.ProduceRate = user.IronMine.ProduceRate
@@ -444,7 +468,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -453,6 +477,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -460,9 +485,9 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "upgradeCrystalMine"){
         return new Promise((resolve, reject) => {
             authData.upgradeCrystalMine(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
                 req.session.user.CrystalMine.Level = user.CrystalMine.Level
                 req.session.user.CrystalMine.ProduceRate = user.CrystalMine.ProduceRate
@@ -472,7 +497,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -481,6 +506,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -488,9 +514,9 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "upgradePetroleumMine"){
         return new Promise((resolve, reject) => {
             authData.upgradePetroleumMine(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
                 req.session.user.PetroleumMine.Level = user.PetroleumMine.Level
                 req.session.user.PetroleumMine.ProduceRate = user.PetroleumMine.ProduceRate
@@ -500,7 +526,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -509,6 +535,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -516,9 +543,9 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "upgradeIronStorage"){
         return new Promise((resolve, reject) => {
             authData.upgradeIronStorage(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
                 req.session.user.IronStorage.Level = user.IronStorage.Level
                 req.session.user.IronStorage.Capacity = user.IronStorage.Capacity
@@ -528,7 +555,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -537,6 +564,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -544,9 +572,9 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "upgradeCrystalStorage"){
         return new Promise((resolve, reject) => {
             authData.upgradeCrystalStorage(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
                 req.session.user.CrystalStorage.Level = user.CrystalStorage.Level
                 req.session.user.CrystalStorage.Capacity = user.CrystalStorage.Capacity
@@ -556,7 +584,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -565,6 +593,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -572,9 +601,9 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
     }else if(req.params.upgrade === "upgradePetroleumStorage"){
         return new Promise((resolve, reject) => {
             authData.upgradePetroleumStorage(req.session.user).then((user) => {
-                req.session.user.Actor.Iron = user.Actor.Iron
-                req.session.user.Actor.Crystal = user.Actor.Crystal
-                req.session.user.Actor.Petroleum = user.Actor.Petroleum
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
                 req.session.user.PetroleumStorage.Level = user.PetroleumStorage.Level
                 req.session.user.PetroleumStorage.Capacity = user.PetroleumStorage.Capacity
@@ -584,7 +613,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
             }).catch((err) => {
                 res.render('account', {
                     data: req.session.user,
-                    Actor: req.session.user.Actor,
+                    Resource: req.session.user.Resource,
                     Pet: req.session.user.Pet,
                     IronMine: req.session.user.IronMine,
                     IronStorage: req.session.user.IronStorage,
@@ -593,6 +622,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumMine: req.session.user.PetroleumMine,
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
                     errorMessage: err
                 })
             })
@@ -604,7 +634,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
 app.get("/information", ensureLogin, function(req,res){
     res.render("information", {
         data: req.session.user,
-        Actor: req.session.user.Actor,
+        Resource: req.session.user.Resource,
         Pet: req.session.user.Pet,
         IronMine: req.session.user.IronMine,
         IronStorage: req.session.user.IronStorage,
@@ -612,13 +642,14 @@ app.get("/information", ensureLogin, function(req,res){
         CrystalStorage: req.session.user.CrystalStorage,
         PetroleumMine: req.session.user.PetroleumMine,
         PetroleumStorage: req.session.user.PetroleumStorage,
-        ItemBag: req.session.user.ItemBag});
+        ItemBag: req.session.user.ItemBag,
+        Achievement: req.session.user.Achievement});
 })
 
 app.get("/Pet", ensureLogin, function(req,res){
     res.render("pet", {
         data: req.session.user,
-        Actor: req.session.user.Actor,
+        Resource: req.session.user.Resource,
         Pet: req.session.user.Pet,
         IronMine: req.session.user.IronMine,
         IronStorage: req.session.user.IronStorage,
@@ -626,7 +657,8 @@ app.get("/Pet", ensureLogin, function(req,res){
         CrystalStorage: req.session.user.CrystalStorage,
         PetroleumMine: req.session.user.PetroleumMine,
         PetroleumStorage: req.session.user.PetroleumStorage,
-        ItemBag: req.session.user.ItemBag});
+        ItemBag: req.session.user.ItemBag,
+        Achievement: req.session.user.Achievement});
 })
 
 app.post("/information", function(req, res) {
@@ -641,10 +673,10 @@ app.post("/information", function(req, res) {
                 rewardDate: user.rewardDate,
                 rewardCollect: user.rewardCollect,
                 previousCollectTime: user.previousCollectTime,
-                Actor: {
-                    Iron: user.Actor.Iron,
-                    Crystal: user.Actor.Crystal,
-                    Petroleum: user.Actor.Petroleum,
+                Resource: {
+                    Iron: user.Resource.Iron,
+                    Crystal: user.Resource.Crystal,
+                    Petroleum: user.Resource.Petroleum,
                 },
                 Pet:{
                     name: user.Pet.name,
@@ -714,11 +746,21 @@ app.post("/information", function(req, res) {
                         "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
                         "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
                     }
+                },
+                Achievement: {
+                    Resource : {
+                        "FirstCollect" : {
+                            "Name": user.Achievement.Resource.FirstCollect.Name,
+                            "Bool": user.Achievement.Resource.FirstCollect.Bool,
+                            "Description": user.Achievement.Resource.FirstCollect.Description
+                        },
+                        "Bonus": user.Achievement.Resource.Bonus,
+                    }
                 }
             }
             res.render("information", {
                 data: req.session.user,
-                Actor: req.session.user.Actor,
+                Resource: req.session.user.Resource,
                 Pet: req.session.user.Pet,
                 IronMine: req.session.user.IronMine,
                 IronStorage: req.session.user.IronStorage,
@@ -727,6 +769,7 @@ app.post("/information", function(req, res) {
                 PetroleumMine: req.session.user.PetroleumMine,
                 PetroleumStorage: req.session.user.PetroleumStorage,
                 ItemBag: req.session.user.ItemBag,
+                Achievement: req.session.user.Achievement,
                 successMessage: "Successful reset account!"
             });
         })
