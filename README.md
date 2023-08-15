@@ -24,6 +24,7 @@ Direction:
 - Express Handlebars = Helpers numbers separate by comma (1000 -> 1,000) and Abbreviate numbers (k,m,b).
 - app.use(express.static("images")) - Inserting Images through hbs (Partly Done - Finding images)
 - Add item slot - Item Boost or Instant use Item - Separate Categories = | Resource | Materials | Others etc..
+- Instead of "Collect" button, change it to Auto collect until it reaches to the Iron Capacity? (Individual timer IronMine, CrystalMine, PetroleumMine)
 
 Using startTime = Date.now() and endTime = Date.now(), and calculate the difference between them TimeDiff = endTime - startTime in milliseconds. (Optional)
 
@@ -49,6 +50,8 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - When user click upgrade, It will check cost materials, reduce it and add an upgrade time clock to the database server.
 - using formula UpgradeTime - (Date.Now() - upgradeTimeStart) can get the remain time upgrade (RTU). When RTU is less than or equal to 0, it will refresh the page + accountData check upgrade status and update all information, and do a final UpdateOne Check. (Expand Version)
 - Once click "Collect all" button, It redirects to post /collectAllResource page and it will stick with windows.location.reload() when building is finished upgrade. To resolve this, change windows.location.reload() to redirect the url page origin + "/account".
+- Can you collect resource during upgrade? Yes, after finished upgrade it will change the 
+
 
 - DailyReward System
 - User can claim daily rewards due to how many days that they had login, cap at 20 days
