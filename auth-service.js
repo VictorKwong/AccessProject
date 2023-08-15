@@ -821,7 +821,10 @@ function collectAllResource(accountData){
               parseInt(account[0].IronMine.ProduceRate * duration/3600 * accountData.Achievement.Resource.Bonus) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600 * accountData.Achievement.Resource.Bonus) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
 
               //determine how many things that can store
+              //update accountData.Resource.Iron
               (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.Resource.Iron += accountData.IronMine.CollectedResource : accountData.Resource.Iron = account[0].IronStorage.Capacity
+              //update accountData.IronMine.CollectedResource
+              (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.IronMine.CollectedResource : accountData.IronMine.CollectedResource = account[0].IronStorage.Capacity - accountData.Resource.Iron
               //update
               accountData.previousCollectTime = currentTimeInSeconds
               accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
