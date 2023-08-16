@@ -475,6 +475,9 @@ function refreshAccount(accountData){
       }else{
         let currentTime = Date.now();
         let currentTimeInSeconds = Math.floor(currentTime / 1000);
+        let duration = currentTimeInSeconds - account[0].previousCollectTime;
+        accountData.IronMine.CollectedResource = 0;
+
         if(((currentTimeInSeconds - accountData.IronMine.UpgradeCost_TimeStart) >= accountData.IronMine.UpgradeCost_Time) && accountData.IronMine.UpgradeCost_Status){
           //finished upgrade
           accountData.IronMine.UpgradeCost_Status = false;
@@ -485,17 +488,30 @@ function refreshAccount(accountData){
           accountData.IronMine.UpgradeCost_Iron = account[0].IronMine.UpgradeCost_Iron + account[0].IronMine.UpgradeCost_Iron;
           accountData.IronMine.UpgradeCost_Crystal = account[0].IronMine.UpgradeCost_Crystal + account[0].IronMine.UpgradeCost_Crystal;
           accountData.IronMine.UpgradeCost_Time = account[0].IronMine.UpgradeCost_Time + account[0].IronMine.UpgradeCost_Time;
-          User.updateOne(
-            { _id: accountData._id }, accountData
-          ).exec().then(() => {
-              resolve(accountData);
-          }).catch((err) => {
-              reject("Upgrade cause error:" + err);
-          })
-        }else{
-          //Nothing happend
-          resolve(account[0]);
         }
+
+        if(account[0].Resource.Iron >= account[0].IronStorage.Capacity){
+          accountData.IronMine.CollectedResource = 0;
+        }else if(((account[0].Resource.Iron + parseInt(account[0].IronMine.ProduceRate * duration/3600 * account[0].Achievement.Resource.Bonus)) <= account[0].IronStorage.Capacity)){
+          //determine how many thing that we can collect
+          accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600 * account[0].Achievement.Resource.Bonus);
+        }else if(((account[0].Resource.Iron + parseInt(account[0].IronMine.ProduceRate * duration/3600 * account[0].Achievement.Resource.Bonus)) > account[0].IronStorage.Capacity)){
+          accountData.IronMine.CollectedResource = account[0].IronStorage.Capacity - account[0].Resource.Iron;
+        }
+        //determine how many things that can store
+        //update accountData.Resource.Iron
+        (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.Resource.Iron += accountData.IronMine.CollectedResource : accountData.Resource.Iron = account[0].IronStorage.Capacity
+        
+        accountData.previousCollectTime = currentTimeInSeconds
+        accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
+        //always update
+        User.updateOne(
+          { _id: accountData._id }, accountData
+        ).exec().then(() => {
+            resolve(accountData);
+        }).catch((err) => {
+            reject("Upgrade cause error:" + err);
+        })
       }
     }).catch((err) => {
         reject(`Unable to find user - ${accountData.userName}: ${err}`);

@@ -9,7 +9,7 @@
 <p>Login Reward Bonus: {{data.loginBonus}}</p>
 
 <div class="d-flex justify-content-end">
-    <div class="p-2" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/> {{addCommas Resource.Iron}}</div>
+    <div class="p-2" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/><span id="IronResource-js">{{addCommas Resource.Iron}}</span></div>
     <div class="p-2" title="Crystal: {{addCommas Resource.Crystal}}">Crystal: {{addCommas Resource.Crystal}}</div>
     <div class="p-2" title="Petroleum: {{addCommas Resource.Petroleum}}">Petroleum: {{addCommas Resource.Petroleum}}</div>
 </div>
@@ -172,10 +172,19 @@
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
         let rate;
-        parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) <= {{IronMine.Capacity}} ? rate = parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) : rate = {{IronMine.Capacity}};
-        const produceRate = "Status: " + rate + "/" + {{IronMine.Capacity}};
-        document.getElementById('ironMineRate-js').innerText = produceRate;
-        //upgrade status
+        //parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) <= {{IronMine.Capacity}} ? rate = parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) : rate = {{IronMine.Capacity}};
+        //const produceRate = "Status: " + rate + "/" + {{IronMine.Capacity}};
+        //document.getElementById('ironMineRate-js').innerText = produceRate;
+
+        if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
+          rate = {{Resource.Iron}};
+        }else if(( {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{IronStorage.Capacity}} ){
+          //determine how many thing that we can collect
+          rate = {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
+        }
+        
+        document.getElementById('IronResource-js').innerText = rate;
+                //upgrade status
         if({{IronMine.UpgradeCost_Status}}){
             const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
             const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
@@ -190,6 +199,7 @@
         }else{
             document.getElementById('ironMineUpgrade-js').innerText = "";
         }
+
 
     }
 setInterval(upgradeIronMine, 1000);
