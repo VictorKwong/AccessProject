@@ -339,8 +339,8 @@ function loginAccount(accountData){
       }else{
         bcrypt.compare(accountData.password, account[0].password).then((result) => {
           if (result) {
-              //----Count Bonus, keep it as 20----
-              let bonusCount = account[0].loginBonus
+            //----Count Bonus, keep it as 20----
+            let bonusCount = account[0].loginBonus
               if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount < 20){
                 //do nothing
               }else if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount >= 20){
@@ -348,6 +348,27 @@ function loginAccount(accountData){
               }else{
                 account[0].loginBonus = 0;
               }
+            let currentTime = Date.now();
+            let currentTimeInSeconds = Math.floor(currentTime / 1000);
+            let duration = currentTimeInSeconds - account[0].previousCollectTime;
+
+            account[0].IronMine.CollectedResource = 0;
+            if(account[0].Resource.Iron >= account[0].IronStorage.Capacity){
+              account[0].IronMine.CollectedResource = 0;
+            }else if(((account[0].Resource.Iron + parseInt(account[0].IronMine.ProduceRate * duration/3600 * account[0].Achievement.Resource.Bonus)) <= account[0].IronStorage.Capacity)){
+              //determine how many thing that we can collect
+              account[0].IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600 * account[0].Achievement.Resource.Bonus);
+            }else if(((account[0].Resource.Iron + parseInt(account[0].IronMine.ProduceRate * duration/3600 * account[0].Achievement.Resource.Bonus)) > account[0].IronStorage.Capacity)){
+              account[0].IronMine.CollectedResource = account[0].IronStorage.Capacity - account[0].Resource.Iron;
+            }
+            //determine how many things that can store
+            //update accountData.Resource.Iron
+            (account[0].Resource.Iron + account[0].IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? account[0].Resource.Iron += account[0].IronMine.CollectedResource : account[0].Resource.Iron = account[0].IronStorage.Capacity
+            
+            account[0].previousCollectTime = currentTimeInSeconds
+            account[0].IronMine.HistoryCollectedResource += account[0].IronMine.CollectedResource
+
+
             resolve(account[0]);
           } else {
             // Passwords do not match, reject the promise with an error message

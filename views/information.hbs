@@ -10,7 +10,7 @@
 
 <div>
     <h4>Collected Resource:</h4>
-    <p>Iron: {{IronMine.HistoryCollectedResource}}</p>
+    <p id ="IronCollectResource-js">Iron: {{IronMine.HistoryCollectedResource}}</p>
     
 </div>
 
@@ -79,3 +79,26 @@
 <form method="post" action="/information">
     <input type="submit" class="btn btn-success pull-right" value="Reset">
 </form>
+
+<script>
+    function upgradeIronMine() {
+        let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
+        //produce rate
+        let duration = dateNow - {{data.previousCollectTime}};
+        let collectIron;
+
+        if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
+          collectIron = "Iron: " + {{IronMine.HistoryCollectedResource}};
+        }else if(( {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{IronStorage.Capacity}} ){
+          //determine how many thing that we can collect
+          collectIron = "Iron: " + ({{IronMine.HistoryCollectedResource}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}));
+        }
+        
+        document.getElementById('IronCollectResource-js').innerText = collectIron;
+
+
+    }
+setInterval(upgradeIronMine, 1000);
+// Initial call to run the test function immediately
+upgradeIronMine();
+</script>
