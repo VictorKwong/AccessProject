@@ -50,7 +50,8 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - When user click upgrade, It will check cost materials, reduce it and add an upgrade time clock to the database server.
 - using formula UpgradeTime - (Date.Now() - upgradeTimeStart) can get the remain time upgrade (RTU). When RTU is less than or equal to 0, it will refresh the page + accountData check upgrade status and update all information, and do a final UpdateOne Check. (Expand Version)
 - Once click "Collect all" button, It redirects to post /collectAllResource page and it will stick with windows.location.reload() when building is finished upgrade. To resolve this, change windows.location.reload() to redirect the url page origin + "/account".
-- Can you collect resource during upgrade? Yes, after finished upgrade it will change the 
+- Can you collect resource during upgrade? Yes, after finished upgrade it
+- *If upgrading a building, log off, and re-log your account after building is finished upgrading.
 
 
 - DailyReward System
