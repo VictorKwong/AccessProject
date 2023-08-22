@@ -800,8 +800,13 @@ app.post("/information", function(req, res) {
 });
 
 app.get('/logout', function(req, res){
-    req.session.reset();
-    res.redirect('/');
+    authData.refreshAccount(req.session.user).then(function(data){
+        req.session.reset();
+        res.redirect('/');
+    })
+    .catch(function(err){
+        res.render('login', {errorMessage: err, userName: req.session.user.userName});
+    });
 })
 
 

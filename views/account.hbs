@@ -9,7 +9,7 @@
 <p>Login Reward Bonus: {{data.loginBonus}}</p>
 
 <div class="d-flex justify-content-end">
-    <div class="p-2" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/><span id="IronResource-js">{{addCommas Resource.Iron}}</span></div>
+    <div class="p-2" id="IronResource-js-title" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/><span id="IronResource-js">{{addCommas Resource.Iron}}</span></div>
     <div class="p-2" title="Crystal: {{addCommas Resource.Crystal}}">Crystal: {{addCommas Resource.Crystal}}</div>
     <div class="p-2" title="Petroleum: {{addCommas Resource.Petroleum}}">Petroleum: {{addCommas Resource.Petroleum}}</div>
 </div>
@@ -184,6 +184,7 @@
         }
         
         document.getElementById('IronResource-js').innerText = rate;
+        document.getElementById('IronResource-js-title').title = "Iron: " + rate;
                 //upgrade status
         if({{IronMine.UpgradeCost_Status}}){
             const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
