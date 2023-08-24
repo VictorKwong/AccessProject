@@ -806,35 +806,19 @@ function claimDailyReward(accountData) {
 }
 
 //Need QC
-function collectAllResource(accountData){
+function iron1000Test(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-
-            let currentTime = Date.now();
-            let currentTimeInSeconds = Math.floor(currentTime / 1000);
-
-            let duration = currentTimeInSeconds - account[0].previousCollectTime;
-
-            accountData.IronMine.CollectedResource = 0;
-
-            if((accountData.Resource.Iron < account[0].IronStorage.Capacity) && parseInt(account[0].IronMine.ProduceRate * duration/3600) > 0){
               //Achievement
               if(!account[0].Achievement.Resource.FirstCollect.Bool){
                 accountData.Achievement.Resource.FirstCollect.Bool = true;
                 accountData.Achievement.Resource.Bonus *= 10;
               }
-              //determine how many thing that we can collect
-              parseInt(account[0].IronMine.ProduceRate * duration/3600 * accountData.Achievement.Resource.Bonus) <= account[0].IronMine.Capacity ? accountData.IronMine.CollectedResource = parseInt(account[0].IronMine.ProduceRate * duration/3600 * accountData.Achievement.Resource.Bonus) : accountData.IronMine.CollectedResource = account[0].IronMine.Capacity;
+              accountData.IronMine.CollectedResource = 1000
+              accountData.Resource.Iron += 1000
+              accountData.IronMine.HistoryCollectedResource += 1000
 
-              //determine how many things that can store
-              //update accountData.Resource.Iron
-              (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.Resource.Iron += accountData.IronMine.CollectedResource : accountData.Resource.Iron = account[0].IronStorage.Capacity
-              //update accountData.IronMine.CollectedResource
-              (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= account[0].IronStorage.Capacity ? accountData.IronMine.CollectedResource : accountData.IronMine.CollectedResource = account[0].IronStorage.Capacity - accountData.Resource.Iron
-              //update
-              accountData.previousCollectTime = currentTimeInSeconds
-              accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
               User.updateOne(
                 { _id: accountData._id }, accountData
               ).exec().then(() => {
@@ -842,13 +826,6 @@ function collectAllResource(accountData){
               }).catch((err) => {
                   reject("Can't collect resource: " + err);
               })
-            } else if(parseInt(account[0].IronMine.ProduceRate * duration/3600) <= 0){
-              //No resource to collect
-              resolve(accountData);
-            }else{
-              //Storage is full bug
-              reject("Storage is full, please upgrade it!");
-            }
     }).catch((err) => {
         reject(`Unable to find user - ${accountData.userName}: ${err}`);
     });
@@ -874,7 +851,14 @@ function collectAllResourceNonExport(accountData, accountZero){
   }
   //determine how many things that can store
   //update accountData.Resource.Iron
-  (accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= accountZero.IronStorage.Capacity ? accountData.Resource.Iron += accountData.IronMine.CollectedResource : accountData.Resource.Iron = accountZero.IronStorage.Capacity
+  if(accountData.Resource.Iron >= accountZero.IronStorage.Capacity){
+    //do nothing
+  }else if((accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= accountZero.IronStorage.Capacity){
+    accountData.Resource.Iron += accountData.IronMine.CollectedResource
+  }else{
+    //remain
+    accountData.Resource.Iron = accountZero.IronStorage.Capacity
+  }
 
   accountData.previousCollectTime = currentTimeInSeconds
   accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
@@ -918,4 +902,4 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
 }
 
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, collectAllResource};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test};

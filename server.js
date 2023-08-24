@@ -412,14 +412,12 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 })
             })
         })
-    }else if(req.params.upgrade === "collectAllResource"){
+    }else if(req.params.upgrade === "Iron1000"){
         return new Promise((resolve, reject) => {
-            authData.collectAllResource(req.session.user).then((user) => {
+            authData.iron1000Test(req.session.user).then((user) => {
                 req.session.user.Resource.Iron = user.Resource.Iron
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
-                
-                
                 res.render('account', {
                     data: req.session.user,
                     Resource: req.session.user.Resource,
