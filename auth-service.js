@@ -105,10 +105,6 @@ var userSchema = new Schema({
         type: Number,
         default: 200,
       },
-      "Capacity":{
-        type: Number,
-        default: 1000 
-      },
       "CollectedResource":{
         type: Number,
         default: 0
@@ -160,6 +156,20 @@ var userSchema = new Schema({
       "UpgradeCost_Crystal":{
         type: Number,
         default: 0,
+      },
+      //duration
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 5
+      },
+      //When to start
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
       }
     },
     "CrystalMine": {
@@ -350,9 +360,10 @@ function loginAccount(accountData){
               }
             let currentTime = Date.now();
             let currentTimeInSeconds = Math.floor(currentTime / 1000);
-
-            account[0].IronMine.CollectedResource = 0;
-            if(((currentTimeInSeconds - account[0].IronMine.UpgradeCost_TimeStart) >= account[0].IronMine.UpgradeCost_Time) && account[0].IronMine.UpgradeCost_Status){
+            if(
+              (((currentTimeInSeconds - account[0].IronMine.UpgradeCost_TimeStart) >= account[0].IronMine.UpgradeCost_Time) && account[0].IronMine.UpgradeCost_Status) ||
+              (((currentTimeInSeconds - account[0].IronStorage.UpgradeCost_TimeStart) >= account[0].IronStorage.UpgradeCost_Time) && account[0].IronStorage.UpgradeCost_Status)
+            ){
               collectAllResourceUpgradeBuildingNonExport(account[0],account[0]);
             }else{
               collectAllResourceNonExport(account[0],account[0]);
@@ -461,7 +472,6 @@ function resetAccount(accountData) {
             accountData.Resource.Petroleum = 50
             accountData.IronMine.Level = 1
             accountData.IronMine.ProduceRate = 200
-            accountData.IronMine.Capacity = 1000
             accountData.IronMine.CollectedResource = 0
             accountData.IronMine.HistoryCollectedResource = 0
             accountData.IronMine.UpgradeCost_Iron = 100
@@ -469,6 +479,14 @@ function resetAccount(accountData) {
             accountData.IronMine.UpgradeCost_Time = 5
             accountData.IronMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
             accountData.IronMine.UpgradeCost_Status = false
+
+            accountData.IronStorage.Level = 1
+            accountData.IronStorage.Capacity = 1000
+            accountData.IronStorage.UpgradeCost_Iron = 100
+            accountData.IronStorage.UpgradeCost_Crystal = 10
+            accountData.IronStorage.UpgradeCost_Time = 5
+            accountData.IronStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.IronStorage.UpgradeCost_Status = false
             User.updateOne(
               { _id: accountData._id }, accountData
             ).exec().then(() => {
@@ -492,7 +510,10 @@ function refreshAccount(accountData){
       }else{
         let currentTime = Date.now();
         let currentTimeInSeconds = Math.floor(currentTime / 1000);
-        if(((currentTimeInSeconds - accountData.IronMine.UpgradeCost_TimeStart) >= accountData.IronMine.UpgradeCost_Time) && accountData.IronMine.UpgradeCost_Status){
+        if(
+          (((currentTimeInSeconds - account[0].IronMine.UpgradeCost_TimeStart) >= account[0].IronMine.UpgradeCost_Time) && account[0].IronMine.UpgradeCost_Status) ||
+          (((currentTimeInSeconds - account[0].IronStorage.UpgradeCost_TimeStart) >= account[0].IronStorage.UpgradeCost_Time) && account[0].IronStorage.UpgradeCost_Status)
+        ){
           collectAllResourceUpgradeBuildingNonExport(accountData,account[0]);
         }else{
           collectAllResourceNonExport(accountData,account[0]);
@@ -617,18 +638,17 @@ function upgradeIronStorage(accountData){
 
                 accountData.Resource.Iron -= account[0].IronStorage.UpgradeCost_Iron;
                 accountData.Resource.Crystal -= account[0].IronStorage.UpgradeCost_Crystal;
-                accountData.IronStorage.Level += 1;
-                accountData.IronStorage.ProduceRate = account[0].IronStorage.ProduceRate + account[0].IronStorage.ProduceRate;
-                accountData.IronStorage.UpgradeCost_Iron = account[0].IronStorage.UpgradeCost_Iron + account[0].IronStorage.UpgradeCost_Iron;
-                accountData.IronStorage.UpgradeCost_Crystal = account[0].IronStorage.UpgradeCost_Crystal + account[0].IronStorage.UpgradeCost_Crystal;
+                accountData.IronStorage.UpgradeCost_Status = true;
+                accountData.IronStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
+                collectAllResourceNonExport(accountData,account[0]);
 
-            User.updateOne(
-              { _id: accountData._id }, accountData
-            ).exec().then(() => {
-                resolve(accountData);
-            }).catch((err) => {
-                reject("Upgrade cause error:" + err);
-            })
+                User.updateOne(
+                  { _id: accountData._id }, accountData
+                ).exec().then(() => {
+                    resolve(accountData);
+                }).catch((err) => {
+                    reject("Upgrade cause error:" + err);
+                })
           } else {
             reject(`Not enough resource: ${accountData.userName}`);
           }
@@ -867,38 +887,58 @@ function collectAllResourceNonExport(accountData, accountZero){
 function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
   let currentTime = Date.now();
   let currentTimeInSeconds = Math.floor(currentTime / 1000);
-  //collect calculation
-  let firstDuration = accountData.IronMine.UpgradeCost_TimeStart + accountData.IronMine.UpgradeCost_Time - accountZero.previousCollectTime;
-  let secondDuration = currentTimeInSeconds - accountZero.previousCollectTime - firstDuration;
 
-  if(accountZero.Resource.Iron >= accountZero.IronStorage.Capacity){
-    accountData.IronMine.CollectedResource = 0;
-  }else if(((accountZero.Resource.Iron + parseInt(accountZero.IronMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.IronMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) <= accountZero.IronStorage.Capacity)){
-    //determine how many thing that we can collect
-    accountData.IronMine.CollectedResource = parseInt(accountZero.IronMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.IronMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2);
-  }else if(((accountZero.Resource.Iron + parseInt(accountZero.IronMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.IronMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) > accountZero.IronStorage.Capacity)){
-    accountData.IronMine.CollectedResource = accountZero.IronStorage.Capacity - accountZero.Resource.Iron;
+  if(((currentTimeInSeconds - accountData.IronStorage.UpgradeCost_TimeStart) >= accountData.IronStorage.UpgradeCost_Time) && accountData.IronStorage.UpgradeCost_Status){
+    //finished upgrade
+    accountData.IronStorage.UpgradeCost_Status = false;
+
+    accountData.IronStorage.Level += 1;
+    accountData.IronStorage.Capacity = accountZero.IronStorage.Capacity + accountZero.IronStorage.Capacity;
+    accountData.IronStorage.UpgradeCost_Iron = parseInt(accountZero.IronStorage.UpgradeCost_Iron * 1.5);
+    accountData.IronStorage.UpgradeCost_Crystal = parseInt(accountZero.IronStorage.UpgradeCost_Crystal * 1.5);
+    accountData.IronStorage.UpgradeCost_Time = accountZero.IronStorage.UpgradeCost_Time + accountZero.IronStorage.UpgradeCost_Time;
+    //In this case I want to make sure IronStorage Capacity is extract from database, not from website
+    accountZero.IronStorage.Capacity = accountData.IronStorage.Capacity;
   }
-  if(accountData.Resource.Iron >= accountZero.IronStorage.Capacity){
-    //do nothing
-  }else if((accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= accountZero.IronStorage.Capacity){
-    accountData.Resource.Iron += accountData.IronMine.CollectedResource
+
+
+  //Iron Mine
+  if(((currentTimeInSeconds - accountData.IronMine.UpgradeCost_TimeStart) >= accountData.IronMine.UpgradeCost_Time) && accountData.IronMine.UpgradeCost_Status){
+    //collect calculation
+    let firstDuration = accountData.IronMine.UpgradeCost_TimeStart + accountData.IronMine.UpgradeCost_Time - accountZero.previousCollectTime;
+    let secondDuration = currentTimeInSeconds - accountZero.previousCollectTime - firstDuration;
+
+    if(accountZero.Resource.Iron >= accountZero.IronStorage.Capacity){
+      accountData.IronMine.CollectedResource = 0;
+    }else if(((accountZero.Resource.Iron + parseInt(accountZero.IronMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.IronMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) <= accountZero.IronStorage.Capacity)){
+      //determine how many thing that we can collect
+      accountData.IronMine.CollectedResource = parseInt(accountZero.IronMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.IronMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2);
+    }else if(((accountZero.Resource.Iron + parseInt(accountZero.IronMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.IronMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) > accountZero.IronStorage.Capacity)){
+      accountData.IronMine.CollectedResource = accountZero.IronStorage.Capacity - accountZero.Resource.Iron;
+    }
+    if(accountData.Resource.Iron >= accountZero.IronStorage.Capacity){
+      //do nothing
+    }else if((accountData.Resource.Iron + accountData.IronMine.CollectedResource) <= accountZero.IronStorage.Capacity){
+      accountData.Resource.Iron += accountData.IronMine.CollectedResource
+    }else{
+      //remain
+      accountData.Resource.Iron = accountZero.IronStorage.Capacity
+    }
+    accountData.previousCollectTime = currentTimeInSeconds
+    accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
+
+    //finished upgrade
+    accountData.IronMine.UpgradeCost_Status = false;
+
+    accountData.IronMine.Level += 1;
+    accountData.IronMine.ProduceRate = accountZero.IronMine.ProduceRate + accountZero.IronMine.ProduceRate;
+    accountData.IronMine.UpgradeCost_Iron = accountZero.IronMine.UpgradeCost_Iron + accountZero.IronMine.UpgradeCost_Iron;
+    accountData.IronMine.UpgradeCost_Crystal = accountZero.IronMine.UpgradeCost_Crystal + accountZero.IronMine.UpgradeCost_Crystal;
+    accountData.IronMine.UpgradeCost_Time = accountZero.IronMine.UpgradeCost_Time + accountZero.IronMine.UpgradeCost_Time;
   }else{
-    //remain
-    accountData.Resource.Iron = accountZero.IronStorage.Capacity
+    collectAllResourceNonExport(accountData, accountZero);
   }
-  accountData.previousCollectTime = currentTimeInSeconds
-  accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
 
-  //finished upgrade
-  accountData.IronMine.UpgradeCost_Status = false;
-
-  accountData.IronMine.Level += 1;
-  accountData.IronMine.ProduceRate = accountZero.IronMine.ProduceRate + accountZero.IronMine.ProduceRate;
-  accountData.IronMine.Capacity = accountZero.IronMine.Capacity + accountZero.IronMine.Capacity;
-  accountData.IronMine.UpgradeCost_Iron = accountZero.IronMine.UpgradeCost_Iron + accountZero.IronMine.UpgradeCost_Iron;
-  accountData.IronMine.UpgradeCost_Crystal = accountZero.IronMine.UpgradeCost_Crystal + accountZero.IronMine.UpgradeCost_Crystal;
-  accountData.IronMine.UpgradeCost_Time = accountZero.IronMine.UpgradeCost_Time + accountZero.IronMine.UpgradeCost_Time;
 }
 
 

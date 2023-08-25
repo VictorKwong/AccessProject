@@ -36,7 +36,6 @@
     <p id="ironMineRate-js">Status: </p>
 
     <p>Produce Rate: {{toAbbr IronMine.ProduceRate}}</p>
-    <p>Capacity: {{toAbbr IronMine.Capacity}}</p>
     
     <p>Upgrade Cost: Iron - {{toAbbr IronMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr IronMine.UpgradeCost_Crystal}}</p>
@@ -73,9 +72,20 @@
 
     <p>Upgrade Cost: Iron - {{toAbbr IronStorage.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr IronStorage.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{IronStorage.UpgradeCost_Time}}</p>
+    {{#if IronStorage.UpgradeCost_Status}}
+    <p id="ironStorageUpgrade-js">Upgrade RemainDuration: {{calDuration IronStorage.UpgradeCost_TimeStart IronStorage.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if IronStorage.UpgradeCost_Status}}
+    <form action="/account/upgradeIronStorage" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronStorage.Name}} - Lv.{{sum IronStorage.Level 1}}" disabled></input>
+    </form>
+    {{else}}
     <form action="/account/upgradeIronStorage" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{IronStorage.Name}} - Lv.{{sum IronStorage.Level 1}}"></input>
     </form>
+    {{/if}}
+
 </div>
 
 <br>
@@ -172,9 +182,6 @@
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
         let rate;
-        //parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) <= {{IronMine.Capacity}} ? rate = parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) : rate = {{IronMine.Capacity}};
-        //const produceRate = "Status: " + rate + "/" + {{IronMine.Capacity}};
-        //document.getElementById('ironMineRate-js').innerText = produceRate;
 
         if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
           rate = {{Resource.Iron}};
@@ -185,7 +192,8 @@
         
         document.getElementById('IronResource-js').innerText = rate;
         document.getElementById('IronResource-js-title').title = "Iron: " + rate;
-                //upgrade status
+
+        //upgrade status
         if({{IronMine.UpgradeCost_Status}}){
             const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
             const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
@@ -197,13 +205,25 @@
                 //window.location.reload();
                 window.location.replace(window.location.origin + "/account")
             }
-        }else{
-            document.getElementById('ironMineUpgrade-js').innerText = "";
         }
-
-
+        if({{IronStorage.UpgradeCost_Status}}){
+            const upgradeTimeStart = {{IronStorage.UpgradeCost_TimeStart}};
+            const upgradeTimeDuration = {{IronStorage.UpgradeCost_Time}};
+            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('ironStorageUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
     }
+
+
+
+
+
+
 setInterval(upgradeIronMine, 1000);
+
 // Initial call to run the test function immediately
 upgradeIronMine();
 

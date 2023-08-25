@@ -168,7 +168,6 @@ app.post("/login", function(req, res) {
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
-                    "Capacity": user.IronMine.Capacity,
                     "CollectedResource": user.IronMine.CollectedResource,
                     "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
@@ -182,7 +181,10 @@ app.post("/login", function(req, res) {
                     "Level": user.IronStorage.Level,
                     "Capacity": user.IronStorage.Capacity,
                     "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
                 },
                 CrystalMine: {
                     "Name": user.CrystalMine.Name,
@@ -286,7 +288,6 @@ app.get("/account", ensureLogin, function(req,res){
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
-                    "Capacity": user.IronMine.Capacity,
                     "CollectedResource": user.IronMine.CollectedResource,
                     "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
@@ -300,7 +301,10 @@ app.get("/account", ensureLogin, function(req,res){
                     "Level": user.IronStorage.Level,
                     "Capacity": user.IronStorage.Capacity,
                     "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
                 },
                 CrystalMine: {
                     "Name": user.CrystalMine.Name,
@@ -366,7 +370,7 @@ app.get("/account", ensureLogin, function(req,res){
                 Achievement: req.session.user.Achievement
             });
         }).catch((err) => {
-            res.render('login', {errorMessage: err, userName: req.session.user.userName});
+            res.render('login', {errorMessage: err});
         })
     })
 })
@@ -690,7 +694,6 @@ app.post("/information", function(req, res) {
                     "Name": user.IronMine.Name,
                     "Level": user.IronMine.Level,
                     "ProduceRate": user.IronMine.ProduceRate,
-                    "Capacity": user.IronMine.Capacity,
                     "CollectedResource": user.IronMine.CollectedResource,
                     "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
@@ -704,7 +707,10 @@ app.post("/information", function(req, res) {
                     "Level": user.IronStorage.Level,
                     "Capacity": user.IronStorage.Capacity,
                     "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
                 },
                 CrystalMine: {
                     "Name": user.CrystalMine.Name,
@@ -772,7 +778,7 @@ app.post("/information", function(req, res) {
             });
         })
         .catch(function(err){
-            res.render('information', {errorMessage: err, userName: req.session.user.userName});
+            res.render('information', {errorMessage: err});
         });
     }
     else if(req.body.displayName === undefined){
@@ -781,7 +787,7 @@ app.post("/information", function(req, res) {
             res.render('information', {successMessage: "Successful change Password!"});
         })
         .catch(function(err){
-            res.render('information', {errorMessage: err, userName: req.session.user.userName});
+            res.render('information', {errorMessage: err});
         });
     }else{
         //change displayName
@@ -791,7 +797,7 @@ app.post("/information", function(req, res) {
             res.render('information', {successMessage: "Successful change name!"});
         })
         .catch(function(err){
-            res.render('information', {errorMessage: err, userName: req.session.user.userName});
+            res.render('information', {errorMessage: err});
         });
     }
 
@@ -803,7 +809,7 @@ app.get('/logout', function(req, res){
         res.redirect('/');
     })
     .catch(function(err){
-        res.render('login', {errorMessage: err, userName: req.session.user.userName});
+        res.render('login', {errorMessage: err});
     });
 })
 

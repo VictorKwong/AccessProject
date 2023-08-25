@@ -120,3 +120,7 @@ upgrading time cost?
 
     }
 ```
+## Reference
+
+Check on Math system level:
+https://howtomakeanrpg.com/a/how-to-make-an-rpg-levels.html
