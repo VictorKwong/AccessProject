@@ -45,7 +45,7 @@ var userSchema = new Schema({
       },
       "Crystal": {
         type: Number,
-        default: 1000000,
+        default: 100000,
         min: 0
       },
       "Petroleum": {
@@ -179,19 +179,39 @@ var userSchema = new Schema({
       },
       "Level": {
         type: Number,
-        default: 1,
+        default: 0,
       },
       "ProduceRate":{
         type: Number,
-        default: 100,
+        default: 120,
+      },
+      "CollectedResource":{
+        type: Number,
+        default: 0
+      },
+      "HistoryCollectedResource":{
+        type: Number,
+        default: 0
       },
       "UpgradeCost_Iron":{
         type: Number,
-        default: 50,
+        default: 100,
       },
       "UpgradeCost_Crystal":{
         type: Number,
-        default: 50,
+        default: 10,
+      },
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 5
+      },
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
       }
     },
     "CrystalStorage": {
@@ -205,7 +225,7 @@ var userSchema = new Schema({
       },
       "Capacity":{
         type: Number,
-        default: 1000,
+        default: 400000,
       },
       "UpgradeCost_Iron":{
         type: Number,
@@ -214,6 +234,18 @@ var userSchema = new Schema({
       "UpgradeCost_Crystal":{
         type: Number,
         default: 10,
+      },
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 5
+      },
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
       }
     },
     "PetroleumMine": {
@@ -855,11 +887,16 @@ function iron1000Test(accountData){
 
 //Non-Export function
 function collectAllResourceNonExport(accountData, accountZero){
+  collectIronMineResourceNonExport(accountData, accountZero);
+  collectCrystalMineResourceNonExport(accountData, accountZero);
+}
+
+function collectIronMineResourceNonExport(accountData, accountZero){
   let currentTime = Date.now();
   let currentTimeInSeconds = Math.floor(currentTime / 1000);
   let duration = currentTimeInSeconds - accountZero.previousCollectTime;
+  //=====================Iron Mine=====================
   //clear out the current resource first
-  accountData.IronMine.CollectedResource = 0;
 
   if(accountZero.Resource.Iron >= accountZero.IronStorage.Capacity){
     accountData.IronMine.CollectedResource = 0;
@@ -884,10 +921,40 @@ function collectAllResourceNonExport(accountData, accountZero){
   accountData.IronMine.HistoryCollectedResource += accountData.IronMine.CollectedResource
 }
 
+function collectCrystalMineResourceNonExport(accountData, accountZero){
+  let currentTime = Date.now();
+  let currentTimeInSeconds = Math.floor(currentTime / 1000);
+  let duration = currentTimeInSeconds - accountZero.previousCollectTime;
+  //=====================Crystal Mine=====================
+  accountData.CrystalMine.CollectedResource = 0;
+
+  if(accountZero.CrystalMine.Level != 0){
+    if(accountZero.Resource.Crystal >= accountZero.CrystalStorage.Capacity){
+      accountData.CrystalMine.CollectedResource = 0;
+    }else if(((accountZero.Resource.Crystal + parseInt(accountZero.CrystalMine.ProduceRate * duration/3600 * accountZero.Achievement.Resource.Bonus)) <= accountZero.CrystalStorage.Capacity)){
+      //determine how many thing that we can collect
+      accountData.CrystalMine.CollectedResource = parseInt(accountZero.CrystalMine.ProduceRate * duration/3600 * accountZero.Achievement.Resource.Bonus);
+    }else if(((accountZero.Resource.Crystal + parseInt(accountZero.CrystalMine.ProduceRate * duration/3600 * accountZero.Achievement.Resource.Bonus)) > accountZero.CrystalStorage.Capacity)){
+      accountData.CrystalMine.CollectedResource = accountZero.CrystalStorage.Capacity - accountZero.Resource.Crystal;
+    }
+  }
+  if(accountData.Resource.Crystal >= accountZero.CrystalStorage.Capacity){
+    //do nothing
+  }else if((accountData.Resource.Crystal + accountData.CrystalMine.CollectedResource) <= accountZero.CrystalStorage.Capacity){
+    accountData.Resource.Crystal += accountData.CrystalMine.CollectedResource
+  }else{
+    accountData.Resource.Crystal = accountZero.CrystalStorage.Capacity
+  }
+
+  accountData.previousCollectTime = currentTimeInSeconds
+  accountData.CrystalMine.HistoryCollectedResource += accountData.CrystalMine.CollectedResource
+}
+
 function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
   let currentTime = Date.now();
   let currentTimeInSeconds = Math.floor(currentTime / 1000);
 
+  //=====================Iron Storage=====================
   if(((currentTimeInSeconds - accountData.IronStorage.UpgradeCost_TimeStart) >= accountData.IronStorage.UpgradeCost_Time) && accountData.IronStorage.UpgradeCost_Status){
     //finished upgrade
     accountData.IronStorage.UpgradeCost_Status = false;
@@ -900,9 +967,21 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
     //In this case I want to make sure IronStorage Capacity is extract from database, not from website
     accountZero.IronStorage.Capacity = accountData.IronStorage.Capacity;
   }
+  //=====================Crystal Storage=====================
+  if(((currentTimeInSeconds - accountData.CrystalStorage.UpgradeCost_TimeStart) >= accountData.CrystalStorage.UpgradeCost_Time) && accountData.CrystalStorage.UpgradeCost_Status){
+    //finished upgrade
+    accountData.CrystalStorage.UpgradeCost_Status = false;
 
+    accountData.CrystalStorage.Level += 1;
+    accountData.CrystalStorage.Capacity = accountZero.CrystalStorage.Capacity + accountZero.CrystalStorage.Capacity;
+    accountData.CrystalStorage.UpgradeCost_Iron = parseInt(accountZero.CrystalStorage.UpgradeCost_Iron * 1.5);
+    accountData.CrystalStorage.UpgradeCost_Crystal = parseInt(accountZero.CrystalStorage.UpgradeCost_Crystal * 1.5);
+    accountData.CrystalStorage.UpgradeCost_Time = accountZero.CrystalStorage.UpgradeCost_Time + accountZero.CrystalStorage.UpgradeCost_Time;
+    accountZero.CrystalStorage.Capacity = accountData.CrystalStorage.Capacity;
+  }
 
-  //Iron Mine
+  //=====================Iron Mine=====================
+
   if(((currentTimeInSeconds - accountData.IronMine.UpgradeCost_TimeStart) >= accountData.IronMine.UpgradeCost_Time) && accountData.IronMine.UpgradeCost_Status){
     //collect calculation
     let firstDuration = accountData.IronMine.UpgradeCost_TimeStart + accountData.IronMine.UpgradeCost_Time - accountZero.previousCollectTime;
@@ -936,7 +1015,49 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
     accountData.IronMine.UpgradeCost_Crystal = accountZero.IronMine.UpgradeCost_Crystal + accountZero.IronMine.UpgradeCost_Crystal;
     accountData.IronMine.UpgradeCost_Time = accountZero.IronMine.UpgradeCost_Time + accountZero.IronMine.UpgradeCost_Time;
   }else{
-    collectAllResourceNonExport(accountData, accountZero);
+    collectIronMineResourceNonExport(accountData, accountZero);
+  }
+
+  //=====================Crystal Mine=====================
+
+  if(((currentTimeInSeconds - accountData.CrystalMine.UpgradeCost_TimeStart) >= accountData.CrystalMine.UpgradeCost_Time) && accountData.CrystalMine.UpgradeCost_Status){
+    //collect calculation
+    let firstDuration = accountData.CrystalMine.UpgradeCost_TimeStart + accountData.CrystalMine.UpgradeCost_Time - accountZero.previousCollectTime;
+    let secondDuration = currentTimeInSeconds - accountZero.previousCollectTime - firstDuration;
+    accountData.CrystalMine.CollectedResource = 0;
+
+    if(accountZero.CrystalMine.Level != 0){
+      if(accountZero.Resource.Crystal >= accountZero.CrystalStorage.Capacity){
+        accountData.CrystalMine.CollectedResource = 0;
+      }else if(((accountZero.Resource.Crystal + parseInt(accountZero.CrystalMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.CrystalMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) <= accountZero.CrystalStorage.Capacity)){
+        //determine how many thing that we can collect
+        accountData.CrystalMine.CollectedResource = parseInt(accountZero.CrystalMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.CrystalMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2);
+      }else if(((accountZero.Resource.Crystal + parseInt(accountZero.CrystalMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.CrystalMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) > accountZero.CrystalStorage.Capacity)){
+        accountData.CrystalMine.CollectedResource = accountZero.CrystalStorage.Capacity - accountZero.Resource.Crystal;
+      }
+    }
+    
+    if(accountData.Resource.Crystal >= accountZero.CrystalStorage.Capacity){
+      //do nothing
+    }else if((accountData.Resource.Crystal + accountData.CrystalMine.CollectedResource) <= accountZero.CrystalStorage.Capacity){
+      accountData.Resource.Crystal += accountData.CrystalMine.CollectedResource
+    }else{
+      //remain
+      accountData.Resource.Crystal = accountZero.CrystalStorage.Capacity
+    }
+    accountData.previousCollectTime = currentTimeInSeconds
+    accountData.CrystalMine.HistoryCollectedResource += accountData.CrystalMine.CollectedResource
+
+    //finished upgrade
+    accountData.CrystalMine.UpgradeCost_Status = false;
+
+    accountData.CrystalMine.Level += 1;
+    accountData.CrystalMine.ProduceRate = accountZero.CrystalMine.ProduceRate + accountZero.CrystalMine.ProduceRate;
+    accountData.CrystalMine.UpgradeCost_Iron = accountZero.CrystalMine.UpgradeCost_Iron + accountZero.CrystalMine.UpgradeCost_Iron;
+    accountData.CrystalMine.UpgradeCost_Crystal = accountZero.CrystalMine.UpgradeCost_Crystal + accountZero.CrystalMine.UpgradeCost_Crystal;
+    accountData.CrystalMine.UpgradeCost_Time = accountZero.CrystalMine.UpgradeCost_Time + accountZero.CrystalMine.UpgradeCost_Time;
+  }else{
+    collectCrystalMineResourceNonExport(accountData, accountZero);
   }
 
 }
