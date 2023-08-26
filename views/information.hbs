@@ -10,8 +10,9 @@
 
 <div>
     <h4>Collected Resource:</h4>
-    <p id ="IronCollectResource-js">Iron: {{IronMine.HistoryCollectedResource}}</p>
-    
+    <p id ="ironCollectResource-js">Iron: {{IronMine.HistoryCollectedResource}}</p>
+    <p id ="crystalCollectResource-js">Crystal: {{CrystalMine.HistoryCollectedResource}}</p>
+    <p id ="petroleumCollectResource-js">Petroleum: {{PetroleumMine.HistoryCollectedResource}}</p>
 </div>
 
 <div>
@@ -85,7 +86,7 @@
         let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
-        let collectIron;
+        let collectIron, collectCrystal,collectPetroleum;
 
         if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
           collectIron = "Iron: " + {{IronMine.HistoryCollectedResource}};
@@ -93,10 +94,24 @@
           //determine how many thing that we can collect
           collectIron = "Iron: " + ({{IronMine.HistoryCollectedResource}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}));
         }
+
+        if({{Resource.Crystal}} >= {{CrystalStorage.Capacity}}){
+          collectCrystal = "Crystal: " + {{CrystalMine.HistoryCollectedResource}};
+        }else if(( {{Resource.Crystal}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{CrystalStorage.Capacity}} ){
+          //determine how many thing that we can collect
+          collectCrystal = "Crystal: " + ({{CrystalMine.HistoryCollectedResource}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}));
+        }
+
+        if({{Resource.Petroleum}} >= {{PetroleumStorage.Capacity}}){
+          collectPetroleum = "Petroleum: " + {{PetroleumMine.HistoryCollectedResource}};
+        }else if(( {{Resource.Petroleum}} + parseInt({{PetroleumMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{PetroleumStorage.Capacity}} ){
+          //determine how many thing that we can collect
+          collectPetroleum = "Petroleum: " + ({{PetroleumMine.HistoryCollectedResource}} + parseInt({{PetroleumMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}));
+        }
         
-        document.getElementById('IronCollectResource-js').innerText = collectIron;
-
-
+        document.getElementById('ironCollectResource-js').innerText = collectIron;
+        document.getElementById('crystalCollectResource-js').innerText = collectCrystal;
+        document.getElementById('petroleumCollectResource-js').innerText = collectPetroleum;
     }
 setInterval(upgradeIronMine, 1000);
 // Initial call to run the test function immediately

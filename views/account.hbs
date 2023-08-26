@@ -11,7 +11,7 @@
 <div class="d-flex justify-content-end">
     <div class="p-2" id="IronResource-js-title" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/><span id="IronResource-js">{{addCommas Resource.Iron}}</span></div>
     <div class="p-2" id="CrystalResource-js-title" title="Crystal: {{addCommas Resource.Crystal}}">Crystal: <span id="CrystalResource-js">{{addCommas Resource.Crystal}}</span></div>
-    <div class="p-2" title="Petroleum: {{addCommas Resource.Petroleum}}">Petroleum: {{addCommas Resource.Petroleum}}</div>
+    <div class="p-2" id="PetroleumResource-js-title" title="Petroleum: {{addCommas Resource.Petroleum}}">Petroleum: <span id="PetroleumResource-js">{{addCommas Resource.Petroleum}}</span></div>
 </div>
 
 <div class="border border-dark">
@@ -33,7 +33,6 @@
 
 <div class="border border-dark">
     <p>{{IronMine.Name}} - Lv {{IronMine.Level}}</p>
-    <p id="ironMineRate-js">Status: </p>
 
     <p>Produce Rate: {{toAbbr IronMine.ProduceRate}}</p>
     
@@ -150,10 +149,25 @@
 
     <p>Upgrade Cost: Iron - {{toAbbr PetroleumMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr PetroleumMine.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{PetroleumMine.UpgradeCost_Time}}</p>
+    {{#if PetroleumMine.UpgradeCost_Status}}
+    <p id="petroleumMineUpgrade-js">Upgrade RemainDuration: {{calDuration PetroleumMine.UpgradeCost_TimeStart PetroleumMine.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if PetroleumMine.UpgradeCost_Status}}
+    <form action="/account/upgradePetroleumMine" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{PetroleumMine.Name}} - Lv.{{sum PetroleumMine.Level 1}}" disabled></input>
+    </form>
+    {{else}}
     <form action="/account/upgradePetroleumMine" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{PetroleumMine.Name}} - Lv.{{sum PetroleumMine.Level 1}}"></input>
     </form>
+    {{/if}}
 </div>
+
+<br>
+<br>
+<br>
+
 <div class="border border-primary">
     <p>{{PetroleumStorage.Name}} - Lv {{PetroleumStorage.Level}}</p>
 
@@ -161,10 +175,24 @@
 
     <p>Upgrade Cost: Iron - {{toAbbr PetroleumStorage.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr PetroleumStorage.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{PetroleumStorage.UpgradeCost_Time}}</p>
+    {{#if PetroleumStorage.UpgradeCost_Status}}
+    <p id="petroleumStorageUpgrade-js">Upgrade RemainDuration: {{calDuration PetroleumStorage.UpgradeCost_TimeStart PetroleumStorage.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if PetroleumStorage.UpgradeCost_Status}}
+    <form action="/account/upgradePetroleumStorage" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{PetroleumStorage.Name}} - Lv.{{sum PetroleumStorage.Level 1}}" disabled></input>
+    </form>
+    {{else}}
     <form action="/account/upgradePetroleumStorage" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{PetroleumStorage.Name}} - Lv.{{sum PetroleumStorage.Level 1}}"></input>
     </form>
+    {{/if}}
 </div>
+
+<br>
+<br>
+<br>
 
 <div>
     <h2>Item Bags</h2>
@@ -208,7 +236,7 @@
         let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
-        let ironRate, crystalRate;
+        let ironRate, crystalRate, petroleumRate;
 
         if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
           ironRate = {{Resource.Iron}};
@@ -224,10 +252,19 @@
           crystalRate = {{Resource.Crystal}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
         }
 
+        if({{Resource.Petroleum}} >= {{PetroleumStorage.Capacity}}){
+          petroleumRate = {{Resource.Petroleum}};
+        }else if(( {{Resource.Petroleum}} + parseInt({{PetroleumMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{PetroleumStorage.Capacity}} ){
+          //determine how many thing that we can collect
+          petroleumRate = {{Resource.Petroleum}} + parseInt({{PetroleumMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
+        }
+
         document.getElementById('IronResource-js').innerText = ironRate;
         document.getElementById('IronResource-js-title').title = "Iron: " + ironRate;
         document.getElementById('CrystalResource-js').innerText = crystalRate;
         document.getElementById('CrystalResource-js-title').title = "Crystal: " + crystalRate;
+        document.getElementById('PetroleumResource-js').innerText = petroleumRate;
+        document.getElementById('PetroleumResource-js-title').title = "Petroleum: " + petroleumRate;
         //upgrade status
         if({{IronMine.UpgradeCost_Status}}){
             const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
@@ -270,11 +307,30 @@
                 window.location.replace(window.location.origin + "/account")
             }
         }
+
+        if({{PetroleumMine.UpgradeCost_Status}}){
+            const upgradeTimeStart = {{PetroleumMine.UpgradeCost_TimeStart}};
+            const upgradeTimeDuration = {{PetroleumMine.UpgradeCost_Time}};
+            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('petroleumMineUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
+
+        if({{PetroleumStorage.UpgradeCost_Status}}){
+            let upgradeTimeStart = {{PetroleumStorage.UpgradeCost_TimeStart}};
+            let upgradeTimeDuration = {{PetroleumStorage.UpgradeCost_Time}};
+            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('petroleumStorageUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
     }
 
 
 setInterval(upgradeIronMine, 1000);
-
 // Initial call to run the test function immediately
 upgradeIronMine();
 

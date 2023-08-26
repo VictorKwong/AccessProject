@@ -255,19 +255,39 @@ var userSchema = new Schema({
       },
       "Level": {
         type: Number,
-        default: 1,
+        default: 0,
       },
       "ProduceRate":{
         type: Number,
-        default: 100,
+        default: 0,
+      },
+      "CollectedResource":{
+        type: Number,
+        default: 0
+      },
+      "HistoryCollectedResource":{
+        type: Number,
+        default: 0
       },
       "UpgradeCost_Iron":{
         type: Number,
-        default: 50,
+        default: 100,
       },
       "UpgradeCost_Crystal":{
         type: Number,
-        default: 50
+        default: 10,
+      },
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 5
+      },
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
       }
     },
     "PetroleumStorage": {
@@ -285,11 +305,23 @@ var userSchema = new Schema({
       },
       "UpgradeCost_Iron":{
         type: Number,
-        default: 10,
+        default: 20,
       },
       "UpgradeCost_Crystal":{
         type: Number,
-        default: 10,
+        default: 20,
+      },
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 10
+      },
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
       }
     },
     "ItemBag":{
@@ -396,7 +428,9 @@ function loginAccount(accountData){
               (((currentTimeInSeconds - account[0].IronMine.UpgradeCost_TimeStart) >= account[0].IronMine.UpgradeCost_Time) && account[0].IronMine.UpgradeCost_Status) ||
               (((currentTimeInSeconds - account[0].IronStorage.UpgradeCost_TimeStart) >= account[0].IronStorage.UpgradeCost_Time) && account[0].IronStorage.UpgradeCost_Status) ||
               (((currentTimeInSeconds - account[0].CrystalMine.UpgradeCost_TimeStart) >= account[0].CrystalMine.UpgradeCost_Time) && account[0].CrystalMine.UpgradeCost_Status) ||
-              (((currentTimeInSeconds - account[0].CrystalStorage.UpgradeCost_TimeStart) >= account[0].CrystalStorage.UpgradeCost_Time) && account[0].CrystalStorage.UpgradeCost_Status)
+              (((currentTimeInSeconds - account[0].CrystalStorage.UpgradeCost_TimeStart) >= account[0].CrystalStorage.UpgradeCost_Time) && account[0].CrystalStorage.UpgradeCost_Status) ||
+              (((currentTimeInSeconds - account[0].PetroleumMine.UpgradeCost_TimeStart) >= account[0].PetroleumMine.UpgradeCost_Time) && account[0].PetroleumMine.UpgradeCost_Status) ||
+              (((currentTimeInSeconds - account[0].PetroleumStorage.UpgradeCost_TimeStart) >= account[0].PetroleumStorage.UpgradeCost_Time) && account[0].PetroleumStorage.UpgradeCost_Status)
             ){
               collectAllResourceUpgradeBuildingNonExport(account[0],account[0]);
             }else{
@@ -532,13 +566,31 @@ function resetAccount(accountData) {
             accountData.CrystalMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
             accountData.CrystalMine.UpgradeCost_Status = false
 
-            accountData.IronStorage.Level = 1
-            accountData.IronStorage.Capacity = 400000
-            accountData.IronStorage.UpgradeCost_Iron = 10
-            accountData.IronStorage.UpgradeCost_Crystal = 10
-            accountData.IronStorage.UpgradeCost_Time = 5
-            accountData.IronStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
-            accountData.IronStorage.UpgradeCost_Status = false
+            accountData.CrystalStorage.Level = 1
+            accountData.CrystalStorage.Capacity = 400000
+            accountData.CrystalStorage.UpgradeCost_Iron = 10
+            accountData.CrystalStorage.UpgradeCost_Crystal = 10
+            accountData.CrystalStorage.UpgradeCost_Time = 5
+            accountData.CrystalStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.CrystalStorage.UpgradeCost_Status = false
+
+            accountData.PetroleumMine.Level = 0
+            accountData.PetroleumMine.ProduceRate = 0
+            accountData.PetroleumMine.CollectedResource = 0
+            accountData.PetroleumMine.HistoryCollectedResource = 0
+            accountData.PetroleumMine.UpgradeCost_Iron = 100
+            accountData.PetroleumMine.UpgradeCost_Crystal = 10
+            accountData.PetroleumMine.UpgradeCost_Time = 5
+            accountData.PetroleumMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.PetroleumMine.UpgradeCost_Status = false
+
+            accountData.PetroleumStorage.Level = 1
+            accountData.PetroleumStorage.Capacity = 1000
+            accountData.PetroleumStorage.UpgradeCost_Iron = 20
+            accountData.PetroleumStorage.UpgradeCost_Crystal = 20
+            accountData.PetroleumStorage.UpgradeCost_Time = 10
+            accountData.PetroleumStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.PetroleumStorage.UpgradeCost_Status = false
 
             User.updateOne(
               { _id: accountData._id }, accountData
@@ -567,7 +619,9 @@ function refreshAccount(accountData){
           (((currentTimeInSeconds - account[0].IronMine.UpgradeCost_TimeStart) >= account[0].IronMine.UpgradeCost_Time) && account[0].IronMine.UpgradeCost_Status) ||
           (((currentTimeInSeconds - account[0].IronStorage.UpgradeCost_TimeStart) >= account[0].IronStorage.UpgradeCost_Time) && account[0].IronStorage.UpgradeCost_Status) ||
           (((currentTimeInSeconds - account[0].CrystalMine.UpgradeCost_TimeStart) >= account[0].CrystalMine.UpgradeCost_Time) && account[0].CrystalMine.UpgradeCost_Status) ||
-          (((currentTimeInSeconds - account[0].CrystalStorage.UpgradeCost_TimeStart) >= account[0].CrystalStorage.UpgradeCost_Time) && account[0].CrystalStorage.UpgradeCost_Status)
+          (((currentTimeInSeconds - account[0].CrystalStorage.UpgradeCost_TimeStart) >= account[0].CrystalStorage.UpgradeCost_Time) && account[0].CrystalStorage.UpgradeCost_Status) ||
+          (((currentTimeInSeconds - account[0].PetroleumMine.UpgradeCost_TimeStart) >= account[0].PetroleumMine.UpgradeCost_Time) && account[0].PetroleumMine.UpgradeCost_Status) ||
+          (((currentTimeInSeconds - account[0].PetroleumStorage.UpgradeCost_TimeStart) >= account[0].PetroleumStorage.UpgradeCost_Time) && account[0].PetroleumStorage.UpgradeCost_Status)
         ){
           collectAllResourceUpgradeBuildingNonExport(accountData,account[0]);
         }else{
@@ -659,10 +713,8 @@ function upgradePetroleumMine(accountData){
 
                 accountData.Resource.Iron -= account[0].PetroleumMine.UpgradeCost_Iron;
                 accountData.Resource.Crystal -= account[0].PetroleumMine.UpgradeCost_Crystal;
-                accountData.PetroleumMine.Level += 1;
-                accountData.PetroleumMine.ProduceRate = account[0].PetroleumMine.ProduceRate + account[0].PetroleumMine.ProduceRate;
-                accountData.PetroleumMine.UpgradeCost_Iron = account[0].PetroleumMine.UpgradeCost_Iron + account[0].PetroleumMine.UpgradeCost_Iron;
-                accountData.PetroleumMine.UpgradeCost_Crystal = account[0].PetroleumMine.UpgradeCost_Crystal + account[0].PetroleumMine.UpgradeCost_Crystal;
+                accountData.PetroleumMine.UpgradeCost_Status = true;
+                accountData.PetroleumMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
 
             User.updateOne(
               { _id: accountData._id }, accountData
@@ -750,10 +802,8 @@ function upgradePetroleumStorage(accountData){
 
                 accountData.Resource.Iron -= account[0].PetroleumStorage.UpgradeCost_Iron;
                 accountData.Resource.Crystal -= account[0].PetroleumStorage.UpgradeCost_Crystal;
-                accountData.PetroleumStorage.Level += 1;
-                accountData.PetroleumStorage.ProduceRate = account[0].PetroleumStorage.ProduceRate + account[0].PetroleumStorage.ProduceRate;
-                accountData.PetroleumStorage.UpgradeCost_Iron = account[0].PetroleumStorage.UpgradeCost_Iron + account[0].PetroleumStorage.UpgradeCost_Iron;
-                accountData.PetroleumStorage.UpgradeCost_Crystal = account[0].PetroleumStorage.UpgradeCost_Crystal + account[0].PetroleumStorage.UpgradeCost_Crystal;
+                accountData.PetroleumStorage.UpgradeCost_Status = true;
+                accountData.PetroleumStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
 
             User.updateOne(
               { _id: accountData._id }, accountData
@@ -796,6 +846,8 @@ function claimDailyReward(accountData) {
             accountData.Resource.Crystal += 7000 * bonusCount;
             accountData.Resource.Petroleum += 3500 * bonusCount;
             accountData.IronMine.HistoryCollectedResource += 7000 * bonusCount;
+            accountData.CrystalMine.HistoryCollectedResource += 7000 * bonusCount;
+            accountData.PetroleumMine.HistoryCollectedResource += 3500 * bonusCount;
             //---------------------
             // const updateAccount = { 
             //   _id: account[0]._id,
@@ -910,6 +962,7 @@ function collectAllResourceNonExport(accountData, accountZero){
   let currentTimeInSeconds = Math.floor(currentTime / 1000);
   collectIronMineResourceNonExport(accountData, accountZero,currentTimeInSeconds);
   collectCrystalMineResourceNonExport(accountData, accountZero,currentTimeInSeconds);
+  collectPetroleumMineResourceNonExport(accountData, accountZero,currentTimeInSeconds);
   accountData.previousCollectTime = currentTimeInSeconds
 }
 
@@ -966,6 +1019,31 @@ function collectCrystalMineResourceNonExport(accountData, accountZero,currentTim
   accountData.CrystalMine.HistoryCollectedResource += accountData.CrystalMine.CollectedResource
 }
 
+function collectPetroleumMineResourceNonExport(accountData, accountZero,currentTimeInSeconds){
+  //=====================Petroleum Mine=====================
+  accountData.PetroleumMine.CollectedResource = 0;
+  let duration = currentTimeInSeconds - accountZero.previousCollectTime;
+  if(accountZero.PetroleumMine.Level != 0){
+    if(accountZero.Resource.Petroleum >= accountZero.PetroleumStorage.Capacity){
+      accountData.PetroleumMine.CollectedResource = 0;
+    }else if(((accountZero.Resource.Petroleum + parseInt(accountZero.PetroleumMine.ProduceRate * duration/3600 * accountZero.Achievement.Resource.Bonus)) <= accountZero.PetroleumStorage.Capacity)){
+      //determine how many thing that we can collect
+      accountData.PetroleumMine.CollectedResource = parseInt(accountZero.PetroleumMine.ProduceRate * duration/3600 * accountZero.Achievement.Resource.Bonus);
+    }else if(((accountZero.Resource.Petroleum + parseInt(accountZero.PetroleumMine.ProduceRate * duration/3600 * accountZero.Achievement.Resource.Bonus)) > accountZero.PetroleumStorage.Capacity)){
+      accountData.PetroleumMine.CollectedResource = accountZero.PetroleumStorage.Capacity - accountZero.Resource.Petroleum;
+    }
+  }
+  if(accountData.Resource.Petroleum >= accountZero.PetroleumStorage.Capacity){
+    //do nothing
+  }else if((accountData.Resource.Petroleum + accountData.PetroleumMine.CollectedResource) <= accountZero.PetroleumStorage.Capacity){
+    accountData.Resource.Petroleum += accountData.PetroleumMine.CollectedResource
+  }else{
+    accountData.Resource.Petroleum = accountZero.PetroleumStorage.Capacity
+  }
+
+  accountData.PetroleumMine.HistoryCollectedResource += accountData.PetroleumMine.CollectedResource
+}
+
 function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
   let currentTime = Date.now();
   let currentTimeInSeconds = Math.floor(currentTime / 1000);
@@ -994,6 +1072,18 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
     accountData.CrystalStorage.UpgradeCost_Crystal = parseInt(accountZero.CrystalStorage.UpgradeCost_Crystal * 1.5);
     accountData.CrystalStorage.UpgradeCost_Time = accountZero.CrystalStorage.UpgradeCost_Time + accountZero.CrystalStorage.UpgradeCost_Time;
     accountZero.CrystalStorage.Capacity = accountData.CrystalStorage.Capacity;
+  }
+  //=====================Petroleum Storage=====================
+  if(((currentTimeInSeconds - accountData.PetroleumStorage.UpgradeCost_TimeStart) >= accountData.PetroleumStorage.UpgradeCost_Time) && accountData.PetroleumStorage.UpgradeCost_Status){
+    //finished upgrade
+    accountData.PetroleumStorage.UpgradeCost_Status = false;
+
+    accountData.PetroleumStorage.Level += 1;
+    accountData.PetroleumStorage.Capacity = accountZero.PetroleumStorage.Capacity + accountZero.PetroleumStorage.Capacity;
+    accountData.PetroleumStorage.UpgradeCost_Iron = parseInt(accountZero.PetroleumStorage.UpgradeCost_Iron * 1.5);
+    accountData.PetroleumStorage.UpgradeCost_Crystal = parseInt(accountZero.PetroleumStorage.UpgradeCost_Crystal * 1.5);
+    accountData.PetroleumStorage.UpgradeCost_Time = accountZero.PetroleumStorage.UpgradeCost_Time + accountZero.PetroleumStorage.UpgradeCost_Time;
+    accountZero.PetroleumStorage.Capacity = accountData.PetroleumStorage.Capacity;
   }
 
   //=====================Iron Mine=====================
@@ -1077,6 +1167,49 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
     collectCrystalMineResourceNonExport(accountData, accountZero,currentTimeInSeconds);
     accountData.previousCollectTime = currentTimeInSeconds
   }
+
+    //=====================Petroleum Mine=====================
+
+    if(((currentTimeInSeconds - accountData.PetroleumMine.UpgradeCost_TimeStart) >= accountData.PetroleumMine.UpgradeCost_Time) && accountData.PetroleumMine.UpgradeCost_Status){
+      //collect calculation
+      let firstDuration = accountData.PetroleumMine.UpgradeCost_TimeStart + accountData.PetroleumMine.UpgradeCost_Time - accountZero.previousCollectTime;
+      let secondDuration = currentTimeInSeconds - accountZero.previousCollectTime - firstDuration;
+      accountData.PetroleumMine.CollectedResource = 0;
+  
+      if(accountZero.PetroleumMine.Level != 0){
+        if(accountZero.Resource.Petroleum >= accountZero.PetroleumStorage.Capacity){
+          accountData.PetroleumMine.CollectedResource = 0;
+        }else if(((accountZero.Resource.Petroleum + parseInt(accountZero.PetroleumMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.PetroleumMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) <= accountZero.PetroleumStorage.Capacity)){
+          //determine how many thing that we can collect
+          accountData.PetroleumMine.CollectedResource = parseInt(accountZero.PetroleumMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.PetroleumMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2);
+        }else if(((accountZero.Resource.Petroleum + parseInt(accountZero.PetroleumMine.ProduceRate * firstDuration/3600 * accountZero.Achievement.Resource.Bonus) + parseInt(accountZero.PetroleumMine.ProduceRate * secondDuration/3600 * accountZero.Achievement.Resource.Bonus * 2)) > accountZero.PetroleumStorage.Capacity)){
+          accountData.PetroleumMine.CollectedResource = accountZero.PetroleumStorage.Capacity - accountZero.Resource.Petroleum;
+        }
+      }
+      
+      if(accountData.Resource.Petroleum >= accountZero.PetroleumStorage.Capacity){
+        //do nothing
+      }else if((accountData.Resource.Petroleum + accountData.PetroleumMine.CollectedResource) <= accountZero.PetroleumStorage.Capacity){
+        accountData.Resource.Petroleum += accountData.PetroleumMine.CollectedResource
+      }else{
+        //remain
+        accountData.Resource.Petroleum = accountZero.PetroleumStorage.Capacity
+      }
+      accountData.previousCollectTime = currentTimeInSeconds
+      accountData.PetroleumMine.HistoryCollectedResource += accountData.PetroleumMine.CollectedResource
+  
+      //finished upgrade
+      accountData.PetroleumMine.UpgradeCost_Status = false;
+  
+      accountData.PetroleumMine.Level += 1;
+      accountData.PetroleumMine.ProduceRate === parseInt(0) ? accountData.PetroleumMine.ProduceRate = 120 : accountData.PetroleumMine.ProduceRate = accountZero.PetroleumMine.ProduceRate + accountZero.PetroleumMine.ProduceRate;
+      accountData.PetroleumMine.UpgradeCost_Iron = accountZero.PetroleumMine.UpgradeCost_Iron + accountZero.PetroleumMine.UpgradeCost_Iron;
+      accountData.PetroleumMine.UpgradeCost_Crystal = accountZero.PetroleumMine.UpgradeCost_Crystal + accountZero.PetroleumMine.UpgradeCost_Crystal;
+      accountData.PetroleumMine.UpgradeCost_Time = accountZero.PetroleumMine.UpgradeCost_Time + accountZero.PetroleumMine.UpgradeCost_Time;
+    }else{
+      collectPetroleumMineResourceNonExport(accountData, accountZero,currentTimeInSeconds);
+      accountData.previousCollectTime = currentTimeInSeconds
+    }
 
 }
 

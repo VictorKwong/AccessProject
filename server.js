@@ -190,6 +190,7 @@ app.post("/login", function(req, res) {
                     "Name": user.CrystalMine.Name,
                     "Level": user.CrystalMine.Level,
                     "ProduceRate": user.CrystalMine.ProduceRate,
+                    "CollectedResource": user.CrystalMine.CollectedResource,
                     "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
@@ -211,15 +212,23 @@ app.post("/login", function(req, res) {
                     "Name": user.PetroleumMine.Name,
                     "Level": user.PetroleumMine.Level,
                     "ProduceRate": user.PetroleumMine.ProduceRate,
+                    "CollectedResource": user.PetroleumMine.CollectedResource,
+                    "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
                 },
                 PetroleumStorage: {
                     "Name": user.PetroleumStorage.Name,
                     "Level": user.PetroleumStorage.Level,
                     "Capacity": user.PetroleumStorage.Capacity,
                     "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
                 },
                 ItemBag: {
                     Resource : {
@@ -317,6 +326,7 @@ app.get("/account", ensureLogin, function(req,res){
                     "Name": user.CrystalMine.Name,
                     "Level": user.CrystalMine.Level,
                     "ProduceRate": user.CrystalMine.ProduceRate,
+                    "CollectedResource": user.CrystalMine.CollectedResource,
                     "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
@@ -338,15 +348,23 @@ app.get("/account", ensureLogin, function(req,res){
                     "Name": user.PetroleumMine.Name,
                     "Level": user.PetroleumMine.Level,
                     "ProduceRate": user.PetroleumMine.ProduceRate,
+                    "CollectedResource": user.PetroleumMine.CollectedResource,
+                    "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
                 },
                 PetroleumStorage: {
                     "Name": user.PetroleumStorage.Name,
                     "Level": user.PetroleumStorage.Level,
                     "Capacity": user.PetroleumStorage.Capacity,
                     "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
                 },
                 ItemBag: {
                     Resource : {
@@ -475,11 +493,6 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
-                req.session.user.IronMine.Level = user.IronMine.Level
-                req.session.user.IronMine.ProduceRate = user.IronMine.ProduceRate
-                req.session.user.IronMine.UpgradeCost_Iron = user.IronMine.UpgradeCost_Iron
-                req.session.user.IronMine.UpgradeCost_Crystal = user.IronMine.UpgradeCost_Crystal
-                
                 res.redirect('/account')
             }).catch((err) => {
                 res.render('account', {
@@ -505,10 +518,6 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
-                req.session.user.CrystalMine.Level = user.CrystalMine.Level
-                req.session.user.CrystalMine.ProduceRate = user.CrystalMine.ProduceRate
-                req.session.user.CrystalMine.UpgradeCost_Iron = user.CrystalMine.UpgradeCost_Iron
-                req.session.user.CrystalMine.UpgradeCost_Crystal = user.CrystalMine.UpgradeCost_Crystal
                 res.redirect('/account')
             }).catch((err) => {
                 res.render('account', {
@@ -534,10 +543,6 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
-                req.session.user.PetroleumMine.Level = user.PetroleumMine.Level
-                req.session.user.PetroleumMine.ProduceRate = user.PetroleumMine.ProduceRate
-                req.session.user.PetroleumMine.UpgradeCost_Iron = user.PetroleumMine.UpgradeCost_Iron
-                req.session.user.PetroleumMine.UpgradeCost_Crystal = user.PetroleumMine.UpgradeCost_Crystal
                 res.redirect('/account')
             }).catch((err) => {
                 res.render('account', {
@@ -563,10 +568,6 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
-                req.session.user.IronStorage.Level = user.IronStorage.Level
-                req.session.user.IronStorage.Capacity = user.IronStorage.Capacity
-                req.session.user.IronStorage.UpgradeCost_Iron = user.IronStorage.UpgradeCost_Iron
-                req.session.user.IronStorage.UpgradeCost_Crystal = user.IronStorage.UpgradeCost_Crystal
                 res.redirect('/account')
             }).catch((err) => {
                 res.render('account', {
@@ -592,10 +593,6 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
-                req.session.user.CrystalStorage.Level = user.CrystalStorage.Level
-                req.session.user.CrystalStorage.Capacity = user.CrystalStorage.Capacity
-                req.session.user.CrystalStorage.UpgradeCost_Iron = user.CrystalStorage.UpgradeCost_Iron
-                req.session.user.CrystalStorage.UpgradeCost_Crystal = user.CrystalStorage.UpgradeCost_Crystal
                 res.redirect('/account')
             }).catch((err) => {
                 res.render('account', {
@@ -621,10 +618,6 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum
 
-                req.session.user.PetroleumStorage.Level = user.PetroleumStorage.Level
-                req.session.user.PetroleumStorage.Capacity = user.PetroleumStorage.Capacity
-                req.session.user.PetroleumStorage.UpgradeCost_Iron = user.PetroleumStorage.UpgradeCost_Iron
-                req.session.user.PetroleumStorage.UpgradeCost_Crystal = user.PetroleumStorage.UpgradeCost_Crystal
                 res.redirect('/account')
             }).catch((err) => {
                 res.render('account', {
@@ -730,6 +723,7 @@ app.post("/information", function(req, res) {
                     "Name": user.CrystalMine.Name,
                     "Level": user.CrystalMine.Level,
                     "ProduceRate": user.CrystalMine.ProduceRate,
+                    "CollectedResource": user.CrystalMine.CollectedResource,
                     "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
                     "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
@@ -742,21 +736,32 @@ app.post("/information", function(req, res) {
                     "Level": user.CrystalStorage.Level,
                     "Capacity": user.CrystalStorage.Capacity,
                     "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
                 },
                 PetroleumMine: {
                     "Name": user.PetroleumMine.Name,
                     "Level": user.PetroleumMine.Level,
                     "ProduceRate": user.PetroleumMine.ProduceRate,
+                    "CollectedResource": user.PetroleumMine.CollectedResource,
+                    "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
                 },
                 PetroleumStorage: {
                     "Name": user.PetroleumStorage.Name,
                     "Level": user.PetroleumStorage.Level,
                     "Capacity": user.PetroleumStorage.Capacity,
                     "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
                 },
                 ItemBag: {
                     Resource : {
