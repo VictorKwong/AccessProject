@@ -190,15 +190,22 @@ app.post("/login", function(req, res) {
                     "Name": user.CrystalMine.Name,
                     "Level": user.CrystalMine.Level,
                     "ProduceRate": user.CrystalMine.ProduceRate,
+                    "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
                 },
                 CrystalStorage: {
                     "Name": user.CrystalStorage.Name,
                     "Level": user.CrystalStorage.Level,
                     "Capacity": user.CrystalStorage.Capacity,
                     "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
                 },
                 PetroleumMine: {
                     "Name": user.PetroleumMine.Name,
@@ -310,15 +317,22 @@ app.get("/account", ensureLogin, function(req,res){
                     "Name": user.CrystalMine.Name,
                     "Level": user.CrystalMine.Level,
                     "ProduceRate": user.CrystalMine.ProduceRate,
+                    "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
                 },
                 CrystalStorage: {
                     "Name": user.CrystalStorage.Name,
                     "Level": user.CrystalStorage.Level,
                     "Capacity": user.CrystalStorage.Capacity,
                     "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
                 },
                 PetroleumMine: {
                     "Name": user.PetroleumMine.Name,
@@ -716,8 +730,12 @@ app.post("/information", function(req, res) {
                     "Name": user.CrystalMine.Name,
                     "Level": user.CrystalMine.Level,
                     "ProduceRate": user.CrystalMine.ProduceRate,
+                    "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
                     "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal
+                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
+                    "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
+                    "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
+                    "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
                 },
                 CrystalStorage: {
                     "Name": user.CrystalStorage.Name,

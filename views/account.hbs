@@ -10,7 +10,7 @@
 
 <div class="d-flex justify-content-end">
     <div class="p-2" id="IronResource-js-title" title="Iron: {{addCommas Resource.Iron}}"><img src="/icon/iron_crop.png" alt="fail"/><span id="IronResource-js">{{addCommas Resource.Iron}}</span></div>
-    <div class="p-2" title="Crystal: {{addCommas Resource.Crystal}}">Crystal: {{addCommas Resource.Crystal}}</div>
+    <div class="p-2" id="CrystalResource-js-title" title="Crystal: {{addCommas Resource.Crystal}}">Crystal: <span id="CrystalResource-js">{{addCommas Resource.Crystal}}</span></div>
     <div class="p-2" title="Petroleum: {{addCommas Resource.Petroleum}}">Petroleum: {{addCommas Resource.Petroleum}}</div>
 </div>
 
@@ -99,10 +99,23 @@
 
     <p>Upgrade Cost: Iron - {{toAbbr CrystalMine.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr CrystalMine.UpgradeCost_Crystal}}</p>
+    {{#if CrystalMine.UpgradeCost_Status}}
+    <p id="crystalMineUpgrade-js">Upgrade RemainDuration: {{calDuration CrystalMine.UpgradeCost_TimeStart CrystalMine.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if CrystalMine.UpgradeCost_Status}}
+    <form action="/account/upgradeCrystalMine" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{CrystalMine.Name}} - Lv.{{sum CrystalMine.Level 1}}" disabled></input>
+    </form>
+    {{else}}
     <form action="/account/upgradeCrystalMine" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{CrystalMine.Name}} - Lv.{{sum CrystalMine.Level 1}}"></input>
     </form>
+    {{/if}}
 </div>
+
+<br>
+<br>
+<br>
 
 <div class="border border-primary">
     <p>{{CrystalStorage.Name}} - Lv {{CrystalStorage.Level}}</p>
@@ -111,10 +124,24 @@
 
     <p>Upgrade Cost: Iron - {{toAbbr CrystalStorage.UpgradeCost_Iron}}</p>
     <p>Upgrade Cost: Crystal - {{toAbbr CrystalStorage.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{CrystalStorage.UpgradeCost_Time}}</p>
+    {{#if CrystalStorage.UpgradeCost_Status}}
+    <p id="crystalStorageUpgrade-js">Upgrade RemainDuration: {{calDuration CrystalStorage.UpgradeCost_TimeStart CrystalStorage.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if CrystalStorage.UpgradeCost_Status}}
+    <form action="/account/upgradeCrystalStorage" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{CrystalStorage.Name}} - Lv.{{sum CrystalStorage.Level 1}}" disabled></input>
+    </form>
+    {{else}}
     <form action="/account/upgradeCrystalStorage" method="POST">
         <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{CrystalStorage.Name}} - Lv.{{sum CrystalStorage.Level 1}}"></input>
     </form>
+    {{/if}}
 </div>
+
+<br>
+<br>
+<br>
 
 <div class="border border-primary">
     <p>{{PetroleumMine.Name}} - Lv {{PetroleumMine.Level}}</p>
@@ -181,18 +208,26 @@
         let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
-        let rate;
+        let ironRate, crystalRate;
 
         if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
-          rate = {{Resource.Iron}};
+          ironRate = {{Resource.Iron}};
         }else if(( {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{IronStorage.Capacity}} ){
           //determine how many thing that we can collect
-          rate = {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
+          ironRate = {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
         }
-        
-        document.getElementById('IronResource-js').innerText = rate;
-        document.getElementById('IronResource-js-title').title = "Iron: " + rate;
 
+        if({{Resource.Crystal}} >= {{CrystalStorage.Capacity}}){
+          crystalRate = {{Resource.Crystal}};
+        }else if(( {{Resource.Crystal}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{CrystalStorage.Capacity}} ){
+          //determine how many thing that we can collect
+          crystalRate = {{Resource.Crystal}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
+        }
+
+        document.getElementById('IronResource-js').innerText = ironRate;
+        document.getElementById('IronResource-js-title').title = "Iron: " + ironRate;
+        document.getElementById('CrystalResource-js').innerText = crystalRate;
+        document.getElementById('CrystalResource-js-title').title = "Crystal: " + crystalRate;
         //upgrade status
         if({{IronMine.UpgradeCost_Status}}){
             const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
@@ -215,11 +250,27 @@
                 window.location.replace(window.location.origin + "/account")
             }
         }
+
+        if({{CrystalMine.UpgradeCost_Status}}){
+            const upgradeTimeStart = {{CrystalMine.UpgradeCost_TimeStart}};
+            const upgradeTimeDuration = {{CrystalMine.UpgradeCost_Time}};
+            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('crystalMineUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
+
+        if({{CrystalStorage.UpgradeCost_Status}}){
+            let upgradeTimeStart = {{CrystalStorage.UpgradeCost_TimeStart}};
+            let upgradeTimeDuration = {{CrystalStorage.UpgradeCost_Time}};
+            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('crystalStorageUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
     }
-
-
-
-
 
 
 setInterval(upgradeIronMine, 1000);
