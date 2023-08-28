@@ -75,7 +75,7 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 
 - Can use "Collect all" button to collect all Resource
 
-
+- Test Token
 ## Upgrading notes pseudo code
 
 upgrading time cost?
