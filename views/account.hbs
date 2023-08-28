@@ -336,7 +336,12 @@ upgradeIronMine();
 
         function updateInputAndSelect(name, amount) {
             const customNumberInput = document.getElementById('customNumber');
-            customNumberInput.value = amount;
+            const currentValue = parseInt(amount);
+            
+            if (!isNaN(currentValue)) {
+                customNumberInput.setAttribute('max', amount); // Update the max attribute
+                customNumberInput.value = amount; // Set the new value
+            }
         }
 
         function decrementValue() {
@@ -348,8 +353,28 @@ upgradeIronMine();
 
         function incrementValue() {
             const customNumberInput = document.getElementById('customNumber');
-            customNumberInput.value = parseInt(customNumberInput.value) + 1;
+            const maxValue = parseInt(customNumberInput.getAttribute('max'));
+
+            let currentValue = parseInt(customNumberInput.value);
+            if (!isNaN(maxValue) && currentValue < maxValue) {
+                customNumberInput.value = currentValue + 1;
+            }else{
+                customNumberInput.value = maxValue
+            }
         }
 
+    //Check blur system
+    const customNumberInput = document.getElementById('customNumber');
+
+    customNumberInput.addEventListener('blur', function() {
+        const currentValue = parseInt(customNumberInput.value);
+        const maxValue = parseInt(customNumberInput.getAttribute('max'));
+
+            if((!isNaN(maxValue) && currentValue > maxValue) || isNaN(currentValue)) {
+                customNumberInput.value = maxValue
+            }else if(currentValue < 1){
+                customNumberInput.value = 1
+            }
+    });
 
 </script>
