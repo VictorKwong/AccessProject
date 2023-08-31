@@ -210,13 +210,16 @@
                 <p>Should not display</p>
             {{/if}}
         {{/each}}
-    <div>
-        <h3>Select Resource</h3>
-        <input type="number" id="customNumber" min="1" value="1">
-        
-        <button onclick="decrementValue()">-</button>
-        <button onclick="incrementValue()">+</button>
-    </div>
+        {{#if @first}}
+            <div>
+                <h3>Select Resource</h3>
+                <input type="number" id="customNumber" min="1" value="1">
+                
+                <button onclick="decrementValue()">-</button>
+                <button onclick="incrementValue()">+</button>
+        {{/if}}
+    
+
 
 
     <h2>Materials</h2>
@@ -376,5 +379,4 @@ upgradeIronMine();
                 customNumberInput.value = 1
             }
     });
-
 </script>

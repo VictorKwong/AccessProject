@@ -70,9 +70,6 @@ app.engine('.hbs', exphbs.engine({
             const dateNow = Math.floor(Date.now() / 1000);
             return (duration - (dateNow - startTime));
         },
-        produceStatus: function(){
-
-        }
         
     },
     // partialsDir: path.join(__dirname, "/views/partials/"),
