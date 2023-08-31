@@ -210,14 +210,18 @@
                 <p>Should not display</p>
             {{/if}}
         {{/each}}
-        {{#if @first}}
-            <div>
-                <h3>Select Resource</h3>
-                <input type="number" id="customNumber" min="1" value="1">
-                
-                <button onclick="decrementValue()">-</button>
-                <button onclick="incrementValue()">+</button>
-        {{/if}}
+        
+        {{#each ItemBag.Resource}}
+            {{#if @first}}
+                <div>
+                    <h3>Select Resource</h3>
+                    <p>{{Name}}</p>
+                    <input type="number" id="customNumber" min="1" value={{Amount}}>
+                    
+                    <button onclick="decrementValue()">-</button>
+                    <button onclick="incrementValue()">+</button>
+            {{/if}}
+        {{/each}}
     
 
 
