@@ -70,6 +70,17 @@ app.engine('.hbs', exphbs.engine({
             const dateNow = Math.floor(Date.now() / 1000);
             return (duration - (dateNow - startTime));
         },
+        firstArrayElement: function (array, indexName){
+            
+            for (const obj in array){
+                //#Name, Amount
+                console.log(array[obj])
+                if(array[obj].Amount){
+                    console.log("Am")
+                    return true;
+                }
+            }
+        }
         
     },
     // partialsDir: path.join(__dirname, "/views/partials/"),

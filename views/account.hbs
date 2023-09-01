@@ -212,16 +212,20 @@
         {{/each}}
         
         {{#each ItemBag.Resource}}
-            {{#if @first}}
-                <div>
-                    <h3>Select Resource</h3>
-                    <p>{{Name}}</p>
-                    <input type="number" id="customNumber" min="1" value={{Amount}}>
-                    
-                    <button onclick="decrementValue()">-</button>
-                    <button onclick="incrementValue()">+</button>
+            {{#if (firstArrayElement ItemBag.Resource Name)}}
+                    <div>
+                        <h3>Select Resource</h3>
+                        <p>{{Name}}</p>
+                        <input type="number" id="customNumber" min="1" value={{Amount}}>
+                        
+                        <button onclick="decrementValue()">-</button>
+                        <button onclick="incrementValue()">+</button>
+                    </div>
             {{/if}}
         {{/each}}
+
+
+
     
 
 
@@ -236,6 +240,17 @@
             {{/if}}
         {{/each}}
 
+        {{#each ItemBag.Materials}}
+            {{#if @first}}
+                <div>
+                    <h3>Select Materials</h3>
+                    <p>{{Name}}</p>
+                    <input type="number" min="1" value={{Amount}}>
+                    
+                    <button onclick="decrementValue()">-</button>
+                    <button onclick="incrementValue()">+</button>
+            {{/if}}
+        {{/each}}
 </div>
 
 <script>
