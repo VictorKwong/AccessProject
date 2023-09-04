@@ -211,22 +211,18 @@
             {{/if}}
         {{/each}}
         
-        {{#each ItemBag.Resource}}
-            {{#if (firstArrayElement ItemBag.Resource Name)}}
-                    <div>
-                        <h3>Select Resource</h3>
-                        <p>{{Name}}</p>
-                        <input type="number" id="customNumber" min="1" value={{Amount}}>
-                        
-                        <button onclick="decrementValue()">-</button>
-                        <button onclick="incrementValue()">+</button>
-                    </div>
-            {{/if}}
-        {{/each}}
-
-
-
-    
+        {{#if (firstArrayElement ItemBag.Resource)}}
+                <div>
+                    <h3>Select Resource</h3>
+                    <p>{{firstArrayElementName ItemBag.Resource}}</p>
+                    <input type="number" id="ResourceNumber" min="1" value={{firstArrayElementAmount ItemBag.Resource}}>
+                    
+                    <button onclick="decrementResourceValue()">-</button>
+                    <button onclick="incrementResourceValue()">+</button>
+                </div>
+        {{else}}
+            <p>Not to display</p>
+        {{/if}}
 
 
 
@@ -240,18 +236,6 @@
             {{/if}}
         {{/each}}
 
-        {{#each ItemBag.Materials}}
-            {{#if @first}}
-                <div>
-                    <h3>Select Materials</h3>
-                    <p>{{Name}}</p>
-                    <input type="number" min="1" value={{Amount}}>
-                    
-                    <button onclick="decrementValue()">-</button>
-                    <button onclick="incrementValue()">+</button>
-            {{/if}}
-        {{/each}}
-</div>
 
 <script>
     function upgradeIronMine() {
@@ -357,45 +341,45 @@ setInterval(upgradeIronMine, 1000);
 upgradeIronMine();
 
         function updateInputAndSelect(name, amount) {
-            const customNumberInput = document.getElementById('customNumber');
+            const ResourceNumberInput = document.getElementById('ResourceNumber');
             const currentValue = parseInt(amount);
             
             if (!isNaN(currentValue)) {
-                customNumberInput.setAttribute('max', amount); // Update the max attribute
-                customNumberInput.value = amount; // Set the new value
+                ResourceNumberInput.setAttribute('max', amount); // Update the max attribute
+                ResourceNumberInput.value = amount; // Set the new value
             }
         }
 
-        function decrementValue() {
-            const customNumberInput = document.getElementById('customNumber');
-            if (customNumberInput.value > 1) {
-                customNumberInput.value = parseInt(customNumberInput.value) - 1;
+        function decrementResourceValue() {
+            const ResourceNumberInput = document.getElementById('ResourceNumber');
+            if (ResourceNumberInput.value > 1) {
+                ResourceNumberInput.value = parseInt(ResourceNumberInput.value) - 1;
             }
         }
 
-        function incrementValue() {
-            const customNumberInput = document.getElementById('customNumber');
-            const maxValue = parseInt(customNumberInput.getAttribute('max'));
+        function incrementResourceValue() {
+            const ResourceNumberInput = document.getElementById('ResourceNumber');
+            const maxValue = parseInt(ResourceNumberInput.getAttribute('max'));
 
-            let currentValue = parseInt(customNumberInput.value);
+            let currentValue = parseInt(ResourceNumberInput.value);
             if (!isNaN(maxValue) && currentValue < maxValue) {
-                customNumberInput.value = currentValue + 1;
+                ResourceNumberInput.value = currentValue + 1;
             }else{
-                customNumberInput.value = maxValue
+                ResourceNumberInput.value = maxValue
             }
         }
 
     //Check blur system
-    const customNumberInput = document.getElementById('customNumber');
+    const ResourceNumberInput = document.getElementById('ResourceNumber');
 
-    customNumberInput.addEventListener('blur', function() {
-        const currentValue = parseInt(customNumberInput.value);
-        const maxValue = parseInt(customNumberInput.getAttribute('max'));
+    ResourceNumberInput.addEventListener('blur', function() {
+        const currentValue = parseInt(ResourceNumberInput.value);
+        const maxValue = parseInt(ResourceNumberInput.getAttribute('max'));
 
             if((!isNaN(maxValue) && currentValue > maxValue) || isNaN(currentValue)) {
-                customNumberInput.value = maxValue
+                ResourceNumberInput.value = maxValue
             }else if(currentValue < 1){
-                customNumberInput.value = 1
+                ResourceNumberInput.value = 1
             }
     });
 </script>

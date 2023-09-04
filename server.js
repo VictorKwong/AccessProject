@@ -70,17 +70,33 @@ app.engine('.hbs', exphbs.engine({
             const dateNow = Math.floor(Date.now() / 1000);
             return (duration - (dateNow - startTime));
         },
-        firstArrayElement: function (array, indexName){
-            
+        firstArrayElement: function (array){
+            let flag = false;
             for (const obj in array){
                 //#Name, Amount
-                console.log(array[obj])
                 if(array[obj].Amount){
-                    console.log("Am")
-                    return true;
+                    flag = true;
                 }
             }
-        }
+            return flag;
+        },
+        firstArrayElementName: function (array){
+            for (const obj in array){
+                if(array[obj].Amount){
+                    return array[obj].Name;
+                }
+            }
+            return null;
+        },
+        firstArrayElementAmount: function (array){
+            for (const obj in array){
+                if(array[obj].Amount){
+                    return array[obj].Amount;
+                }
+            }
+            return null;
+        },
+
         
     },
     // partialsDir: path.join(__dirname, "/views/partials/"),

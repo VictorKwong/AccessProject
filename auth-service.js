@@ -346,7 +346,7 @@ var userSchema = new Schema({
         },
         "CarbonSteel": {
           "Name": { type: String, default: "Carbon Steel" },
-          "Amount": { type: Number, default: 0 }
+          "Amount": { type: Number, default: 12 }
         },
       }
     },
