@@ -165,118 +165,7 @@ app.get("/login", function(req,res){
 app.post("/login", function(req, res) {
     return new Promise((resolve, reject) => {
         authData.loginAccount(req.body).then((user) => {
-            req.session.user = {
-                _id: user._id,
-                userName: user.userName,
-                displayName: user.displayName,
-                loginBonus: user.loginBonus,
-                rewardDate: user.rewardDate,
-                rewardCollect: user.rewardCollect,
-                previousCollectTime: user.previousCollectTime,
-                Resource: {
-                    Iron: user.Resource.Iron,
-                    Crystal: user.Resource.Crystal,
-                    Petroleum: user.Resource.Petroleum,
-                },
-                Pet:{
-                    name: user.Pet.name,
-                    level: user.Pet.level,
-                    experience: user.Pet.experience,
-                    maxHealth: user.Pet.maxHealth,
-                    currentHealth: user.Pet.currentHealth,
-                    strength: user.Pet.strength,
-                    dexterity: user.Pet.dexterity,
-                    intelligence: user.Pet.intelligence,
-                },
-                IronMine: {
-                    "Name": user.IronMine.Name,
-                    "Level": user.IronMine.Level,
-                    "ProduceRate": user.IronMine.ProduceRate,
-                    "CollectedResource": user.IronMine.CollectedResource,
-                    "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
-                },
-                IronStorage: {
-                    "Name": user.IronStorage.Name,
-                    "Level": user.IronStorage.Level,
-                    "Capacity": user.IronStorage.Capacity,
-                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
-                },
-                CrystalMine: {
-                    "Name": user.CrystalMine.Name,
-                    "Level": user.CrystalMine.Level,
-                    "ProduceRate": user.CrystalMine.ProduceRate,
-                    "CollectedResource": user.CrystalMine.CollectedResource,
-                    "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
-                },
-                CrystalStorage: {
-                    "Name": user.CrystalStorage.Name,
-                    "Level": user.CrystalStorage.Level,
-                    "Capacity": user.CrystalStorage.Capacity,
-                    "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
-                },
-                PetroleumMine: {
-                    "Name": user.PetroleumMine.Name,
-                    "Level": user.PetroleumMine.Level,
-                    "ProduceRate": user.PetroleumMine.ProduceRate,
-                    "CollectedResource": user.PetroleumMine.CollectedResource,
-                    "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
-                },
-                PetroleumStorage: {
-                    "Name": user.PetroleumStorage.Name,
-                    "Level": user.PetroleumStorage.Level,
-                    "Capacity": user.PetroleumStorage.Capacity,
-                    "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
-                },
-                ItemBag: {
-                    Resource : {
-                        "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
-                        "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
-                        "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
-                    },
-                    Materials : {
-                        "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
-                        "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
-                    }
-                },
-                Achievement: {
-                    Resource : {
-                        "FirstCollect" : {
-                            "Name": user.Achievement.Resource.FirstCollect.Name,
-                            "Bool": user.Achievement.Resource.FirstCollect.Bool,
-                            "Description": user.Achievement.Resource.FirstCollect.Description
-                        },
-                        "Bonus": user.Achievement.Resource.Bonus,
-                    }
-                }
-            }
-
+            reqSessionUserData(req,user);
             res.redirect('/information');
         }).catch((err) => {
             res.render('login', {errorMessage: err, userName: req.body.userName});
@@ -301,117 +190,7 @@ app.post("/register", function(req, res) {
 app.get("/account", ensureLogin, function(req,res){
     return new Promise((resolve, reject) => {
         authData.refreshAccount(req.session.user).then((user) => {
-            req.session.user = {
-                _id: user._id,
-                userName: user.userName,
-                displayName: user.displayName,
-                loginBonus: user.loginBonus,
-                rewardDate: user.rewardDate,
-                rewardCollect: user.rewardCollect,
-                previousCollectTime: user.previousCollectTime,
-                Resource: {
-                    Iron: user.Resource.Iron,
-                    Crystal: user.Resource.Crystal,
-                    Petroleum: user.Resource.Petroleum,
-                },
-                Pet:{
-                    name: user.Pet.name,
-                    level: user.Pet.level,
-                    experience: user.Pet.experience,
-                    maxHealth: user.Pet.maxHealth,
-                    currentHealth: user.Pet.currentHealth,
-                    strength: user.Pet.strength,
-                    dexterity: user.Pet.dexterity,
-                    intelligence: user.Pet.intelligence,
-                },
-                IronMine: {
-                    "Name": user.IronMine.Name,
-                    "Level": user.IronMine.Level,
-                    "ProduceRate": user.IronMine.ProduceRate,
-                    "CollectedResource": user.IronMine.CollectedResource,
-                    "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
-                },
-                IronStorage: {
-                    "Name": user.IronStorage.Name,
-                    "Level": user.IronStorage.Level,
-                    "Capacity": user.IronStorage.Capacity,
-                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
-                },
-                CrystalMine: {
-                    "Name": user.CrystalMine.Name,
-                    "Level": user.CrystalMine.Level,
-                    "ProduceRate": user.CrystalMine.ProduceRate,
-                    "CollectedResource": user.CrystalMine.CollectedResource,
-                    "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
-                },
-                CrystalStorage: {
-                    "Name": user.CrystalStorage.Name,
-                    "Level": user.CrystalStorage.Level,
-                    "Capacity": user.CrystalStorage.Capacity,
-                    "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
-                },
-                PetroleumMine: {
-                    "Name": user.PetroleumMine.Name,
-                    "Level": user.PetroleumMine.Level,
-                    "ProduceRate": user.PetroleumMine.ProduceRate,
-                    "CollectedResource": user.PetroleumMine.CollectedResource,
-                    "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
-                },
-                PetroleumStorage: {
-                    "Name": user.PetroleumStorage.Name,
-                    "Level": user.PetroleumStorage.Level,
-                    "Capacity": user.PetroleumStorage.Capacity,
-                    "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
-                },
-                ItemBag: {
-                    Resource : {
-                        "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
-                        "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
-                        "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
-                    },
-                    Materials : {
-                        "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
-                        "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
-                    }
-                },
-                Achievement: {
-                    Resource : {
-                        "FirstCollect" : {
-                            "Name": user.Achievement.Resource.FirstCollect.Name,
-                            "Bool": user.Achievement.Resource.FirstCollect.Bool,
-                            "Description": user.Achievement.Resource.FirstCollect.Description
-                        },
-                        "Bonus": user.Achievement.Resource.Bonus,
-                    }
-                }
-            }
+            reqSessionUserData(req,user);
             res.render('account', {
                 data: req.session.user,
                 Resource: req.session.user.Resource,
@@ -698,117 +477,7 @@ app.post("/information", function(req, res) {
     if(req.body.displayName === undefined && req.body.password === undefined && req.body.newPassword === undefined && req.body.confirmNewPassword === undefined){
         //reset
         authData.resetAccount(req.session.user).then(function(user){
-            req.session.user = {
-                _id: user._id,
-                userName: user.userName,
-                displayName: user.displayName,
-                loginBonus: user.loginBonus,
-                rewardDate: user.rewardDate,
-                rewardCollect: user.rewardCollect,
-                previousCollectTime: user.previousCollectTime,
-                Resource: {
-                    Iron: user.Resource.Iron,
-                    Crystal: user.Resource.Crystal,
-                    Petroleum: user.Resource.Petroleum,
-                },
-                Pet:{
-                    name: user.Pet.name,
-                    level: user.Pet.level,
-                    experience: user.Pet.experience,
-                    maxHealth: user.Pet.maxHealth,
-                    currentHealth: user.Pet.currentHealth,
-                    strength: user.Pet.strength,
-                    dexterity: user.Pet.dexterity,
-                    intelligence: user.Pet.intelligence,
-                },
-                IronMine: {
-                    "Name": user.IronMine.Name,
-                    "Level": user.IronMine.Level,
-                    "ProduceRate": user.IronMine.ProduceRate,
-                    "CollectedResource": user.IronMine.CollectedResource,
-                    "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
-                },
-                IronStorage: {
-                    "Name": user.IronStorage.Name,
-                    "Level": user.IronStorage.Level,
-                    "Capacity": user.IronStorage.Capacity,
-                    "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
-                },
-                CrystalMine: {
-                    "Name": user.CrystalMine.Name,
-                    "Level": user.CrystalMine.Level,
-                    "ProduceRate": user.CrystalMine.ProduceRate,
-                    "CollectedResource": user.CrystalMine.CollectedResource,
-                    "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
-                },
-                CrystalStorage: {
-                    "Name": user.CrystalStorage.Name,
-                    "Level": user.CrystalStorage.Level,
-                    "Capacity": user.CrystalStorage.Capacity,
-                    "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
-                },
-                PetroleumMine: {
-                    "Name": user.PetroleumMine.Name,
-                    "Level": user.PetroleumMine.Level,
-                    "ProduceRate": user.PetroleumMine.ProduceRate,
-                    "CollectedResource": user.PetroleumMine.CollectedResource,
-                    "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
-                    "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
-                },
-                PetroleumStorage: {
-                    "Name": user.PetroleumStorage.Name,
-                    "Level": user.PetroleumStorage.Level,
-                    "Capacity": user.PetroleumStorage.Capacity,
-                    "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
-                    "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
-                    "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
-                    "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
-                    "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
-                },
-                ItemBag: {
-                    Resource : {
-                        "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
-                        "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
-                        "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
-                    },
-                    Materials : {
-                        "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
-                        "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
-                    }
-                },
-                Achievement: {
-                    Resource : {
-                        "FirstCollect" : {
-                            "Name": user.Achievement.Resource.FirstCollect.Name,
-                            "Bool": user.Achievement.Resource.FirstCollect.Bool,
-                            "Description": user.Achievement.Resource.FirstCollect.Description
-                        },
-                        "Bonus": user.Achievement.Resource.Bonus,
-                    }
-                }
-            }
+            reqSessionUserData(req,user);
             res.render("information", {
                 data: req.session.user,
                 Resource: req.session.user.Resource,
@@ -868,3 +537,119 @@ blogService.initialize()
 }).catch(function(err){
     console.log(err);
 })
+
+//Helper function
+function reqSessionUserData(req,user){
+    req.session.user = {
+        _id: user._id,
+        userName: user.userName,
+        displayName: user.displayName,
+        loginBonus: user.loginBonus,
+        rewardDate: user.rewardDate,
+        rewardCollect: user.rewardCollect,
+        previousCollectTime: user.previousCollectTime,
+        Resource: {
+            Iron: user.Resource.Iron,
+            Crystal: user.Resource.Crystal,
+            Petroleum: user.Resource.Petroleum,
+            Gem: user.Resource.Gem
+        },
+        Pet:{
+            name: user.Pet.name,
+            level: user.Pet.level,
+            experience: user.Pet.experience,
+            maxHealth: user.Pet.maxHealth,
+            currentHealth: user.Pet.currentHealth,
+            strength: user.Pet.strength,
+            dexterity: user.Pet.dexterity,
+            intelligence: user.Pet.intelligence,
+        },
+        IronMine: {
+            "Name": user.IronMine.Name,
+            "Level": user.IronMine.Level,
+            "ProduceRate": user.IronMine.ProduceRate,
+            "CollectedResource": user.IronMine.CollectedResource,
+            "HistoryCollectedResource": user.IronMine.HistoryCollectedResource,
+            "UpgradeCost_Iron": user.IronMine.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.IronMine.UpgradeCost_Crystal,
+            "UpgradeCost_Time": user.IronMine.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.IronMine.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.IronMine.UpgradeCost_Status
+        },
+        IronStorage: {
+            "Name": user.IronStorage.Name,
+            "Level": user.IronStorage.Level,
+            "Capacity": user.IronStorage.Capacity,
+            "UpgradeCost_Iron": user.IronStorage.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.IronStorage.UpgradeCost_Crystal,
+            "UpgradeCost_Time": user.IronStorage.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.IronStorage.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.IronStorage.UpgradeCost_Status
+        },
+        CrystalMine: {
+            "Name": user.CrystalMine.Name,
+            "Level": user.CrystalMine.Level,
+            "ProduceRate": user.CrystalMine.ProduceRate,
+            "CollectedResource": user.CrystalMine.CollectedResource,
+            "HistoryCollectedResource": user.CrystalMine.HistoryCollectedResource,
+            "UpgradeCost_Iron": user.CrystalMine.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.CrystalMine.UpgradeCost_Crystal,
+            "UpgradeCost_Time": user.CrystalMine.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.CrystalMine.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.CrystalMine.UpgradeCost_Status
+        },
+        CrystalStorage: {
+            "Name": user.CrystalStorage.Name,
+            "Level": user.CrystalStorage.Level,
+            "Capacity": user.CrystalStorage.Capacity,
+            "UpgradeCost_Iron": user.CrystalStorage.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.CrystalStorage.UpgradeCost_Crystal,
+            "UpgradeCost_Time": user.CrystalStorage.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.CrystalStorage.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.CrystalStorage.UpgradeCost_Status
+        },
+        PetroleumMine: {
+            "Name": user.PetroleumMine.Name,
+            "Level": user.PetroleumMine.Level,
+            "ProduceRate": user.PetroleumMine.ProduceRate,
+            "CollectedResource": user.PetroleumMine.CollectedResource,
+            "HistoryCollectedResource": user.PetroleumMine.HistoryCollectedResource,
+            "UpgradeCost_Iron": user.PetroleumMine.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.PetroleumMine.UpgradeCost_Crystal,
+            "UpgradeCost_Time": user.PetroleumMine.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.PetroleumMine.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.PetroleumMine.UpgradeCost_Status
+        },
+        PetroleumStorage: {
+            "Name": user.PetroleumStorage.Name,
+            "Level": user.PetroleumStorage.Level,
+            "Capacity": user.PetroleumStorage.Capacity,
+            "UpgradeCost_Iron": user.PetroleumStorage.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.PetroleumStorage.UpgradeCost_Crystal,
+            "UpgradeCost_Time": user.PetroleumStorage.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
+        },
+        ItemBag: {
+            Resource : {
+                "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
+                "Crystal1000" : { "Name": user.ItemBag.Resource.Crystal1000.Name, "Amount": user.ItemBag.Resource.Crystal1000.Amount },
+                "Petroleum200" : { "Name": user.ItemBag.Resource.Petroleum200.Name, "Amount": user.ItemBag.Resource.Petroleum200.Amount }
+            },
+            Materials : {
+                "TextileFibers" : { "Name": user.ItemBag.Materials.TextileFibers.Name, "Amount": user.ItemBag.Materials.TextileFibers.Amount },
+                "CarbonSteel" : { "Name": user.ItemBag.Materials.CarbonSteel.Name, "Amount": user.ItemBag.Materials.CarbonSteel.Amount }
+            }
+        },
+        Achievement: {
+            Resource : {
+                "FirstCollect" : {
+                    "Name": user.Achievement.Resource.FirstCollect.Name,
+                    "Bool": user.Achievement.Resource.FirstCollect.Bool,
+                    "Description": user.Achievement.Resource.FirstCollect.Description
+                },
+                "Bonus": user.Achievement.Resource.Bonus,
+            }
+        }
+    }
+}

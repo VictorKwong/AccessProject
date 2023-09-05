@@ -73,7 +73,10 @@ Using startTime = Date.now() and endTime = Date.now(), and calculate the differe
 - Regular Event?
 - To be continue
 
-- Can use "Collect all" button to collect all Resource
+- Can use "Collect all" button to collect all Resource (auto collect)
+
+- Gem System
+- This will represent "real money"
 
 - Test Token
 ## Upgrading notes pseudo code

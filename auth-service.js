@@ -52,6 +52,10 @@ var userSchema = new Schema({
         type: Number,
         default: 50,
         min: 0
+      },"Gem": {
+        type: Number,
+        default: 100,
+        min: 0
       }
     },
     "Pet": {
