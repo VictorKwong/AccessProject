@@ -363,6 +363,9 @@ var userSchema = new Schema({
         },
         "Bonus": { type: Number, default: 1},
       }
+    },
+    "Mission": {
+      "SpendIron100":{ type: Boolean, default: false}
     }
 });
 
