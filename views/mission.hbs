@@ -3,3 +3,10 @@
 {{else if successMessage}}
     <div class="alert alert-success"> <strong>Success:</strong> {{successMessage}}</div>
 {{/if}}
+
+    <h2>Mission Log</h2>
+    {{#if accountData.Mission.SpendIron100.Bool && accountData.Mission.SpendCrystal100.Bool }}
+        <p>Hi</p>
+    {{else}}
+        <p>No</p>
+    {{/if}}

@@ -202,7 +202,8 @@ app.get("/account", ensureLogin, function(req,res){
                 PetroleumMine: req.session.user.PetroleumMine,
                 PetroleumStorage: req.session.user.PetroleumStorage,
                 ItemBag : req.session.user.ItemBag,
-                Achievement: req.session.user.Achievement
+                Achievement: req.session.user.Achievement,
+                Mission: req.session.user.Mission
             });
         }).catch((err) => {
             res.render('login', {errorMessage: err});
@@ -232,6 +233,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     successMessage: "Daily Reward Claimed! Iron +" + 7000 * user.loginBonus +", Crystal +" + 7000 * user.loginBonus + ", Petroleum +" + 3500 * user.loginBonus
                 })
             }).catch((err) => {
@@ -247,6 +249,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -269,6 +272,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     successMessage: "Collect all Resource! Iron +" + user.IronMine.CollectedResource
                 })
             }).catch((err) => {
@@ -285,6 +289,46 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
+                    errorMessage: err
+                })
+            })
+        })
+    }else if(req.params.upgrade === "Reduce100"){
+        return new Promise((resolve, resject) => {
+            authData.spend100Test(req.ession.user).then((user) => {
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
+                res.render('account', {
+                    data: req.session.user,
+                    Resource: req.session.user.Resource,
+                    Pet: req.session.user.Pet,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    PetroleumMine: req.session.user.PetroleumMine,
+                    PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
+                    successMessage: "Reduce All Resource 100"
+                })
+            }).catch((err) => {
+                res.render('account', {
+                    data: req.session.user,
+                    Resource: req.session.user.Resource,
+                    Pet: req.session.user.Pet,
+                    IronMine: req.session.user.IronMine,
+                    IronStorage: req.session.user.IronStorage,
+                    CrystalMine: req.session.user.CrystalMine,
+                    CrystalStorage: req.session.user.CrystalStorage,
+                    PetroleumMine: req.session.user.PetroleumMine,
+                    PetroleumStorage: req.session.user.PetroleumStorage,
+                    ItemBag: req.session.user.ItemBag,
+                    Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -310,6 +354,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -335,6 +380,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -360,6 +406,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -385,6 +432,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -410,6 +458,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -435,6 +484,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                     PetroleumStorage: req.session.user.PetroleumStorage,
                     ItemBag: req.session.user.ItemBag,
                     Achievement: req.session.user.Achievement,
+                    Mission: req.session.user.Mission,
                     errorMessage: err
                 })
             })
@@ -455,7 +505,8 @@ app.get("/information", ensureLogin, function(req,res){
         PetroleumMine: req.session.user.PetroleumMine,
         PetroleumStorage: req.session.user.PetroleumStorage,
         ItemBag: req.session.user.ItemBag,
-        Achievement: req.session.user.Achievement});
+        Achievement: req.session.user.Achievement,
+        Mission: req.session.user.Mission});
 })
 
 app.get("/Pet", ensureLogin, function(req,res){
@@ -470,8 +521,26 @@ app.get("/Pet", ensureLogin, function(req,res){
         PetroleumMine: req.session.user.PetroleumMine,
         PetroleumStorage: req.session.user.PetroleumStorage,
         ItemBag: req.session.user.ItemBag,
-        Achievement: req.session.user.Achievement});
+        Achievement: req.session.user.Achievement,
+        Mission: req.session.user.Mission});
 })
+
+app.get("/Mission", ensureLogin, function(req,res){
+    res.render("mission", {
+        data: req.session.user,
+        Resource: req.session.user.Resource,
+        Pet: req.session.user.Pet,
+        IronMine: req.session.user.IronMine,
+        IronStorage: req.session.user.IronStorage,
+        CrystalMine: req.session.user.CrystalMine,
+        CrystalStorage: req.session.user.CrystalStorage,
+        PetroleumMine: req.session.user.PetroleumMine,
+        PetroleumStorage: req.session.user.PetroleumStorage,
+        ItemBag: req.session.user.ItemBag,
+        Achievement: req.session.user.Achievement,
+        Mission: req.session.user.Mission});
+})
+
 
 app.post("/information", function(req, res) {
     if(req.body.displayName === undefined && req.body.password === undefined && req.body.newPassword === undefined && req.body.confirmNewPassword === undefined){
@@ -490,6 +559,7 @@ app.post("/information", function(req, res) {
                 PetroleumStorage: req.session.user.PetroleumStorage,
                 ItemBag: req.session.user.ItemBag,
                 Achievement: req.session.user.Achievement,
+                Mission: req.session.user.Mission,
                 successMessage: "Successful reset account!"
             });
         })
@@ -649,6 +719,19 @@ function reqSessionUserData(req,user){
                     "Description": user.Achievement.Resource.FirstCollect.Description
                 },
                 "Bonus": user.Achievement.Resource.Bonus,
+            }
+        },
+        Mission:{
+            "SpendIron100":{
+                "Task": user.Mission.SpendIron100.Task,
+                "Bool": user.Mission.SpendIron100.Bool,
+            },
+            "SpendCrystal100":{
+                "Task": user.Mission.SpendCrystal100.Task,
+                "Bool": user.Mission.SpendCrystal100.Bool,
+            },
+            "CompleteTask":{
+                "Bool": user.Mission.CompleteTask.Bool
             }
         }
     }

@@ -5,8 +5,11 @@ const bcrypt = require('bcryptjs');
 
 //Set daily reward-----------
 var todayDate = new Date();
+var nowDate = todayDate.toLocaleDateString();
 todayDate.setDate(todayDate.getDate() - 1);
 var previousDate = todayDate.toLocaleDateString();
+todayDate.setDate(todayDate.getDate() + 2);
+var nextDate = todayDate.toLocaleDateString();
 //---------------------------
 
 
@@ -365,7 +368,18 @@ var userSchema = new Schema({
       }
     },
     "Mission": {
-      "SpendIron100":{ type: Boolean, default: false}
+      "NextDate": {type: Date, default: nextDate},
+      "SpendIron100":{ 
+        "Task": {type: Number, default: 0},
+        "Bool": {type: Boolean, default: false}
+      },
+      "SpendCrystal100":{ 
+        "Task": {type: Number, default: 0},
+        "Bool": {type: Boolean, default: false}
+      },
+      "CompleteTask":{
+        "Bool": {type: Boolean, default: false}
+      }
     }
 });
 
@@ -420,6 +434,15 @@ function loginAccount(accountData){
       }else{
         bcrypt.compare(accountData.password, account[0].password).then((result) => {
           if (result) {
+            //----Mission Check----
+            if(nowDate === account[0].Mission.NextDate){
+              account[0].Mission.NextDate = nextDate;
+              account[0].Mission.SpendIron100.Task = 0;
+              account[0].Mission.SpendIron100.Bool = false;
+              account[0].Mission.SpendCrystal100.Task = 0;
+              account[0].Mission.SpendCrystal100.Bool = false;
+              account[0].Mission.CompleteTask.Bool = false;
+            }
             //----Count Bonus, keep it as 20----
             let bonusCount = account[0].loginBonus
               if(account[0].rewardDate.toLocaleDateString() === previousDate && bonusCount < 20){
@@ -855,71 +878,7 @@ function claimDailyReward(accountData) {
             accountData.IronMine.HistoryCollectedResource += 7000 * bonusCount;
             accountData.CrystalMine.HistoryCollectedResource += 7000 * bonusCount;
             accountData.PetroleumMine.HistoryCollectedResource += 3500 * bonusCount;
-            //---------------------
-            // const updateAccount = { 
-            //   _id: account[0]._id,
-            //   userName: account[0].userName,
-            //   rewardDate: today,
-            //   loginBonus: bonusCount,
-            //   Resource: {
-            //     Iron: account[0].Resource.Iron + (7000 * bonusCount),
-            //     Crystal: account[0].Resource.Crystal + (7000 * bonusCount),
-            //     Petroleum: account[0].Resource.Petroleum + (3500 * bonusCount)
-            //   },
-            //   IronMine: {
-            //     Name: account[0].IronMine.Name,
-            //     Level: account[0].IronMine.Level,
-            //     ProduceRate: account[0].IronMine.ProduceRate,
-            //     UpgradeCost_Iron: account[0].IronMine.UpgradeCost_Iron,
-            //     UpgradeCost_Crystal: account[0].IronMine.UpgradeCost_Crystal,
-            //   },
-            //   IronStorage: {
-            //     Name: account[0].IronStorage.Name,
-            //     Level: account[0].IronStorage.Level,
-            //     Capacity: account[0].IronStorage.Capacity,
-            //     UpgradeCost_Iron: account[0].IronStorage.UpgradeCost_Iron,
-            //     UpgradeCost_Crystal: account[0].IronStorage.UpgradeCost_Crystal
-            //   },
-            //   CrystalMine: {
-            //     Name: account[0].CrystalMine.Name,
-            //     Level: account[0].CrystalMine.Level,
-            //     ProduceRate: account[0].CrystalMine.ProduceRate,
-            //     UpgradeCost_Iron: account[0].CrystalMine.UpgradeCost_Iron,
-            //     UpgradeCost_Crystal: account[0].CrystalMine.UpgradeCost_Crystal
-            //   },
-            //   CrystalStorage: {
-            //     Name: account[0].CrystalStorage.Name,
-            //     Level: account[0].CrystalStorage.Level,
-            //     Capacity: account[0].CrystalStorage.Capacity,
-            //     UpgradeCost_Iron: account[0].CrystalStorage.UpgradeCost_Iron,
-            //     UpgradeCost_Crystal: account[0].CrystalStorage.UpgradeCost_Crystal 
-            //   },
-            //   PetroleumMine: {
-            //     Name: account[0].PetroleumMine.Name,
-            //     Level: account[0].PetroleumMine.Level,
-            //     ProduceRate: account[0].PetroleumMine.ProduceRate,
-            //     UpgradeCost_Iron: account[0].PetroleumMine.UpgradeCost_Iron,
-            //     UpgradeCost_Crystal: account[0].PetroleumMine.UpgradeCost_Crystal
-            //   },
-            //   PetroleumStorage: {
-            //     Name: account[0].PetroleumStorage.Name,
-            //     Level: account[0].PetroleumStorage.Level,
-            //     Capacity: account[0].PetroleumStorage.Capacity,
-            //     UpgradeCost_Iron: account[0].PetroleumStorage.UpgradeCost_Iron,
-            //     UpgradeCost_Crystal: account[0].PetroleumStorage.UpgradeCost_Crystal
-            //   },
-            //   ItemBag: {
-            //     Resource : {
-            //         "Iron1000" : { "Name": account[0].ItemBag.Resource.Iron1000.Name, "Amount": account[0].ItemBag.Resource.Iron1000.Amount },
-            //         "Crystal1000" : { "Name": account[0].ItemBag.Resource.Crystal1000.Name, "Amount": account[0].ItemBag.Resource.Crystal1000.Amount },
-            //         "Petroleum200" : { "Name": account[0].ItemBag.Resource.Petroleum200.Name, "Amount": account[0].ItemBag.Resource.Petroleum200.Amount }
-            //     },
-            //     Materials : {
-            //         "TextileFibers" : { "Name": account[0].ItemBag.Materials.TextileFibers.Name, "Amount": account[0].ItemBag.Materials.TextileFibers.Amount },
-            //         "CarbonSteel" : { "Name": account[0].ItemBag.Materials.CarbonSteel.Name, "Amount": account[0].ItemBag.Materials.CarbonSteel.Amount }
-            //     }
-            //   }
-            // }
+            
             User.updateOne(
               { _id: accountData._id }, accountData
             ).exec().then(() => {
@@ -933,6 +892,39 @@ function claimDailyReward(accountData) {
         reject(`Unable to find user - ${accountData.userName}: ${err}`);
     });
   })
+}
+
+function spend100Test(accountData){
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+      if(accountData.Resource.Iron >= 100 && accountData.Resource.Crystal >= 100 && accountData.Resource.Petroleum >= 100){
+        accountData.Resource.Iron -= 100;
+        accountData.Resource.Crystal -= 100;
+        accountData.Resource.Petroleum -= 100;
+        accountData.Mission.SpendIron100.Task += 100;
+        accountData.Mission.SpendCrystal100.Task += 100;
+        if(accountData.Mission.SpendIron100.Task >= 100){
+          accountData.Mission.SpendIron100.Bool = true;
+        }
+        if(accountData.Mission.SpendCrystal100.Task >= 100){
+          accountData.Mission.SpendCrystal100.Bool = true;
+        }
+        User.updateOne(
+          { _id: accountData._id }, accountData
+        ).exec().then(() => {
+            resolve(accountData);
+        }).catch((err) => {
+            reject("Can't reduce resource: " + err);
+        })
+      }else{
+        reject("Not enough resource: " + err);
+      }
+    }).catch((err) => {
+      reject(`Unable to find user - ${accountData.userName}: ${err}`);
+  });
+
+});
 }
 
 //Need QC
@@ -1221,4 +1213,4 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
 }
 
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test};
