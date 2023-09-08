@@ -96,7 +96,13 @@ app.engine('.hbs', exphbs.engine({
             }
             return null;
         },
-
+        andOperator: function (cond1,cond2){
+            let flag = false;
+            if(cond1 && cond2){
+                flag = true;
+            }
+            return flag;
+        },
         
     },
     // partialsDir: path.join(__dirname, "/views/partials/"),
@@ -296,7 +302,7 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
         })
     }else if(req.params.upgrade === "Reduce100"){
         return new Promise((resolve, resject) => {
-            authData.spend100Test(req.ession.user).then((user) => {
+            authData.spend100Test(req.session.user).then((user) => {
                 req.session.user.Resource.Iron = user.Resource.Iron
                 req.session.user.Resource.Crystal = user.Resource.Crystal
                 req.session.user.Resource.Petroleum = user.Resource.Petroleum

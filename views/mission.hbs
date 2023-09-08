@@ -5,7 +5,7 @@
 {{/if}}
 
     <h2>Mission Log</h2>
-    {{#if accountData.Mission.SpendIron100.Bool && accountData.Mission.SpendCrystal100.Bool }}
+    {{#if (andOperator Mission.SpendIron100.Bool Mission.SpendCrystal100.Bool)}}
         <p>Hi</p>
     {{else}}
         <p>No</p>

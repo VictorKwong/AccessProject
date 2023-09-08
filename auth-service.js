@@ -898,6 +898,7 @@ function spend100Test(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
+      console.log(accountData)
       if(accountData.Resource.Iron >= 100 && accountData.Resource.Crystal >= 100 && accountData.Resource.Petroleum >= 100){
         accountData.Resource.Iron -= 100;
         accountData.Resource.Crystal -= 100;
@@ -918,7 +919,7 @@ function spend100Test(accountData){
             reject("Can't reduce resource: " + err);
         })
       }else{
-        reject("Not enough resource: " + err);
+        reject("Not enough resource");
       }
     }).catch((err) => {
       reject(`Unable to find user - ${accountData.userName}: ${err}`);
