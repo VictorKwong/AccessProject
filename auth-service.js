@@ -8,7 +8,7 @@ var todayDate = new Date();
 var nowDate = todayDate.toLocaleDateString();
 todayDate.setDate(todayDate.getDate() - 1);
 var previousDate = todayDate.toLocaleDateString();
-todayDate.setDate(todayDate.getDate() + 2);
+todayDate.setDate(todayDate.getDate() + 1);
 var nextDate = todayDate.toLocaleDateString();
 //---------------------------
 
@@ -310,6 +310,62 @@ var userSchema = new Schema({
         type: Number,
         default: 1000,
       },
+      "UpgradeCost_Iron":{
+        type: Number,
+        default: 20,
+      },
+      "UpgradeCost_Crystal":{
+        type: Number,
+        default: 20,
+      },
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 10
+      },
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
+      }
+    },
+    //Training
+    "StrengthAcademy": {
+      "Name": {
+        type: String,
+        default: "Strength Academy"
+      },
+      "Level": {
+        type: Number,
+        default: 1,
+      },
+      "TrainingStrengthMax":{
+        type: Number,
+        default: 1,
+      },
+      "TrainingCost_Iron":{
+        type: Number,
+        default: 20,
+      },
+      "TrainingCost_Crystal":{
+        type: Number,
+        default: 20,
+      },
+      "TrainingCost_Time":{
+        type: Number,
+        default: 10
+      },
+      "TrainingCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "TrainingCost_Status":{
+        type: Boolean,
+        default: false
+      },
+
       "UpgradeCost_Iron":{
         type: Number,
         default: 20,
@@ -955,6 +1011,39 @@ function iron1000Test(accountData){
 
   });
 }
+
+//Pet Training
+function upgradeStrengthAcademy(accountData){
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+          if ((account[0].Resource.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
+
+            accountData.Resource.Iron -= account[0].IronMine.UpgradeCost_Iron;
+            accountData.Resource.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
+            accountData.IronMine.UpgradeCost_Status = true;
+            accountData.IronMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
+
+            collectAllResourceNonExport(accountData,account[0]);
+
+            User.updateOne(
+              { _id: accountData._id }, accountData
+            ).exec().then(() => {
+                resolve(accountData);
+            }).catch((err) => {
+                reject("Upgrade cause error:" + err);
+            })
+          } else {
+            reject(`Not enough resource: ${accountData.userName}`);
+          }
+    }).catch((err) => {
+        reject(`Unable to find user - ${accountData.userName}: ${err}`);
+    });
+
+});
+}
+
 
 //Non-Export function
 function collectAllResourceNonExport(accountData, accountZero){
