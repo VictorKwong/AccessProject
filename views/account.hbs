@@ -243,7 +243,7 @@
 
 
 <script>
-    function upgradeIronMine() {
+    function upgradeAll() {
         let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
         //produce rate
         let duration = dateNow - {{data.previousCollectTime}};
@@ -338,12 +338,15 @@
                 window.location.replace(window.location.origin + "/account")
             }
         }
+
+        //Academy
+        
     }
 
 
-setInterval(upgradeIronMine, 1000);
+setInterval(upgradeAll, 1000);
 // Initial call to run the test function immediately
-upgradeIronMine();
+upgradeAll();
 
         function updateInputAndSelect(name, amount) {
             const ResourceNumberInput = document.getElementById('ResourceNumber');

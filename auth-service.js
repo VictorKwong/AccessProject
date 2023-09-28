@@ -353,6 +353,10 @@ var userSchema = new Schema({
         type: Number,
         default: 20,
       },
+      "TrainingCost_Petroleum":{
+        type: Number,
+        default: 20,
+      },
       "TrainingCost_Time":{
         type: Number,
         default: 10
@@ -371,6 +375,10 @@ var userSchema = new Schema({
         default: 20,
       },
       "UpgradeCost_Crystal":{
+        type: Number,
+        default: 20,
+      },
+      "UpgradeCost_Petroleum":{
         type: Number,
         default: 20,
       },
@@ -1017,13 +1025,15 @@ function upgradeStrengthAcademy(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Resource.Iron - account[0].IronMine.UpgradeCost_Iron) >= 0 &&
-              (account[0].Resource.Crystal - account[0].IronMine.UpgradeCost_Crystal) >= 0){
+          if ((account[0].Resource.Iron - account[0].StrengthAcademy.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].StrengthAcademy.UpgradeCost_Crystal) >= 0 &&
+              (account[0].Resource.Petroleum - account[0].StrengthAcademy.UpgradeCost_Petroleum) >= 0 ){
 
-            accountData.Resource.Iron -= account[0].IronMine.UpgradeCost_Iron;
-            accountData.Resource.Crystal -= account[0].IronMine.UpgradeCost_Crystal;
-            accountData.IronMine.UpgradeCost_Status = true;
-            accountData.IronMine.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
+            accountData.Resource.Iron -= account[0].StrengthAcademy.UpgradeCost_Iron;
+            accountData.Resource.Crystal -= account[0].StrengthAcademy.UpgradeCost_Crystal;
+            accountData.Resource.Petroleum -= account[0].StrengthAcademy.UpgradeCost_Petroleum;
+            accountData.StrengthAcademy.UpgradeCost_Status = true;
+            accountData.StrengthAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
 
             collectAllResourceNonExport(accountData,account[0]);
 
@@ -1303,4 +1313,4 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
 }
 
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeStrengthAcademy};

@@ -197,20 +197,7 @@ app.get("/account", ensureLogin, function(req,res){
     return new Promise((resolve, reject) => {
         authData.refreshAccount(req.session.user).then((user) => {
             reqSessionUserData(req,user);
-            res.render('account', {
-                data: req.session.user,
-                Resource: req.session.user.Resource,
-                Pet: req.session.user.Pet,
-                IronMine: req.session.user.IronMine,
-                IronStorage: req.session.user.IronStorage,
-                CrystalMine: req.session.user.CrystalMine,
-                CrystalStorage: req.session.user.CrystalStorage,
-                PetroleumMine: req.session.user.PetroleumMine,
-                PetroleumStorage: req.session.user.PetroleumStorage,
-                ItemBag : req.session.user.ItemBag,
-                Achievement: req.session.user.Achievement,
-                Mission: req.session.user.Mission
-            });
+            res.render('account', returnRender(req));
         }).catch((err) => {
             res.render('login', {errorMessage: err});
         })
@@ -706,6 +693,24 @@ function reqSessionUserData(req,user){
             "UpgradeCost_TimeStart": user.PetroleumStorage.UpgradeCost_TimeStart,
             "UpgradeCost_Status": user.PetroleumStorage.UpgradeCost_Status
         },
+        StrengthAcademy: {
+            "Name": user.StrengthAcademy.Name,
+            "Level": user.StrengthAcademy.Level,
+            "TrainingStrengthMax": user.StrengthAcademy.TrainingStrengthMax,
+            "TrainingCost_Iron": user.StrengthAcademy.TrainingCost_Iron,
+            "TrainingCost_Crystal": user.StrengthAcademy.TrainingCost_Crystal,
+            "TrainingCost_Petroleum": user.StrengthAcademy.TrainingCost_Petroleum,
+            "TrainingCost_Time": user.StrengthAcademy.TrainingCost_Time,
+            "TrainingCost_TimeStart": user.StrengthAcademy.TrainingCost_TimeStart,
+            "TrainingCost_Status": user.StrengthAcademy.TrainingCost_Status,
+
+            "UpgradeCost_Iron": user.StrengthAcademy.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.StrengthAcademy.UpgradeCost_Crystal,
+            "UpgradeCost_Petroleum": user.StrengthAcademy.UpgradeCost_Petroleum,
+            "UpgradeCost_Time": user.StrengthAcademy.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.StrengthAcademy.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.StrengthAcademy.UpgradeCost_Status
+        },
         ItemBag: {
             Resource : {
                 "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
@@ -741,4 +746,57 @@ function reqSessionUserData(req,user){
             }
         }
     }
+}
+
+function returnRender(req,successMessageVar,errorMessageVar){
+
+    if(successMessageVar != undefined){
+        return {
+            data: req.session.user,
+            Resource: req.session.user.Resource,
+            Pet: req.session.user.Pet,
+            IronMine: req.session.user.IronMine,
+            IronStorage: req.session.user.IronStorage,
+            CrystalMine: req.session.user.CrystalMine,
+            CrystalStorage: req.session.user.CrystalStorage,
+            PetroleumMine: req.session.user.PetroleumMine,
+            PetroleumStorage: req.session.user.PetroleumStorage,
+            ItemBag: req.session.user.ItemBag,
+            Achievement: req.session.user.Achievement,
+            Mission: req.session.user.Mission,
+            successMessage: successMessageVar
+            }
+    }else if(errorMessageVar != undefined){
+        return {
+            data: req.session.user,
+            Resource: req.session.user.Resource,
+            Pet: req.session.user.Pet,
+            IronMine: req.session.user.IronMine,
+            IronStorage: req.session.user.IronStorage,
+            CrystalMine: req.session.user.CrystalMine,
+            CrystalStorage: req.session.user.CrystalStorage,
+            PetroleumMine: req.session.user.PetroleumMine,
+            PetroleumStorage: req.session.user.PetroleumStorage,
+            ItemBag: req.session.user.ItemBag,
+            Achievement: req.session.user.Achievement,
+            Mission: req.session.user.Mission,
+            errorMessage: errorMessageVar
+            }
+    }else{
+        return {
+            data: req.session.user,
+            Resource: req.session.user.Resource,
+            Pet: req.session.user.Pet,
+            IronMine: req.session.user.IronMine,
+            IronStorage: req.session.user.IronStorage,
+            CrystalMine: req.session.user.CrystalMine,
+            CrystalStorage: req.session.user.CrystalStorage,
+            PetroleumMine: req.session.user.PetroleumMine,
+            PetroleumStorage: req.session.user.PetroleumStorage,
+            ItemBag: req.session.user.ItemBag,
+            Achievement: req.session.user.Achievement,
+            Mission: req.session.user.Mission
+            }
+    }
+
 }
