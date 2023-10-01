@@ -198,6 +198,30 @@
 <br>
 <br>
 <br>
+<div class="border border-primary">
+    <p>{{StrengthAcademy.Name}} - Lv {{StrengthAcademy.Level}}</p>
+
+    <p>Strength Training: {{StrengthAcademy.TrainingStrengthMax}}</p>
+
+    <p>Upgrade Cost: Iron - {{toAbbr StrengthAcademy.UpgradeCost_Iron}}</p>
+    <p>Upgrade Cost: Crystal - {{toAbbr StrengthAcademy.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{StrengthAcademy.UpgradeCost_Time}}</p>
+    {{#if StrengthAcademy.UpgradeCost_Status}}
+    <p id="strengthAcademyUpgrade-js">Upgrade RemainDuration: {{calDuration StrengthAcademy.UpgradeCost_TimeStart StrengthAcademy.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if StrengthAcademy.UpgradeCost_Status}}
+    <form action="/account/upgradeStrengthAcademy" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{StrengthAcademy.Name}} - Lv.{{sum StrengthAcademy.Level 1}}" disabled></input>
+    </form>
+    {{else}}
+    <form action="/account/upgradeStrengthAcademy" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{StrengthAcademy.Name}} - Lv.{{sum StrengthAcademy.Level 1}}"></input>
+    </form>
+    {{/if}}
+</div>
+<br>
+<br>
+<br>
 
 <div>
     <h2>Item Bags</h2>
@@ -276,7 +300,7 @@
         document.getElementById('CrystalResource-js-title').title = "Crystal: " + crystalRate;
         document.getElementById('PetroleumResource-js').innerText = petroleumRate;
         document.getElementById('PetroleumResource-js-title').title = "Petroleum: " + petroleumRate;
-        //upgrade status
+        //upgrade status, maybe For statement array?
         if({{IronMine.UpgradeCost_Status}}){
             const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
             const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
@@ -340,6 +364,15 @@
         }
 
         //Academy
+        if({{StrengthAcademy.UpgradeCost_Status}}){
+            let upgradeTimeStart = {{StrengthAcademy.UpgradeCost_TimeStart}};
+            let upgradeTimeDuration = {{StrengthAcademy.UpgradeCost_Time}};
+            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('strengthAcademyUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
         
     }
 

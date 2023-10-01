@@ -130,4 +130,5 @@ https://howtomakeanrpg.com/a/how-to-make-an-rpg-levels.html
 
 ============Current Notes=============
 auth-Service.js => upgradeStrengthAcademy, ?RefreshRate (Web and JS), ?Pet Upgrade
-server.js => test out returnRender() function? -> Sync all
+server.js => test out returnRender() function -> Sync all (OK)
+account => update realtime? (Testing?)
