@@ -313,6 +313,18 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', returnRender(req,undefined,err));
             })
         })
+    }else if(req.params.upgrade === "upgradeStrengthAcademy"){
+        return new Promise((resolve, reject) => {
+            authData.upgradeStrengthAcademy(req.session.user).then((user) => {
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
+
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', returnRender(req,undefined,err));
+            })
+        })
     }
 })
 
