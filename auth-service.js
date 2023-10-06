@@ -395,6 +395,69 @@ var userSchema = new Schema({
         default: false
       }
     },
+    "DexterityAcademy": {
+      "Name": {
+        type: String,
+        default: "Dexterity Academy"
+      },
+      "Level": {
+        type: Number,
+        default: 1,
+      },
+      "TrainingDexterityMax":{
+        type: Number,
+        default: 1,
+      },
+      "TrainingCost_Iron":{
+        type: Number,
+        default: 20,
+      },
+      "TrainingCost_Crystal":{
+        type: Number,
+        default: 20,
+      },
+      "TrainingCost_Petroleum":{
+        type: Number,
+        default: 20,
+      },
+      "TrainingCost_Time":{
+        type: Number,
+        default: 10
+      },
+      "TrainingCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "TrainingCost_Status":{
+        type: Boolean,
+        default: false
+      },
+
+      "UpgradeCost_Iron":{
+        type: Number,
+        default: 20,
+      },
+      "UpgradeCost_Crystal":{
+        type: Number,
+        default: 20,
+      },
+      "UpgradeCost_Petroleum":{
+        type: Number,
+        default: 20,
+      },
+      "UpgradeCost_Time":{
+        type: Number,
+        default: 10
+      },
+      "UpgradeCost_TimeStart":{
+        type: Number,
+        default: Math.floor(Date.now() / 1000)
+      },
+      "UpgradeCost_Status":{
+        type: Boolean,
+        default: false
+      }
+    },
     "ItemBag":{
       "Resource" : {
         "Iron1000": {
