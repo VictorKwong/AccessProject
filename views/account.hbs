@@ -199,48 +199,23 @@
 <br>
 <br>
 <div class="border border-primary">
-    <p>{{StrengthAcademy.Name}} - Lv {{StrengthAcademy.Level}}</p>
+    <p>{{TrainingAcademy.Name}} - Lv {{TrainingAcademy.Level}}</p>
 
-    <p>Strength Training: {{StrengthAcademy.TrainingStrengthMax}}</p>
+    <p>Training Training: {{TrainingAcademy.TrainingMax}}</p>
 
-    <p>Upgrade Cost: Iron - {{toAbbr StrengthAcademy.UpgradeCost_Iron}}</p>
-    <p>Upgrade Cost: Crystal - {{toAbbr StrengthAcademy.UpgradeCost_Crystal}}</p>
-    <p>Upgrade Time: {{StrengthAcademy.UpgradeCost_Time}}</p>
-    {{#if StrengthAcademy.UpgradeCost_Status}}
-    <p id="strengthAcademyUpgrade-js">Upgrade RemainDuration: {{calDuration StrengthAcademy.UpgradeCost_TimeStart StrengthAcademy.UpgradeCost_Time}}</p>
+    <p>Upgrade Cost: Iron - {{toAbbr TrainingAcademy.UpgradeCost_Iron}}</p>
+    <p>Upgrade Cost: Crystal - {{toAbbr TrainingAcademy.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{TrainingAcademy.UpgradeCost_Time}}</p>
+    {{#if TrainingAcademy.UpgradeCost_Status}}
+    <p id="trainingAcademyUpgrade-js">Upgrade RemainDuration: {{calDuration TrainingAcademy.UpgradeCost_TimeStart TrainingAcademy.UpgradeCost_Time}}</p>
     {{/if}}
-    {{#if StrengthAcademy.UpgradeCost_Status}}
-    <form action="/account/upgradeStrengthAcademy" method="POST">
-        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{StrengthAcademy.Name}} - Lv.{{sum StrengthAcademy.Level 1}}" disabled></input>
+    {{#if TrainingAcademy.UpgradeCost_Status}}
+    <form action="/account/upgradeTrainingAcademy" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{TrainingAcademy.Name}} - Lv.{{sum TrainingAcademy.Level 1}}" disabled></input>
     </form>
     {{else}}
-    <form action="/account/upgradeStrengthAcademy" method="POST">
-        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{StrengthAcademy.Name}} - Lv.{{sum StrengthAcademy.Level 1}}"></input>
-    </form>
-    {{/if}}
-</div>
-<br>
-<br>
-<br>
-
-<div class="border border-primary">
-    <p>{{DexterityAcademy.Name}} - Lv {{DexterityAcademy.Level}}</p>
-
-    <p>Dexterity Training: {{DexterityAcademy.TrainingDexterityMax}}</p>
-
-    <p>Upgrade Cost: Iron - {{toAbbr DexterityAcademy.UpgradeCost_Iron}}</p>
-    <p>Upgrade Cost: Crystal - {{toAbbr DexterityAcademy.UpgradeCost_Crystal}}</p>
-    <p>Upgrade Time: {{DexterityAcademy.UpgradeCost_Time}}</p>
-    {{#if DexterityAcademy.UpgradeCost_Status}}
-    <p id="dexterityAcademyUpgrade-js">Upgrade RemainDuration: {{calDuration DexterityAcademy.UpgradeCost_TimeStart DexterityAcademy.UpgradeCost_Time}}</p>
-    {{/if}}
-    {{#if DexterityAcademy.UpgradeCost_Status}}
-    <form action="/account/upgradeDexterityAcademy" method="POST">
-        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{DexterityAcademy.Name}} - Lv.{{sum DexterityAcademy.Level 1}}" disabled></input>
-    </form>
-    {{else}}
-    <form action="/account/upgradeDexterityAcademy" method="POST">
-        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{DexterityAcademy.Name}} - Lv.{{sum DexterityAcademy.Level 1}}"></input>
+    <form action="/account/upgradeTrainingAcademy" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{TrainingAcademy.Name}} - Lv.{{sum TrainingAcademy.Level 1}}"></input>
     </form>
     {{/if}}
 </div>
@@ -389,21 +364,11 @@
         }
 
         //Academy
-        if({{StrengthAcademy.UpgradeCost_Status}}){
-            let upgradeTimeStart = {{StrengthAcademy.UpgradeCost_TimeStart}};
-            let upgradeTimeDuration = {{StrengthAcademy.UpgradeCost_Time}};
+        if({{TrainingAcademy.UpgradeCost_Status}}){
+            let upgradeTimeStart = {{TrainingAcademy.UpgradeCost_TimeStart}};
+            let upgradeTimeDuration = {{TrainingAcademy.UpgradeCost_Time}};
             let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('strengthAcademyUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
-
-        if({{DexterityAcademy.UpgradeCost_Status}}){
-            let upgradeTimeStart = {{DexterityAcademy.UpgradeCost_TimeStart}};
-            let upgradeTimeDuration = {{DexterityAcademy.UpgradeCost_Time}};
-            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('dexterityAcademyUpgrade-js').innerText = timeRemain;
+            document.getElementById('trainingAcademyUpgrade-js').innerText = timeRemain;
             if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
                 window.location.replace(window.location.origin + "/account")
             }
