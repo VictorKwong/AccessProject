@@ -223,6 +223,31 @@
 <br>
 <br>
 
+<div class="border border-primary">
+    <p>{{DexterityAcademy.Name}} - Lv {{DexterityAcademy.Level}}</p>
+
+    <p>Dexterity Training: {{DexterityAcademy.TrainingDexterityMax}}</p>
+
+    <p>Upgrade Cost: Iron - {{toAbbr DexterityAcademy.UpgradeCost_Iron}}</p>
+    <p>Upgrade Cost: Crystal - {{toAbbr DexterityAcademy.UpgradeCost_Crystal}}</p>
+    <p>Upgrade Time: {{DexterityAcademy.UpgradeCost_Time}}</p>
+    {{#if DexterityAcademy.UpgradeCost_Status}}
+    <p id="dexterityAcademyUpgrade-js">Upgrade RemainDuration: {{calDuration DexterityAcademy.UpgradeCost_TimeStart DexterityAcademy.UpgradeCost_Time}}</p>
+    {{/if}}
+    {{#if DexterityAcademy.UpgradeCost_Status}}
+    <form action="/account/upgradeDexterityAcademy" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{DexterityAcademy.Name}} - Lv.{{sum DexterityAcademy.Level 1}}" disabled></input>
+    </form>
+    {{else}}
+    <form action="/account/upgradeDexterityAcademy" method="POST">
+        <input class="btn btn-primary" role="button" type="submit" value="Upgrade {{DexterityAcademy.Name}} - Lv.{{sum DexterityAcademy.Level 1}}"></input>
+    </form>
+    {{/if}}
+</div>
+<br>
+<br>
+<br>
+
 <div>
     <h2>Item Bags</h2>
 </div>
@@ -369,6 +394,16 @@
             let upgradeTimeDuration = {{StrengthAcademy.UpgradeCost_Time}};
             let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
             document.getElementById('strengthAcademyUpgrade-js').innerText = timeRemain;
+            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
+                window.location.replace(window.location.origin + "/account")
+            }
+        }
+
+        if({{DexterityAcademy.UpgradeCost_Status}}){
+            let upgradeTimeStart = {{DexterityAcademy.UpgradeCost_TimeStart}};
+            let upgradeTimeDuration = {{DexterityAcademy.UpgradeCost_Time}};
+            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
+            document.getElementById('dexterityAcademyUpgrade-js').innerText = timeRemain;
             if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
                 window.location.replace(window.location.origin + "/account")
             }

@@ -755,6 +755,21 @@ function resetAccount(accountData) {
             accountData.StrengthAcademy.TrainingCost_TimeStart = Math.floor(Date.now() / 1000)
             accountData.StrengthAcademy.TrainingCost_Status = false
 
+            accountData.DexterityAcademy.Level = 1
+            accountData.DexterityAcademy.TrainingStrengthMax = 1
+            accountData.DexterityAcademy.UpgradeCost_Iron = 20
+            accountData.DexterityAcademy.UpgradeCost_Crystal = 20
+            accountData.DexterityAcademy.UpgradeCost_Time = 10
+            accountData.DexterityAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.DexterityAcademy.UpgradeCost_Status = false
+
+            accountData.DexterityAcademy.TrainingCost_Iron = 20
+            accountData.DexterityAcademy.TrainingCost_Crystal = 20
+            accountData.DexterityAcademy.TrainingCost_Time = 10
+            accountData.DexterityAcademy.TrainingCost_Time = 10
+            accountData.DexterityAcademy.TrainingCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.DexterityAcademy.TrainingCost_Status = false
+
 
             User.updateOne(
               { _id: accountData._id }, accountData
@@ -1115,6 +1130,39 @@ function upgradeStrengthAcademy(accountData){
 });
 }
 
+function upgradeDexterityAcademy(accountData){
+  return new Promise(function (resolve, reject) {
+    User.find({ _id: accountData._id }).exec()
+    .then((account) => {
+          if ((account[0].Resource.Iron - account[0].DexterityAcademy.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].DexterityAcademy.UpgradeCost_Crystal) >= 0 &&
+              (account[0].Resource.Petroleum - account[0].DexterityAcademy.UpgradeCost_Petroleum) >= 0 ){
+
+            accountData.Resource.Iron -= account[0].DexterityAcademy.UpgradeCost_Iron;
+            accountData.Resource.Crystal -= account[0].DexterityAcademy.UpgradeCost_Crystal;
+            accountData.Resource.Petroleum -= account[0].DexterityAcademy.UpgradeCost_Petroleum;
+            accountData.DexterityAcademy.UpgradeCost_Status = true;
+            accountData.DexterityAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
+
+            collectAllResourceNonExport(accountData,account[0]);
+
+            User.updateOne(
+              { _id: accountData._id }, accountData
+            ).exec().then(() => {
+                resolve(accountData);
+            }).catch((err) => {
+                reject("Upgrade cause error:" + err);
+            })
+          } else {
+            reject(`Not enough resource: ${accountData.userName}`);
+          }
+    }).catch((err) => {
+        reject(`Unable to find user - ${accountData.userName}: ${err}`);
+    });
+
+});
+}
+
 
 //Non-Export function
 function collectAllResourceNonExport(accountData, accountZero){
@@ -1261,6 +1309,22 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
     accountData.StrengthAcademy.TrainingCost_Crystal = parseInt(accountZero.StrengthAcademy.TrainingCost_Crystal * 1.5);
     accountData.StrengthAcademy.TrainingCost_Petroleum = parseInt(accountZero.StrengthAcademy.TrainingCost_Petroleum * 1.5);
   }
+    //=====================Dexterity Academy=====================
+    if(((currentTimeInSeconds - accountData.DexterityAcademy.UpgradeCost_TimeStart) >= accountData.DexterityAcademy.UpgradeCost_Time) && accountData.DexterityAcademy.UpgradeCost_Status){
+      //finished upgrade
+      accountData.DexterityAcademy.UpgradeCost_Status = false;
+  
+      accountData.DexterityAcademy.Level += 1;
+      accountData.DexterityAcademy.TrainingStrengthMax = accountZero.DexterityAcademy.TrainingStrengthMax + accountZero.DexterityAcademy.TrainingStrengthMax;
+      accountData.DexterityAcademy.UpgradeCost_Iron = parseInt(accountZero.DexterityAcademy.UpgradeCost_Iron * 1.5);
+      accountData.DexterityAcademy.UpgradeCost_Crystal = parseInt(accountZero.DexterityAcademy.UpgradeCost_Crystal * 1.5);
+      accountData.DexterityAcademy.UpgradeCost_Petroleum = parseInt(accountZero.DexterityAcademy.UpgradeCost_Petroleum * 1.5);
+      accountData.DexterityAcademy.UpgradeCost_Time = accountZero.DexterityAcademy.UpgradeCost_Time + accountZero.DexterityAcademy.UpgradeCost_Time;
+  
+      accountData.DexterityAcademy.TrainingCost_Iron = parseInt(accountZero.DexterityAcademy.TrainingCost_Iron * 1.5);
+      accountData.DexterityAcademy.TrainingCost_Crystal = parseInt(accountZero.DexterityAcademy.TrainingCost_Crystal * 1.5);
+      accountData.DexterityAcademy.TrainingCost_Petroleum = parseInt(accountZero.DexterityAcademy.TrainingCost_Petroleum * 1.5);
+    }
   //=====================Iron Mine=====================
 
   if(((currentTimeInSeconds - accountData.IronMine.UpgradeCost_TimeStart) >= accountData.IronMine.UpgradeCost_Time) && accountData.IronMine.UpgradeCost_Status){
@@ -1399,10 +1463,11 @@ function checkAllUpgradeBuildingStatusNonExport(accountZero){
     (((currentTimeInSeconds - accountZero.CrystalStorage.UpgradeCost_TimeStart) >= accountZero.CrystalStorage.UpgradeCost_Time) && accountZero.CrystalStorage.UpgradeCost_Status) ||
     (((currentTimeInSeconds - accountZero.PetroleumMine.UpgradeCost_TimeStart) >= accountZero.PetroleumMine.UpgradeCost_Time) && accountZero.PetroleumMine.UpgradeCost_Status) ||
     (((currentTimeInSeconds - accountZero.PetroleumStorage.UpgradeCost_TimeStart) >= accountZero.PetroleumStorage.UpgradeCost_Time) && accountZero.PetroleumStorage.UpgradeCost_Status) ||
-    (((currentTimeInSeconds - accountZero.StrengthAcademy.UpgradeCost_TimeStart) >= accountZero.StrengthAcademy.UpgradeCost_Time) && accountZero.StrengthAcademy.UpgradeCost_Status)
+    (((currentTimeInSeconds - accountZero.StrengthAcademy.UpgradeCost_TimeStart) >= accountZero.StrengthAcademy.UpgradeCost_Time) && accountZero.StrengthAcademy.UpgradeCost_Status) || 
+    (((currentTimeInSeconds - accountZero.DexterityAcademy.UpgradeCost_TimeStart) >= accountZero.DexterityAcademy.UpgradeCost_Time) && accountZero.DexterityAcademy.UpgradeCost_Status)
   )
 }
 
 
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeStrengthAcademy};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeStrengthAcademy, upgradeDexterityAcademy};

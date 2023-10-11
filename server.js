@@ -325,6 +325,18 @@ app.post("/account/:upgrade", ensureLogin, function(req, res) {
                 res.render('account', returnRender(req,undefined,err));
             })
         })
+    }else if(req.params.upgrade === "upgradeDexterityAcademy"){
+        return new Promise((resolve, reject) => {
+            authData.upgradeDexterityAcademy(req.session.user).then((user) => {
+                req.session.user.Resource.Iron = user.Resource.Iron
+                req.session.user.Resource.Crystal = user.Resource.Crystal
+                req.session.user.Resource.Petroleum = user.Resource.Petroleum
+
+                res.redirect('/account')
+            }).catch((err) => {
+                res.render('account', returnRender(req,undefined,err));
+            })
+        })
     }
 })
 
@@ -504,6 +516,24 @@ function reqSessionUserData(req,user){
             "UpgradeCost_TimeStart": user.StrengthAcademy.UpgradeCost_TimeStart,
             "UpgradeCost_Status": user.StrengthAcademy.UpgradeCost_Status
         },
+        DexterityAcademy: {
+            "Name": user.DexterityAcademy.Name,
+            "Level": user.DexterityAcademy.Level,
+            "TrainingStrengthMax": user.DexterityAcademy.TrainingStrengthMax,
+            "TrainingCost_Iron": user.DexterityAcademy.TrainingCost_Iron,
+            "TrainingCost_Crystal": user.DexterityAcademy.TrainingCost_Crystal,
+            "TrainingCost_Petroleum": user.DexterityAcademy.TrainingCost_Petroleum,
+            "TrainingCost_Time": user.DexterityAcademy.TrainingCost_Time,
+            "TrainingCost_TimeStart": user.DexterityAcademy.TrainingCost_TimeStart,
+            "TrainingCost_Status": user.DexterityAcademy.TrainingCost_Status,
+
+            "UpgradeCost_Iron": user.DexterityAcademy.UpgradeCost_Iron,
+            "UpgradeCost_Crystal": user.DexterityAcademy.UpgradeCost_Crystal,
+            "UpgradeCost_Petroleum": user.DexterityAcademy.UpgradeCost_Petroleum,
+            "UpgradeCost_Time": user.DexterityAcademy.UpgradeCost_Time,
+            "UpgradeCost_TimeStart": user.DexterityAcademy.UpgradeCost_TimeStart,
+            "UpgradeCost_Status": user.DexterityAcademy.UpgradeCost_Status
+        },
         ItemBag: {
             Resource : {
                 "Iron1000" : { "Name": user.ItemBag.Resource.Iron1000.Name, "Amount": user.ItemBag.Resource.Iron1000.Amount },
@@ -558,6 +588,7 @@ function returnRender(req,successMessageVar,errorMessageVar){
             Achievement: req.session.user.Achievement,
             Mission: req.session.user.Mission,
             StrengthAcademy: req.session.user.StrengthAcademy,
+            DexterityAcademy: req.session.user.DexterityAcademy,
             successMessage: successMessageVar
             }
     }else if(errorMessageVar != undefined){
@@ -575,6 +606,7 @@ function returnRender(req,successMessageVar,errorMessageVar){
             Achievement: req.session.user.Achievement,
             Mission: req.session.user.Mission,
             StrengthAcademy: req.session.user.StrengthAcademy,
+            DexterityAcademy: req.session.user.DexterityAcademy,
             errorMessage: errorMessageVar
             }
     }else{
@@ -592,6 +624,7 @@ function returnRender(req,successMessageVar,errorMessageVar){
             Achievement: req.session.user.Achievement,
             Mission: req.session.user.Mission,
             StrengthAcademy: req.session.user.StrengthAcademy,
+            DexterityAcademy: req.session.user.DexterityAcademy,
             }
     }
 
