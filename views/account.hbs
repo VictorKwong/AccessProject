@@ -301,79 +301,67 @@
         document.getElementById('PetroleumResource-js').innerText = petroleumRate;
         document.getElementById('PetroleumResource-js-title').title = "Petroleum: " + petroleumRate;
         //upgrade status, maybe For statement array?
-        if({{IronMine.UpgradeCost_Status}}){
-            const upgradeTimeStart = {{IronMine.UpgradeCost_TimeStart}};
-            const upgradeTimeDuration = {{IronMine.UpgradeCost_Time}};
-            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('ironMineUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                //1. upgrading, 2. during upgrading, collect resource, 3. finished upgrading /collectResource
-                //collectAllResource
-                //window.location.reload();
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
-        if({{IronStorage.UpgradeCost_Status}}){
-            const upgradeTimeStart = {{IronStorage.UpgradeCost_TimeStart}};
-            const upgradeTimeDuration = {{IronStorage.UpgradeCost_Time}};
-            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('ironStorageUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
+        const structures = [
+            {
+                id: 'ironMine',
+                name: 'Iron Mine',
+                upgradeCostStatus: {{IronMine.UpgradeCost_Status}},
+                upgradeTimeStart: {{IronMine.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{IronMine.UpgradeCost_Time}},
+            },
+            {
+                id: 'ironStorage',
+                name: 'Iron Storage',
+                upgradeCostStatus: {{IronStorage.UpgradeCost_Status}},
+                upgradeTimeStart: {{IronStorage.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{IronStorage.UpgradeCost_Time}},
+            },
+            {
+                id: 'crystalMine',
+                name: 'Crystal Mine',
+                upgradeCostStatus: {{CrystalMine.UpgradeCost_Status}},
+                upgradeTimeStart: {{CrystalMine.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{CrystalMine.UpgradeCost_Time}},
+            },
+            {
+                id: 'crystalStorage',
+                name: 'Crystal Storage',
+                upgradeCostStatus: {{CrystalStorage.UpgradeCost_Status}},
+                upgradeTimeStart: {{CrystalStorage.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{CrystalStorage.UpgradeCost_Time}},
+            },
+            {
+                id: 'petroleumMine',
+                name: 'Petroleum Mine',
+                upgradeCostStatus: {{PetroleumMine.UpgradeCost_Status}},
+                upgradeTimeStart: {{PetroleumMine.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{PetroleumMine.UpgradeCost_Time}},
+            },
+            {
+                id: 'petroleumStorage',
+                name: 'Petroleum Storage',
+                upgradeCostStatus: {{PetroleumStorage.UpgradeCost_Status}},
+                upgradeTimeStart: {{PetroleumStorage.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{PetroleumStorage.UpgradeCost_Time}},
+            },
+            {
+                id: 'trainingAcademy',
+                name: 'Training Academy',
+                upgradeCostStatus: {{TrainingAcademy.UpgradeCost_Status}},
+                upgradeTimeStart: {{TrainingAcademy.UpgradeCost_TimeStart}},
+                upgradeTimeDuration: {{TrainingAcademy.UpgradeCost_Time}},
+            },
+        ];
 
-        if({{CrystalMine.UpgradeCost_Status}}){
-            const upgradeTimeStart = {{CrystalMine.UpgradeCost_TimeStart}};
-            const upgradeTimeDuration = {{CrystalMine.UpgradeCost_Time}};
-            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('crystalMineUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
+        for (const structure of structures) {
+        if (structure.upgradeCostStatus) {
+            const timeRemain = "Upgrade Remain Duration: " + (structure.upgradeTimeDuration - (dateNow - structure.upgradeTimeStart));
+            document.getElementById(`${structure.id}Upgrade-js`).innerText = timeRemain;
+                if (structure.upgradeTimeDuration - (dateNow - structure.upgradeTimeStart) <= 0) {
+                    window.location.replace(window.location.origin + "/account");
+                }
             }
         }
-
-        if({{CrystalStorage.UpgradeCost_Status}}){
-            let upgradeTimeStart = {{CrystalStorage.UpgradeCost_TimeStart}};
-            let upgradeTimeDuration = {{CrystalStorage.UpgradeCost_Time}};
-            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('crystalStorageUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
-
-        if({{PetroleumMine.UpgradeCost_Status}}){
-            const upgradeTimeStart = {{PetroleumMine.UpgradeCost_TimeStart}};
-            const upgradeTimeDuration = {{PetroleumMine.UpgradeCost_Time}};
-            const timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('petroleumMineUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
-
-        if({{PetroleumStorage.UpgradeCost_Status}}){
-            let upgradeTimeStart = {{PetroleumStorage.UpgradeCost_TimeStart}};
-            let upgradeTimeDuration = {{PetroleumStorage.UpgradeCost_Time}};
-            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('petroleumStorageUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
-
-        //Academy
-        if({{TrainingAcademy.UpgradeCost_Status}}){
-            let upgradeTimeStart = {{TrainingAcademy.UpgradeCost_TimeStart}};
-            let upgradeTimeDuration = {{TrainingAcademy.UpgradeCost_Time}};
-            let timeRemain = "Upgrade Remain Duration: " + (upgradeTimeDuration - (dateNow - upgradeTimeStart))
-            document.getElementById('trainingAcademyUpgrade-js').innerText = timeRemain;
-            if((upgradeTimeDuration - (dateNow - upgradeTimeStart)) <= 0){
-                window.location.replace(window.location.origin + "/account")
-            }
-        }
-        
     }
 
 
