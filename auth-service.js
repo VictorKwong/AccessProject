@@ -395,69 +395,6 @@ var userSchema = new Schema({
         default: false
       }
     },
-    "DexterityAcademy": {
-      "Name": {
-        type: String,
-        default: "Dexterity Academy"
-      },
-      "Level": {
-        type: Number,
-        default: 1,
-      },
-      "TrainingMax":{
-        type: Number,
-        default: 1,
-      },
-      "TrainingCost_Iron":{
-        type: Number,
-        default: 20,
-      },
-      "TrainingCost_Crystal":{
-        type: Number,
-        default: 20,
-      },
-      "TrainingCost_Petroleum":{
-        type: Number,
-        default: 20,
-      },
-      "TrainingCost_Time":{
-        type: Number,
-        default: 10
-      },
-      "TrainingCost_TimeStart":{
-        type: Number,
-        default: Math.floor(Date.now() / 1000)
-      },
-      "TrainingCost_Status":{
-        type: Boolean,
-        default: false
-      },
-
-      "UpgradeCost_Iron":{
-        type: Number,
-        default: 20,
-      },
-      "UpgradeCost_Crystal":{
-        type: Number,
-        default: 20,
-      },
-      "UpgradeCost_Petroleum":{
-        type: Number,
-        default: 20,
-      },
-      "UpgradeCost_Time":{
-        type: Number,
-        default: 10
-      },
-      "UpgradeCost_TimeStart":{
-        type: Number,
-        default: Math.floor(Date.now() / 1000)
-      },
-      "UpgradeCost_Status":{
-        type: Boolean,
-        default: false
-      }
-    },
     "ItemBag":{
       "Resource" : {
         "Iron1000": {
@@ -579,9 +516,11 @@ function loginAccount(accountData){
               }else{
                 account[0].loginBonus = 0;
               }
+              console.log(account[0]);
             if(checkAllUpgradeBuildingStatusNonExport(account[0])){
               collectAllResourceUpgradeBuildingNonExport(account[0],account[0]);
             }else{
+              
               collectAllResourceNonExport(account[0],account[0]);
             }
 
@@ -740,20 +679,20 @@ function resetAccount(accountData) {
             accountData.PetroleumStorage.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
             accountData.PetroleumStorage.UpgradeCost_Status = false
 
-            accountData.StrengthAcademy.Level = 1
-            accountData.StrengthAcademy.TrainingMax = 1
-            accountData.StrengthAcademy.UpgradeCost_Iron = 20
-            accountData.StrengthAcademy.UpgradeCost_Crystal = 20
-            accountData.StrengthAcademy.UpgradeCost_Time = 10
-            accountData.StrengthAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
-            accountData.StrengthAcademy.UpgradeCost_Status = false
+            accountData.TrainingAcademy.Level = 1
+            accountData.TrainingAcademy.TrainingMax = 1
+            accountData.TrainingAcademy.UpgradeCost_Iron = 20
+            accountData.TrainingAcademy.UpgradeCost_Crystal = 20
+            accountData.TrainingAcademy.UpgradeCost_Time = 10
+            accountData.TrainingAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.TrainingAcademy.UpgradeCost_Status = false
 
-            accountData.StrengthAcademy.TrainingCost_Iron = 20
-            accountData.StrengthAcademy.TrainingCost_Crystal = 20
-            accountData.StrengthAcademy.TrainingCost_Time = 10
-            accountData.StrengthAcademy.TrainingCost_Time = 10
-            accountData.StrengthAcademy.TrainingCost_TimeStart = Math.floor(Date.now() / 1000)
-            accountData.StrengthAcademy.TrainingCost_Status = false
+            accountData.TrainingAcademy.TrainingCost_Iron = 20
+            accountData.TrainingAcademy.TrainingCost_Crystal = 20
+            accountData.TrainingAcademy.TrainingCost_Time = 10
+            accountData.TrainingAcademy.TrainingCost_Time = 10
+            accountData.TrainingAcademy.TrainingCost_TimeStart = Math.floor(Date.now() / 1000)
+            accountData.TrainingAcademy.TrainingCost_Status = false
 
             User.updateOne(
               { _id: accountData._id }, accountData
@@ -1081,19 +1020,19 @@ function iron1000Test(accountData){
 }
 
 //Pet Training
-function upgradeStrengthAcademy(accountData){
+function upgradeTrainingAcademy(accountData){
   return new Promise(function (resolve, reject) {
     User.find({ _id: accountData._id }).exec()
     .then((account) => {
-          if ((account[0].Resource.Iron - account[0].StrengthAcademy.UpgradeCost_Iron) >= 0 &&
-              (account[0].Resource.Crystal - account[0].StrengthAcademy.UpgradeCost_Crystal) >= 0 &&
-              (account[0].Resource.Petroleum - account[0].StrengthAcademy.UpgradeCost_Petroleum) >= 0 ){
+          if ((account[0].Resource.Iron - account[0].TrainingAcademy.UpgradeCost_Iron) >= 0 &&
+              (account[0].Resource.Crystal - account[0].TrainingAcademy.UpgradeCost_Crystal) >= 0 &&
+              (account[0].Resource.Petroleum - account[0].TrainingAcademy.UpgradeCost_Petroleum) >= 0 ){
 
-            accountData.Resource.Iron -= account[0].StrengthAcademy.UpgradeCost_Iron;
-            accountData.Resource.Crystal -= account[0].StrengthAcademy.UpgradeCost_Crystal;
-            accountData.Resource.Petroleum -= account[0].StrengthAcademy.UpgradeCost_Petroleum;
-            accountData.StrengthAcademy.UpgradeCost_Status = true;
-            accountData.StrengthAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
+            accountData.Resource.Iron -= account[0].TrainingAcademy.UpgradeCost_Iron;
+            accountData.Resource.Crystal -= account[0].TrainingAcademy.UpgradeCost_Crystal;
+            accountData.Resource.Petroleum -= account[0].TrainingAcademy.UpgradeCost_Petroleum;
+            accountData.TrainingAcademy.UpgradeCost_Status = true;
+            accountData.TrainingAcademy.UpgradeCost_TimeStart = Math.floor(Date.now() / 1000);
 
             collectAllResourceNonExport(accountData,account[0]);
 
@@ -1245,20 +1184,20 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
     accountZero.PetroleumStorage.Capacity = accountData.PetroleumStorage.Capacity;
   }
   //=====================Strength Academy=====================
-  if(((currentTimeInSeconds - accountData.StrengthAcademy.UpgradeCost_TimeStart) >= accountData.StrengthAcademy.UpgradeCost_Time) && accountData.StrengthAcademy.UpgradeCost_Status){
+  if(((currentTimeInSeconds - accountData.TrainingAcademy.UpgradeCost_TimeStart) >= accountData.TrainingAcademy.UpgradeCost_Time) && accountData.TrainingAcademy.UpgradeCost_Status){
     //finished upgrade
-    accountData.StrengthAcademy.UpgradeCost_Status = false;
+    accountData.TrainingAcademy.UpgradeCost_Status = false;
 
-    accountData.StrengthAcademy.Level += 1;
-    accountData.StrengthAcademy.TrainingMax = accountZero.StrengthAcademy.TrainingMax + accountZero.StrengthAcademy.TrainingMax;
-    accountData.StrengthAcademy.UpgradeCost_Iron = parseInt(accountZero.StrengthAcademy.UpgradeCost_Iron * 1.5);
-    accountData.StrengthAcademy.UpgradeCost_Crystal = parseInt(accountZero.StrengthAcademy.UpgradeCost_Crystal * 1.5);
-    accountData.StrengthAcademy.UpgradeCost_Petroleum = parseInt(accountZero.StrengthAcademy.UpgradeCost_Petroleum * 1.5);
-    accountData.StrengthAcademy.UpgradeCost_Time = accountZero.StrengthAcademy.UpgradeCost_Time + accountZero.StrengthAcademy.UpgradeCost_Time;
+    accountData.TrainingAcademy.Level += 1;
+    accountData.TrainingAcademy.TrainingMax = accountZero.TrainingAcademy.TrainingMax + accountZero.TrainingAcademy.TrainingMax;
+    accountData.TrainingAcademy.UpgradeCost_Iron = parseInt(accountZero.TrainingAcademy.UpgradeCost_Iron * 1.5);
+    accountData.TrainingAcademy.UpgradeCost_Crystal = parseInt(accountZero.TrainingAcademy.UpgradeCost_Crystal * 1.5);
+    accountData.TrainingAcademy.UpgradeCost_Petroleum = parseInt(accountZero.TrainingAcademy.UpgradeCost_Petroleum * 1.5);
+    accountData.TrainingAcademy.UpgradeCost_Time = accountZero.TrainingAcademy.UpgradeCost_Time + accountZero.TrainingAcademy.UpgradeCost_Time;
 
-    accountData.StrengthAcademy.TrainingCost_Iron = parseInt(accountZero.StrengthAcademy.TrainingCost_Iron * 1.5);
-    accountData.StrengthAcademy.TrainingCost_Crystal = parseInt(accountZero.StrengthAcademy.TrainingCost_Crystal * 1.5);
-    accountData.StrengthAcademy.TrainingCost_Petroleum = parseInt(accountZero.StrengthAcademy.TrainingCost_Petroleum * 1.5);
+    accountData.TrainingAcademy.TrainingCost_Iron = parseInt(accountZero.TrainingAcademy.TrainingCost_Iron * 1.5);
+    accountData.TrainingAcademy.TrainingCost_Crystal = parseInt(accountZero.TrainingAcademy.TrainingCost_Crystal * 1.5);
+    accountData.TrainingAcademy.TrainingCost_Petroleum = parseInt(accountZero.TrainingAcademy.TrainingCost_Petroleum * 1.5);
   }
   //=====================Iron Mine=====================
 
@@ -1398,10 +1337,10 @@ function checkAllUpgradeBuildingStatusNonExport(accountZero){
     (((currentTimeInSeconds - accountZero.CrystalStorage.UpgradeCost_TimeStart) >= accountZero.CrystalStorage.UpgradeCost_Time) && accountZero.CrystalStorage.UpgradeCost_Status) ||
     (((currentTimeInSeconds - accountZero.PetroleumMine.UpgradeCost_TimeStart) >= accountZero.PetroleumMine.UpgradeCost_Time) && accountZero.PetroleumMine.UpgradeCost_Status) ||
     (((currentTimeInSeconds - accountZero.PetroleumStorage.UpgradeCost_TimeStart) >= accountZero.PetroleumStorage.UpgradeCost_Time) && accountZero.PetroleumStorage.UpgradeCost_Status) ||
-    (((currentTimeInSeconds - accountZero.StrengthAcademy.UpgradeCost_TimeStart) >= accountZero.StrengthAcademy.UpgradeCost_Time) && accountZero.StrengthAcademy.UpgradeCost_Status)
+    (((currentTimeInSeconds - accountZero.TrainingAcademy.UpgradeCost_TimeStart) >= accountZero.TrainingAcademy.UpgradeCost_Time) && accountZero.TrainingAcademy.UpgradeCost_Status)
   )
 }
 
 
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeStrengthAcademy};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeTrainingAcademy};

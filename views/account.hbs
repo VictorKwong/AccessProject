@@ -268,31 +268,22 @@
 
 <script>
     function upgradeAll() {
-        let dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
-        //produce rate
-        let duration = dateNow - {{data.previousCollectTime}};
-        let ironRate, crystalRate, petroleumRate;
+        const dateNow = Math.floor(Date.now() / 1000); // Convert to seconds
+        const duration = dateNow - {{data.previousCollectTime}};
 
-        if({{Resource.Iron}} >= {{IronStorage.Capacity}}){
-          ironRate = {{Resource.Iron}};
-        }else if(( {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{IronStorage.Capacity}} ){
-          //determine how many thing that we can collect
-          ironRate = {{Resource.Iron}} + parseInt({{IronMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
+        function calculateResourceRate(resource, storageCapacity, mineProduceRate, bonus) {
+            if (resource >= storageCapacity) {
+                return resource;
+            } else {
+                const collectable = parseInt(mineProduceRate * duration / 3600 * bonus);
+                return (resource + collectable <= storageCapacity) ? (resource + collectable) : resource;
+            }
         }
 
-        if({{Resource.Crystal}} >= {{CrystalStorage.Capacity}}){
-          crystalRate = {{Resource.Crystal}};
-        }else if(( {{Resource.Crystal}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{CrystalStorage.Capacity}} ){
-          //determine how many thing that we can collect
-          crystalRate = {{Resource.Crystal}} + parseInt({{CrystalMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
-        }
+        const ironRate = calculateResourceRate({{Resource.Iron}}, {{IronStorage.Capacity}}, {{IronMine.ProduceRate}}, {{Achievement.Resource.Bonus}});
+        const crystalRate = calculateResourceRate({{Resource.Crystal}}, {{CrystalStorage.Capacity}}, {{CrystalMine.ProduceRate}}, {{Achievement.Resource.Bonus}});
+        const petroleumRate = calculateResourceRate({{Resource.Petroleum}}, {{PetroleumStorage.Capacity}}, {{PetroleumMine.ProduceRate}}, {{Achievement.Resource.Bonus}});
 
-        if({{Resource.Petroleum}} >= {{PetroleumStorage.Capacity}}){
-          petroleumRate = {{Resource.Petroleum}};
-        }else if(( {{Resource.Petroleum}} + parseInt({{PetroleumMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}}) ) <= {{PetroleumStorage.Capacity}} ){
-          //determine how many thing that we can collect
-          petroleumRate = {{Resource.Petroleum}} + parseInt({{PetroleumMine.ProduceRate}} * duration/3600 * {{Achievement.Resource.Bonus}});
-        }
 
         document.getElementById('IronResource-js').innerText = ironRate;
         document.getElementById('IronResource-js-title').title = "Iron: " + ironRate;
