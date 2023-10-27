@@ -594,6 +594,26 @@ function changePasswordAccount(accountData, userID, varName) {
       });
   });
 }
+
+function changeDisplayPetNameAccount(accountData, userID, varPetName) {  
+  return new Promise(function(resolve, reject) {
+    // Find the user based on the provided userID
+    User.find({ _id: userID }).exec()
+    .then((account) => {
+            User.updateOne(
+              { _id: userID },
+              { $set: { 'Pet.name' : accountData.displayPetName } }
+            ).exec().then(() => {
+              resolve(accountData);
+            }).catch((err) => {
+                reject(accountData.displayPetName + " name has already been taken!");
+            })
+    }).catch((err) => {
+        reject(`Unable to find user - ${varPetName}: ${err}`);
+    });
+  });
+}
+
 function changeDisplayNameAccount(accountData, userID, varName) {  
   return new Promise(function(resolve, reject) {
     // Find the user based on the provided userID
@@ -612,6 +632,8 @@ function changeDisplayNameAccount(accountData, userID, varName) {
     });
   });
 }
+
+
 function resetAccount(accountData) {  
   return new Promise(function(resolve, reject) {
     // Find the user based on the provided userID
@@ -1323,7 +1345,6 @@ function collectAllResourceUpgradeBuildingNonExport(accountData, accountZero){
       collectPetroleumMineResourceNonExport(accountData, accountZero,currentTimeInSeconds);
       accountData.previousCollectTime = currentTimeInSeconds
     }
-
 }
 
 //Check UpgradeStatus
@@ -1343,4 +1364,4 @@ function checkAllUpgradeBuildingStatusNonExport(accountZero){
 
 
 
-module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeTrainingAcademy};
+module.exports = { initialize, registerAccount, loginAccount, changePasswordAccount, changeDisplayNameAccount, changeDisplayPetNameAccount, resetAccount, refreshAccount, upgradeIronMine, upgradeCrystalMine, upgradePetroleumMine, upgradeIronStorage, upgradeCrystalStorage, upgradePetroleumStorage, claimDailyReward, iron1000Test, spend100Test, upgradeTrainingAcademy};

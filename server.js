@@ -145,7 +145,6 @@ function ensureLogin(req, res, next) {
     }
 }
 
-
 function onHttpStart() {
     console.log("Express http server listening on: " + HTTP_PORT);
 }
@@ -168,7 +167,6 @@ app.post("/login", function(req, res) {
         })
     })    
 })
-
 
 app.get("/register", function(req,res){
     res.render('register');
@@ -333,7 +331,8 @@ app.get("/Mission", ensureLogin, function(req,res){
 
 
 app.post("/information", function(req, res) {
-    if(req.body.displayName === undefined && req.body.password === undefined && req.body.newPassword === undefined && req.body.confirmNewPassword === undefined){
+    if(req.body.displayName === undefined && req.body.displayPetName === undefined && 
+        req.body.password === undefined && req.body.newPassword === undefined && req.body.confirmNewPassword === undefined){
         //reset
         authData.resetAccount(req.session.user).then(function(user){
             reqSessionUserData(req,user);
@@ -343,17 +342,23 @@ app.post("/information", function(req, res) {
             res.render('information', {errorMessage: err});
         });
     }
-    else if(req.body.displayName === undefined){
-        //change password - can be the same
+    else if(req.body.password !== undefined && req.body.newPassword !== undefined && req.body.confirmNewPassword !== undefined){
         authData.changePasswordAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
             res.render('information', {successMessage: "Successful change Password!"});
         })
         .catch(function(err){
             res.render('information', {errorMessage: err});
         });
-    }else{
-        //change displayName
+    }else if(req.body.displayPetName !== undefined){
         
+        authData.changeDisplayPetNameAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
+            req.session.user.Pet.name = data.displayPetName;
+            res.render('information', {successMessage: "Successful change name!"});
+        })
+        .catch(function(err){
+            res.render('information', {errorMessage: err});
+        });
+    }else if(req.body.displayName !== undefined){
         authData.changeDisplayNameAccount(req.body, req.session.user._id, req.session.user.userName).then(function(data){
             req.session.user.displayName = data.displayName;
             res.render('information', {successMessage: "Successful change name!"});
