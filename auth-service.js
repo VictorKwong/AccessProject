@@ -11,8 +11,6 @@ var previousDate = todayDate.toLocaleDateString();
 todayDate.setDate(todayDate.getDate() + 1);
 var nextDate = todayDate.toLocaleDateString();
 //---------------------------
-
-
 var userSchema = new Schema({
     "userName":  {
       type: String,

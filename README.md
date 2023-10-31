@@ -134,6 +134,7 @@ server.js => test out returnRender() function -> Sync all (OK)
 account => update realtime? (Testing?), checkAllUpgradeBuildingStatusNonExport()
 Add Dexterity-> updated (TestingX) -> Dead end because JSON too large
 
-
 Note:
 Now I understand Why I just pass only one req.session.user because I want to update it only once. -> To expand the String I did separate req.session.user & req.session.building, but it's not quite effective to do it.
+
+Change Pet Name Easily
